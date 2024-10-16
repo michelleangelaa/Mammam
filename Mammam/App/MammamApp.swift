@@ -16,7 +16,7 @@ struct MammamApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CoordinatorView()
         }
     }
 }

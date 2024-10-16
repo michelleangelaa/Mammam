@@ -1,26 +1,26 @@
 //
-//  MealPlanView.swift
+//  RateMealView.swift
 //  Mammam
 //
-//  Created by Michelle Angela Aryanto on 15/10/24.
+//  Created by Michelle Angela Aryanto on 16/10/24.
 //
 
 import SwiftUI
 
-struct MealPlanView: View {
+struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
-        Text("this is meal plan view")
+        Text("rate ur mealll")
         Button {
-            coordinator.presentSheet(sheet: .rateMeal)
+            coordinator.dismissSheet()
         } label: {
-            Text("forgot password")
+            Text("back")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
 #Preview {
-    MealPlanView()
+    RateMealView()
 }
