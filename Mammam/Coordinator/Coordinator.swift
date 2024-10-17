@@ -45,7 +45,7 @@ class Coordinator: ObservableObject {
     @ViewBuilder
     func buildSheet(sheet: Sheet) -> some View {
         switch sheet {
-        case .forgotPassword: MealPlanView().presentationDetents([.medium, .large])
+        case .forgotPassword: MealPlanView()
         case .rateMeal: RateMealView()
         }
     }
