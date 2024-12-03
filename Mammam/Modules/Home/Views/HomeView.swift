@@ -11,7 +11,7 @@ struct HomeView: View {
     @EnvironmentObject private var coordinator: Coordinator
     
     var body: some View {
-        Text("This is home page")
+        Text("This is home view")
         Button {	
             coordinator.push(page: .login)
         } label: {
