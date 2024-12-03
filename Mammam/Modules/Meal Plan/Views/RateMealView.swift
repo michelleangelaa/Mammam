@@ -8,12 +8,6 @@
 import SwiftData
 import SwiftUI
 
-struct ExampleRow: View {
-    var body: some View {
-        Text("Example Row")
-    }
-}
-
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
     
@@ -26,74 +20,112 @@ struct RateMealView: View {
     @State private var consumedQty: Double = 1.0
     @State private var allergic: Bool = false
     @State private var notes: String = ""
-    
+    @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
+
     var units = ["Tea Spoon", "Table Spoon", "Cup"]
 
     var body: some View {
-        Text("Review Meal")
-            .font(.title2).fontWeight(.bold)
-        
-        Form {
-            TextField("Ingredient Name", text: $ingredient)
-            TextField("Type", text: $type)
-            DatePicker("Time Given", selection: $timeGiven, displayedComponents: .hourAndMinute)
-            DatePicker("Time Ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
-            HStack {
-                Text("Meal serving size")
-                Spacer()
-                HStack {
-                    TextField("Qty", value: $servingQty, format: .number)
-                        .keyboardType(.decimalPad)
-                        .fixedSize()
-                    Picker("", selection: $servingUnit) {
-                        ForEach(units, id: \.self) { unit in
-                            Text(unit)
-                        }
-                    }
-                    .labelsHidden()
-                }
-               
-            }
-            HStack {
-                Text("Meal consumed")
-                Spacer()
-                HStack {
-                    TextField("Qty", value: $consumedQty, format: .number)
-                        .keyboardType(.decimalPad)
-                        .fixedSize()
-                    Picker("", selection: $servingUnit) {
-                        ForEach(units, id: \.self) { unit in
-                            Text(unit)
-                        }
-                    }
-                    .labelsHidden()
-                }
-                
-            }
-            HStack {
-                Text("Allergic Reaction")
-                Picker("Allergic Reaction", selection: $allergic) {
-                    Text("Yes").tag(true)
-                    Text("No").tag(false)
-                }
-                .pickerStyle(.segmented)
-            }
-            TextField("Notes", text: $notes)
-        }
+        VStack {
+            Text("Review Meal")
+                .font(.title2).fontWeight(.bold)
 
-        
-        
-        
-        
+            Form {
+                TextField("Ingredient Name", text: $ingredient)
+                TextField("Type", text: $type)
+                DatePicker("Time Given", selection: $timeGiven, displayedComponents: .hourAndMinute)
+                DatePicker("Time Ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
+                    .onChange(of: timeEnded) { _ in
+                        validateTimes()
+                    }
+                HStack {
+                    Text("Meal serving size")
+                    Spacer()
+                    HStack {
+                        TextField("Qty", value: $servingQty, format: .number)
+                            .keyboardType(.decimalPad)
+                            .fixedSize()
+                        Picker("", selection: $servingUnit) {
+                            ForEach(units, id: \.self) { unit in
+                                Text(unit)
+                            }
+                        }
+                        .labelsHidden()
+                    }
+                }
+                HStack {
+                    Text("Meal consumed")
+                    Spacer()
+                    HStack {
+                        TextField("Qty", value: $consumedQty, format: .number)
+                            .keyboardType(.decimalPad)
+                            .fixedSize()
+                            .onChange(of: consumedQty) { _ in
+                                validateQuantities()
+                            }
+                        Picker("", selection: $servingUnit) {
+                            ForEach(units, id: \.self) { unit in
+                                Text(unit)
+                            }
+                        }
+                        .labelsHidden()
+                    }
+                }
+                HStack {
+                    Text("Allergic Reaction")
+                    Picker("Allergic Reaction", selection: $allergic) {
+                        Text("Yes").tag(true)
+                        Text("No").tag(false)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                TextField("Notes", text: $notes)
+            }
 
-        Button {
-            coordinator.dismissSheet()
-        } label: {
-            Text("back")
+            Button {
+                if validateInputs() {
+                    let meal = Meal(ingredient: ingredient, type: type, timeGiven: timeGiven, timeEnded: timeEnded, servingUnit:servingUnit,servingQty: servingQty, consumedQty: consumedQty,allergic: allergic, notes: notes)
+                    coordinator.dismissSheet()
+                } else {
+                    showAlert = true
+                }
+            } label: {
+                Text("Submit")
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Invalid Input"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
         }
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // Validation Logic
+    private func validateInputs() -> Bool {
+        if timeEnded < timeGiven {
+            alertMessage = "Time Ended must be later than or equal to Time Given."
+            return false
+        }
+        if consumedQty > servingQty {
+            alertMessage = "Consumed quantity cannot exceed the serving size."
+            return false
+        }
+        return true
+    }
+
+    private func validateTimes() {
+        if timeEnded < timeGiven {
+            alertMessage = "Time Ended must be later than or equal to Time Given."
+            showAlert = true
+        }
+    }
+
+    private func validateQuantities() {
+        if consumedQty > servingQty {
+            alertMessage = "Consumed quantity cannot exceed the serving size."
+            showAlert = true
+        }
     }
 }
+
 
 #Preview {
     RateMealView()
