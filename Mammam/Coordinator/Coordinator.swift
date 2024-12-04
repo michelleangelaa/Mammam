@@ -39,6 +39,10 @@ class Coordinator: ObservableObject {
         switch page {
         case .main: HomeView()
         case .login: ProfileView()
+        case .logMeal: MealPlannerView()
+        case .mealFeedback: MealFeedbackView()
+
+
         }
     }
     
@@ -47,6 +51,8 @@ class Coordinator: ObservableObject {
         switch sheet {
         case .forgotPassword: MealPlanView()
         case .rateMeal: RateMealView()
+        case .mealDetail: MealDetailView()
+
         }
     }
     
@@ -54,6 +60,7 @@ class Coordinator: ObservableObject {
     func buildCover(cover: FullSceenCover) -> some View {
         switch cover {
         case .signUp: MealPlanView()
+
         }
     }
     
