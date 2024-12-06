@@ -10,6 +10,7 @@ import SwiftUI
 
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
+    @Environment(\.modelContext) private var context
     @State private var navigateToMealFeedback = false // State to trigger navigation
     
     @State private var ingredient: String = ""
@@ -87,6 +88,7 @@ struct RateMealView: View {
                 Button {
                     if validateInputs() {
                         let meal = Meal(ingredient: ingredient, type: type, timeGiven: timeGiven, timeEnded: timeEnded, servingUnit:servingUnit,servingQty: servingQty, consumedQty: consumedQty,allergic: allergic, notes: notes)
+                        context.insert(meal)
                         navigateToMealFeedback = true
                     } else {
                         showAlert = true
