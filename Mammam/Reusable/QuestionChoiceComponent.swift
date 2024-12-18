@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct QuestionChoiceComponent: View {
+    // Customizable text properties
+        let buttonText1: String
+        let buttonText2: String
+        let actions: [() -> Void]
+
     var body: some View {
         VStack {
             ZStack(alignment: .topLeading){
@@ -22,12 +27,19 @@ struct QuestionChoiceComponent: View {
                     .padding([.top, .leading], 19)
                 
                 VStack(spacing: 14) {
-                    CustomMediumButtonComponent(state: .enabled, text: "Get Mad") {
-                        //action function
+                    CustomMediumButtonComponent(state: .enabled, text: buttonText1) {
+                        // Trigger first action
+                            if actions.indices.contains(0) {
+                                actions[0]()
+                            }
+                        
                     }
                     
-                    CustomMediumButtonComponent(state: .enabled, text: "encourage the kid") {
-                        //action function
+                    CustomMediumButtonComponent(state: .enabled, text: buttonText2) {
+                        // Trigger sec action
+                        if actions.indices.contains(1) {
+                            actions[1]()
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -39,6 +51,13 @@ struct QuestionChoiceComponent: View {
 }
 
 #Preview {
-    QuestionChoiceComponent()
+    QuestionChoiceComponent(
+            buttonText1: "Get Mad",
+            buttonText2: "Encourage the Kid",
+            actions: [
+                { print("Get Mad tapped") },
+                { print("Encourage the Kid tapped") }
+            ]
+    )
 }
 
