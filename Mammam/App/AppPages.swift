@@ -10,6 +10,10 @@ import Foundation
 enum AppPages: Hashable {
     case main
     case login
+    case logMeal
+    case mealFeedback
+
+
 }
 
 enum Sheet: String, Identifiable {
@@ -19,6 +23,8 @@ enum Sheet: String, Identifiable {
     
     case forgotPassword
     case rateMeal
+    case mealDetail
+
 }
 
 enum FullSceenCover: String, Identifiable {
@@ -26,5 +32,6 @@ enum FullSceenCover: String, Identifiable {
         self.rawValue
     }
     
-    case signUp 
+    case signUp
+
 }

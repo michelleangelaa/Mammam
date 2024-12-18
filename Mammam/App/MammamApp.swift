@@ -17,6 +17,7 @@ struct MammamApp: App {
         WindowGroup {
             CoordinatorView()
         }
+        .modelContainer(for: [Meal.self])
     }
 }
 

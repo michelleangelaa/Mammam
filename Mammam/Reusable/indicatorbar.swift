@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomIndicatorbar: View {
+struct indicatorbar: View {
     let totalCount: Int // Total number of indicators
     let currentIndex: Int // Current active index (0-based)
     
@@ -34,13 +34,13 @@ struct CustomIndicatorbar: View {
         if index < currentIndex {
             return Color.rose.rose600
         } else {
-            return Color.gray.gray300
+            return Color.gray.gray200
         }
     }
 }
 
 #Preview {
     VStack {
-        CustomIndicatorbar(totalCount: 5, currentIndex: 1)
+        indicatorbar(totalCount: 5, currentIndex: 1)
     }
 }

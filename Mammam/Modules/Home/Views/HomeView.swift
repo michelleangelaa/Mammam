@@ -13,14 +13,14 @@ struct HomeView: View {
     var body: some View {
         Text("This is home view")
         
-//        CustomLargeButtonComponent(state: .enabled, text: "mau ke profile page") {
-//            coordinator.push(page: .login)
-//        }
-//        Button {
-//            coordinator.push(page: .login)
-//        } label: {
-//            Text("go to login but profile")
-//        }
+        CustomLargeButtonComponent(state: .enabled, text: "mau ke profile page") {
+            coordinator.push(page: .login)
+        }
+        Button {
+            coordinator.push(page: .login)
+        } label: {
+            Text("go to login but profile")
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
