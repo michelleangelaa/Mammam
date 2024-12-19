@@ -16,8 +16,9 @@ struct MammamApp: App {
 
     var body: some Scene {
         WindowGroup {
-            CoordinatorView()
+//            CoordinatorView()
 //            SavedMenuView()
+            MealPlannerView(mealPlan: MealPlanPreviewData.sampleMealPlan)
         
 
         }
