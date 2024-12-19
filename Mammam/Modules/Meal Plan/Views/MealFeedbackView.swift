@@ -14,7 +14,8 @@ struct MealFeedbackView: View {
     
     // Use @Query to fetch all meals from the model context
     @Query private var meals: [Meal]
-    
+
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -42,26 +43,31 @@ struct MealFeedbackView: View {
             return
         }
         
-        let meal1 = Meal(ingredient: "Potato", type: "Morning Snack", timeGiven: timeGiven, timeEnded: timeEnded, servingUnit: "Table Spoon", servingQty: 2, consumedQty: 1, allergic: true, notes: "gatal")
+        let dummyIngredient = Ingredient(name: "tofu")
+
+        
+        let meal1 = Meal(ingredient: dummyIngredient, type: "Morning Snack", timeGiven: timeGiven, timeEnded: timeEnded, servingUnit: "Table Spoon", servingQty: 2, consumedQty: 1, isAllergic: true, isLogged: true, notes: "gatal")
         context.insert(meal1)
     }
 }
 
 struct MealCell: View {
     let meal: Meal
+//    let ingredient: Ingredient
+
 //    let durationString = calculateDuration(timeGiven: meal.timeGiven, timeEnded: meal.timeEnded)
 
     var body: some View {
         HStack {
             Text(formatDate(meal.timeGiven))
             Spacer()
-            Text(meal.ingredient)
+//            Text(meal.ingredient)
             Spacer()
             Text(calculateDuration(timeGiven: meal.timeGiven, timeEnded: meal.timeEnded))
             Spacer()
             Text("\(meal.servingQty) \(meal.servingUnit)")
             Spacer()
-            Text(formatBool(meal.allergic))
+            Text(formatBool(meal.isAllergic))
             Spacer()
             Text(meal.notes)
         }

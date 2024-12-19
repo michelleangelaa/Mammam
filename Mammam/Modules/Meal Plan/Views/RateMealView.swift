@@ -20,7 +20,8 @@ struct RateMealView: View {
     @State private var servingUnit: String = "Tea Spoon"
     @State private var servingQty: Double = 1.0
     @State private var consumedQty: Double = 1.0
-    @State private var allergic: Bool = false
+    @State private var isAllergic: Bool = false
+    @State private var isLogged: Bool = true
     @State private var notes: String = ""
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
@@ -76,7 +77,7 @@ struct RateMealView: View {
                     }
                     HStack {
                         Text("Allergic Reaction")
-                        Picker("Allergic Reaction", selection: $allergic) {
+                        Picker("Allergic Reaction", selection: $isAllergic) {
                             Text("Yes").tag(true)
                             Text("No").tag(false)
                         }
@@ -87,7 +88,7 @@ struct RateMealView: View {
 
                 Button {
                     if validateInputs() {
-                        let meal = Meal(ingredient: ingredient, type: type, timeGiven: timeGiven, timeEnded: timeEnded, servingUnit:servingUnit,servingQty: servingQty, consumedQty: consumedQty,allergic: allergic, notes: notes)
+                        let meal = Meal(type: type, timeGiven: timeGiven, timeEnded: timeEnded, servingUnit:servingUnit,servingQty: servingQty, consumedQty: consumedQty,isAllergic: isAllergic, isLogged: isLogged, notes: notes)
                         context.insert(meal)
                         navigateToMealFeedback = true
                     } else {
@@ -96,6 +97,7 @@ struct RateMealView: View {
                 } label: {
                     Text("Submit")
                 }
+                .buttonStyle(.borderedProminent)
                 .navigationDestination(isPresented: $navigateToMealFeedback) {
                     MealFeedbackView() // This will show RateMealView within the same sheet
                 }

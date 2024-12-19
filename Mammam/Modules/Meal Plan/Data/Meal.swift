@@ -10,17 +10,19 @@ import SwiftData
 
 @Model
 class Meal{
-    var ingredient: String
+    @Relationship
+    var ingredient: Ingredient?
     var type: String
-    var timeGiven: Date
+    var timeGiven: Date	
     var timeEnded: Date
     var servingUnit: String
     var servingQty: Double
     var consumedQty: Double
-    var allergic: Bool
+    var isAllergic: Bool
+    var isLogged: Bool
     var notes: String
     
-    init(ingredient: String, type: String, timeGiven: Date, timeEnded: Date, servingUnit: String, servingQty: Double, consumedQty: Double, allergic: Bool, notes: String) {
+    init(ingredient: Ingredient? = nil, type: String, timeGiven: Date, timeEnded: Date, servingUnit: String, servingQty: Double, consumedQty: Double, isAllergic: Bool, isLogged: Bool, notes: String) {
         self.ingredient = ingredient
         self.type = type
         self.timeGiven = timeGiven
@@ -28,7 +30,11 @@ class Meal{
         self.servingUnit = servingUnit
         self.servingQty = servingQty
         self.consumedQty = consumedQty
-        self.allergic = allergic
+        self.isAllergic = isAllergic
+        self.isLogged = isLogged
         self.notes = notes
     }
+    
+    var mealPlan: MealPlan?
+
 }

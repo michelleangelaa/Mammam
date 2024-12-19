@@ -10,12 +10,12 @@ import Foundation
 extension Nutrient {
     static var sampleNutritions : [Nutrient] {
         [
-            Nutrient(name: "Protein"),
-            Nutrient(name: "Fat"),
-            Nutrient(name: "Zinc"),
-            Nutrient(name: "MicroNutrient"),
-            Nutrient(name: "Iron"),
-            Nutrient(name: "Carbo")
+            Nutrient(name: "Protein", nutrientCount: 0),
+            Nutrient(name: "Fat", nutrientCount: 0),
+            Nutrient(name: "Zinc", nutrientCount: 0),
+            Nutrient(name: "MicroNutrient", nutrientCount: 0),
+            Nutrient(name: "Iron", nutrientCount: 0),
+            Nutrient(name: "Carbo", nutrientCount: 0)
         ]
     }
 }
