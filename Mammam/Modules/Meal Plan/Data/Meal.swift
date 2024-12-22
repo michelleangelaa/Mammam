@@ -9,18 +9,23 @@ import Foundation
 import SwiftData
 
 @Model
-class Meal{
-    var ingredient: String
+class Meal {
+    @Relationship(inverse: \MealPlan.meals)
+    var mealPlan: MealPlan?
+    @Relationship
+    var ingredient: Ingredient?
     var type: String
     var timeGiven: Date
     var timeEnded: Date
     var servingUnit: String
     var servingQty: Double
     var consumedQty: Double
-    var allergic: Bool
+    var isAllergic: Bool
+    var isLogged: Bool
     var notes: String
-    
-    init(ingredient: String, type: String, timeGiven: Date, timeEnded: Date, servingUnit: String, servingQty: Double, consumedQty: Double, allergic: Bool, notes: String) {
+
+    init(ingredient: Ingredient? = nil, mealPlan: MealPlan? = nil, type: String, timeGiven: Date, timeEnded: Date, servingUnit: String, servingQty: Double, consumedQty: Double, isAllergic: Bool, isLogged: Bool, notes: String) {
+        self.mealPlan = mealPlan
         self.ingredient = ingredient
         self.type = type
         self.timeGiven = timeGiven
@@ -28,7 +33,8 @@ class Meal{
         self.servingUnit = servingUnit
         self.servingQty = servingQty
         self.consumedQty = consumedQty
-        self.allergic = allergic
+        self.isAllergic = isAllergic
+        self.isLogged = isLogged
         self.notes = notes
     }
 }

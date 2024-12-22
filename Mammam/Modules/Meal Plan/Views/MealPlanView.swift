@@ -20,14 +20,14 @@ struct MealPlanView: View {
 
                     Button {
                         navigateToRateMeal = true
-                        //            coordinator.presentSheet(sheet: .rateMeal)
+                                    coordinator.presentSheet(sheet: .rateMeal)
                     } label: {
                         Text("forgot password")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationDestination(isPresented: $navigateToRateMeal) {
-                        RateMealView() // This will show RateMealView within the same sheet
-                    }
+//                    .navigationDestination(isPresented: $navigateToRateMeal) {
+//                        RateMealView() // This will show RateMealView within the same sheet
+//                    }
 
                     Text("Ingredients")
                     VStack(alignment: .leading) {
