@@ -50,7 +50,7 @@ class Coordinator: ObservableObject {
     func buildSheet(sheet: Sheet) -> some View {
         switch sheet {
         case .forgotPassword: MealPlanView()
-        case .rateMeal: RateMealView()
+        case .rateMeal: MealPlanView()
         case .mealDetail: MealDetailView()
 
         }

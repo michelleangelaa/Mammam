@@ -25,7 +25,7 @@ struct ReviewMealTypeView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // Progress Indicator
-            CustomIndicatorbar(totalCount: mealTypes.count, currentIndex: currentMealTypeIndex + 1)
+            indicatorbar(totalCount: mealTypes.count, currentIndex: currentMealTypeIndex + 1)
 
             // Header
             VStack(alignment: .leading, spacing: 4) {

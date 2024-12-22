@@ -18,7 +18,7 @@ struct SelectDateView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 40) {
-            CustomIndicatorbar(totalCount: 5, currentIndex: 1)
+            indicatorbar(totalCount: 5, currentIndex: 1)
 
             VStack(alignment: .leading) {
                 Text("Select Date")
@@ -123,7 +123,7 @@ struct SelectDateView: View {
                     type: mealType,
                     timeGiven: timeGiven,
                     timeEnded: timeEnded,
-                    servingUnit: "gram",
+                    servingUnit: "Cup",
                     servingQty: 100,
                     consumedQty: 0,
                     isAllergic: false,
