@@ -83,12 +83,21 @@ struct MealPlannerView: View {
 
                     ForEach(sortedDates, id: \.self) { date in
                         if let mealsForDate = groupedMeals[date] {
-                            Section(header: Text(formattedDate(date)).font(.headline).padding(.horizontal)
+                            Section(header: Text(formattedDate(date))
+                                .font(.headline)
+                                .padding(.horizontal)
                             ) {
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack(spacing: 16) {
-                                        ForEach(mealsForDate.sorted(by: { mealTypeOrder($0.type) < mealTypeOrder($1.type) })) { meal in
-                                            MealCardView(meal: meal)
+                                        ForEach(mealsForDate.sorted {
+                                            mealTypeOrder($0.type) < mealTypeOrder($1.type)
+                                        }) { meal in
+                                            // Wrap the card in a NavigationLink
+                                            NavigationLink {
+                                                RateMealView(meal: meal)
+                                            } label: {
+                                                MealCardView(meal: meal)
+                                            }
                                         }
                                     }
                                     .padding(.horizontal)
@@ -103,6 +112,7 @@ struct MealPlannerView: View {
         }
         .padding(.top)
     }
+
 
     func datesBetween(start: Date, end: Date) -> [Date] {
         var dates = [Date]()
@@ -148,6 +158,7 @@ struct MealCardView: View {
                     .frame(width: 70, height: 70)
                     .cornerRadius(8)
             }
+            
             Text(meal.type)
                 .font(.subheadline)
                 .bold()
@@ -163,7 +174,7 @@ struct MealCardView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(UIColor.systemGray6))
+                .fill(meal.isLogged ? Color(UIColor.systemGreen) : Color(UIColor.systemGray6))
         )
     }
 }

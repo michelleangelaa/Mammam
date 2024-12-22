@@ -10,6 +10,8 @@ import SwiftUI
 struct MealDetailView: View {
     var body: some View {
         Text("this is meal detail view")
+        
+        
     }
 }
 
