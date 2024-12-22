@@ -39,7 +39,7 @@ class Coordinator: ObservableObject {
         switch page {
         case .main: HomeView()
         case .login: ProfileView()
-        case .logMeal: MealPlannerView(mealPlan: MealPlanPreviewData.sampleMealPlan)
+        case .logMeal: MealPlannerView()
         case .mealFeedback: MealFeedbackView()
 
 

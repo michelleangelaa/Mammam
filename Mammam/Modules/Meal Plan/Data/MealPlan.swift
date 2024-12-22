@@ -9,13 +9,15 @@ import Foundation
 import SwiftData
 
 @Model
-class MealPlan{
+class MealPlan {
     var startDate: Date
     var endDate: Date
+    @Relationship(deleteRule: .cascade)
     var meals: [Meal]?
-    
+
     init(startDate: Date, endDate: Date) {
         self.startDate = startDate
         self.endDate = endDate
+        self.meals = [] // Initialize empty array
     }
 }
