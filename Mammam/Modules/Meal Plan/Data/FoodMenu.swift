@@ -13,9 +13,13 @@ class FoodMenu {
     var name: String
     var image: String
     var isSaved: Bool
-    var ingredients: [Ingredient]
-    var allergens: [Allergen]
-    
+
+    @Relationship
+    var ingredients: [Ingredient]?
+
+    @Relationship(inverse: \Allergen.menus)
+    var allergens: [Allergen]?
+
     init(name: String, image: String, isSaved: Bool, ingredients: [Ingredient], allergens: [Allergen]) {
         self.name = name
         self.image = image

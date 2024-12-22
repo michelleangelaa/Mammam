@@ -10,30 +10,62 @@ import Foundation
 extension Ingredient {
     static func sampleIngredients(with nutrients: [Nutrient]) -> [Ingredient] {
         let protein = nutrients.first(where: { $0.name == "Protein" })
-        let fat     = nutrients.first(where: { $0.name == "Fat" })
-        let zinc    = nutrients.first(where: { $0.name == "Zinc" })
-        let micro   = nutrients.first(where: { $0.name == "MicroNutrient" })
-        let iron    = nutrients.first(where: { $0.name == "Iron" })
-        let carbo   = nutrients.first(where: { $0.name == "Carbo" })
+        let fat = nutrients.first(where: { $0.name == "Fat" })
+        let zinc = nutrients.first(where: { $0.name == "Zinc" })
+        let micro = nutrients.first(where: { $0.name == "MicroNutrient" })
+        let iron = nutrients.first(where: { $0.name == "Iron" })
+        let carbo = nutrients.first(where: { $0.name == "Carbo" })
 
         let egg = Ingredient(
             name: "Egg",
             image: "egg",
             nutrients: [protein, fat, iron].compactMap { $0 }
         )
-        
+
+        // Create allergens
+        let eggAllergen = Allergen.sampleAllergens.first(where: { $0.name == "Egg" })
+        let dairyAllergen = Allergen.sampleAllergens.first(where: { $0.name == "Dairy" })
+
+        // Create menus with egg ingredient
+        let meatEggPorrige = FoodMenu(
+            name: "Meat Egg Porrige",
+            image: "meateggporridge",
+            isSaved: false,
+            ingredients: [egg],
+            allergens: [eggAllergen].compactMap { $0 }
+        )
+
+        let cheeseMacaroni = FoodMenu(
+            name: "Cheese Macaroni",
+            image: "cheesemacaroni",
+            isSaved: false,
+            ingredients: [egg],
+            allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
+        )
+
+        let butterChickenPorriage = FoodMenu(
+            name: "Butter Chicken Porriage",
+            image: "butterchickenporridge",
+            isSaved: false,
+            ingredients: [egg],
+            allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
+        )
+
+        // Connect menus to egg ingredient
+        egg.menus = [meatEggPorrige, cheeseMacaroni, butterChickenPorriage]
+
         let potato = Ingredient(
             name: "Potato",
             image: "potato",
             nutrients: [carbo, micro].compactMap { $0 }
         )
-        
+
         let tomato = Ingredient(
             name: "Tomato",
             image: "tomato",
             nutrients: [micro].compactMap { $0 }
         )
-        
+
         let berries = Ingredient(
             name: "Berries",
             image: "berries",
@@ -45,7 +77,7 @@ extension Ingredient {
 }
 
 func linkIngredientsAndNutrients(ingredients: [Ingredient], nutrients: [Nutrient]) {
-    ingredients.forEach { ingredient in
+    for ingredient in ingredients {
         ingredient.nutrients?.forEach { nutrient in
             if nutrient.ingredients == nil {
                 nutrient.ingredients = []
@@ -64,10 +96,7 @@ extension Ingredient {
     }
 }
 
-
-
 let myNutrients = Nutrient.sampleNutrients
 let myIngredients = Ingredient.sampleIngredients(with: myNutrients)
 
-//linkIngredientsAndNutrients(ingredients: myIngredients, nutrients: myNutrients)
-
+// linkIngredientsAndNutrients(ingredients: myIngredients, nutrients: myNutrients)

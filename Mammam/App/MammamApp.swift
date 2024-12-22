@@ -19,7 +19,8 @@ struct MammamApp: App {
         WindowGroup {
 //            CoordinatorView()
 //            SavedMenuView()
-            MealPlannerView()
+//            MealPlannerView()
+            MealDetailView(ingredient: myIngredients.first(where: { $0.name == "Egg" })!)
         }
         .modelContainer(container)
         
@@ -28,7 +29,16 @@ struct MammamApp: App {
 
     init() {
 //        print(URL.applicationSupportDirectory.path(percentEncoded: false))
-        let schema = Schema([Meal.self])
+        let schema = Schema(
+            [
+                    Meal.self,
+                    MealPlan.self,
+                    Ingredient.self,
+                    Nutrient.self,
+                    FoodMenu.self,
+                    Allergen.self
+                ]
+        )
         let config = ModelConfiguration("MammamData", schema: schema)
         do {
             container = try ModelContainer(for: schema, configurations: config)
