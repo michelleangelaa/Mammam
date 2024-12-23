@@ -29,26 +29,26 @@ struct MealFeedbackView: View {
                     }
                 }
             }
-            .onAppear(perform: addSample) // Optional, to add dummy data
+//            .onAppear(perform: addSample) // Optional, to add dummy data
         }
     }
     
-    func addSample() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
-        
-        guard let timeGiven = dateFormatter.date(from: "2024/12/06 10:30"),
-              let timeEnded = dateFormatter.date(from: "2024/12/06 10:35") else {
-            print("Error creating dates")
-            return
-        }
-        
-        let dummyIngredient = Ingredient(name: "tofu")
-
-        
-        let meal1 = Meal(ingredient: dummyIngredient, type: "Morning Snack", timeGiven: timeGiven, timeEnded: timeEnded, servingUnit: "Table Spoon", servingQty: 2, consumedQty: 1, isAllergic: true, isLogged: true, notes: "gatal")
-        context.insert(meal1)
-    }
+//    func addSample() {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+//        
+//        guard let timeGiven = dateFormatter.date(from: "2024/12/06 10:30"),
+//              let timeEnded = dateFormatter.date(from: "2024/12/06 10:35") else {
+//            print("Error creating dates")
+//            return
+//        }
+//        
+//        let dummyIngredient = Ingredient(name: "tofu")
+//
+//        
+//        let meal1 = Meal(ingredient: dummyIngredient, type: "Morning Snack", timeGiven: timeGiven, timeEnded: timeEnded, servingUnit: "Table Spoon", servingQty: 2, consumedQty: 1, isAllergic: true, isLogged: true, notes: "gatal")
+//        context.insert(meal1)
+//    }
 }
 
 struct MealCell: View {
@@ -114,7 +114,3 @@ func calculateDuration(timeGiven: Date, timeEnded: Date) -> String {
     MealFeedbackView()
 }
 
-
-#Preview {
-    MealFeedbackView()
-}

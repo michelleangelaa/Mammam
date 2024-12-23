@@ -12,8 +12,9 @@
 //  Created by Michelle Angela Aryanto on 04/12/24.
 //
 
-import SwiftData
+
 import SwiftUI
+import SwiftData
 
 struct MealPlannerView: View {
     @EnvironmentObject private var coordinator: Coordinator

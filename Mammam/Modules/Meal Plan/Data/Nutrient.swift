@@ -12,6 +12,7 @@ import SwiftData
 class Nutrient {
     var name: String
     var nutrientCount: Int
+    
     var ingredients: [Ingredient]?
     
     init(name: String, nutrientCount: Int, ingredients: [Ingredient]? = nil) {

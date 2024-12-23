@@ -51,7 +51,7 @@ class Coordinator: ObservableObject {
         switch sheet {
         case .forgotPassword: MealPlanView()
         case .rateMeal: MealPlanView()
-        case .mealDetail: MealDetailView()
+        case .mealDetail: MealDetailView(ingredient: Ingredient.sampleIngredients[0])
 
         }
     }

@@ -105,6 +105,20 @@ struct SelectDateView: View {
     }
 
     private func generateMeals(for mealPlan: MealPlan) {
+        let ingredientsFetchDescriptor = FetchDescriptor<Ingredient>()
+            let existingIngredients: [Ingredient]
+            do {
+                existingIngredients = try context.fetch(ingredientsFetchDescriptor)
+            } catch {
+                print("Failed to fetch ingredients: \(error)")
+                return
+            }
+            
+            guard !existingIngredients.isEmpty else {
+                print("No existing ingredients found in database")
+                return
+            }
+        
         let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
         let calendar = Calendar.current
         let totalDays = calendar.dateComponents([.day], from: mealPlan.startDate, to: mealPlan.endDate).day ?? 0
@@ -115,10 +129,10 @@ struct SelectDateView: View {
             for mealType in mealTypes {
                 let timeGiven = currentDate
                 let timeEnded = calendar.date(byAdding: .hour, value: 1, to: timeGiven) ?? timeGiven
-                let ingredient = Ingredient.sampleIngredients.randomElement()!
+                let randomIngredient = existingIngredients.randomElement()!
 
                 let meal = Meal(
-                    ingredient: ingredient,
+                    ingredient: randomIngredient,
                     mealPlan: mealPlan,
                     type: mealType,
                     timeGiven: timeGiven,
