@@ -13,7 +13,8 @@ struct ProgressView: View {
     @Environment(\.modelContext) private var context
     @Query private var nutrients: [Nutrient]
     @Query private var meals: [Meal]
-    @State private var period = 0
+    @State private var period = 0 // 0: Monthly, 1: Weekly
+    @State private var currentDate = Date() // Tracks the current date for week/month navigation
 
     var body: some View {
         VStack {
@@ -22,9 +23,24 @@ struct ProgressView: View {
                 Text("Weekly").tag(1)
             }
             .pickerStyle(.segmented)
+            .padding()
+
+            HStack {
+                Button(action: { navigateDate(-1) }) {
+                    Image(systemName: "chevron.left")
+                }
+                Spacer()
+                Text(displayPeriodTitle)
+                    .font(.headline)
+                Spacer()
+                Button(action: { navigateDate(1) }) {
+                    Image(systemName: "chevron.right")
+                }
+            }
+            .padding(.horizontal)
 
             VStack {
-                Chart(nutrients, id: \.name) { nutrient in
+                Chart(filteredNutrients, id: \.name) { nutrient in
                     SectorMark(
                         angle: .value("Count", nutrient.nutrientCount),
                         innerRadius: .ratio(0.618),
@@ -39,7 +55,7 @@ struct ProgressView: View {
                         if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
                             VStack {
                                 Text("TOTAL")
-                                Text("\(totalNutrientCount) Times")
+                                Text("\(totalFilteredNutrientCount) Times")
                             }
                             .position(x: frame.midX, y: frame.midY)
                         }
@@ -51,23 +67,106 @@ struct ProgressView: View {
 
             ScrollView {
                 LazyVStack(alignment: .leading) {
-                    displayAllergicWatch()
-                    displayLogHistory()
+                    displayAllergicWatch(meals: filteredMeals)
+                    displayLogHistory(meals: filteredMeals, period: period)
                 }
             }
         }
         .padding()
-        .navigationTitle("Variation Summary")
+        .navigationTitle(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
     }
-    private var totalNutrientCount: Int {
-        return nutrients.reduce(0) { $0 + $1.nutrientCount }
+
+    private var totalFilteredNutrientCount: Int {
+        return filteredNutrients.reduce(0) { $0 + $1.nutrientCount }
     }
+
+    private var filteredMeals: [Meal] {
+        let calendar = Calendar.current
+
+        if period == 1 { // Weekly
+            let weekRange = calendar.dateInterval(of: .weekOfYear, for: currentDate)
+            return meals.filter {
+                $0.isLogged &&
+                ($0.timeGiven >= (weekRange?.start ?? Date()) && $0.timeGiven <= (weekRange?.end ?? Date()))
+            }
+        } else { // Monthly
+            let monthRange = calendar.dateInterval(of: .month, for: currentDate)
+            return meals.filter {
+                $0.isLogged &&
+                ($0.timeGiven >= (monthRange?.start ?? Date()) && $0.timeGiven <= (monthRange?.end ?? Date()))
+            }
+        }
+    }
+
+    private var filteredNutrients: [Nutrient] {
+        var nutrientCounts = [String: Int]()
+        filteredMeals.forEach { meal in
+            meal.ingredient?.nutrients?.forEach { nutrient in
+                nutrientCounts[nutrient.name, default: 0] += 1
+            }
+        }
+        return nutrientCounts.map { Nutrient(name: $0.key, nutrientCount: $0.value) }
+    }
+
+    private func navigateDate(_ step: Int) {
+        let calendar = Calendar.current
+        if period == 1 {
+            currentDate = calendar.date(byAdding: .weekOfYear, value: step, to: currentDate) ?? currentDate
+        } else {
+            currentDate = calendar.date(byAdding: .month, value: step, to: currentDate) ?? currentDate
+        }
+    }
+    private var displayPeriodTitle: String {
+        let calendar = Calendar.current
+
+        if period == 0 { // Monthly
+            return displayMonths()
+        } else { // Weekly
+            return displayWeeks()
+        }
+    }
+
+    private func displayMonths() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM"
+
+        let startMonth = formatter.string(from: Calendar.current.startOfMonth(for: currentDate))
+        let endMonth = formatter.string(from: Calendar.current.endOfMonth(for: currentDate))
+
+        // Avoid displaying duplicate months
+        if startMonth == endMonth {
+            return startMonth
+        } else {
+            return "\(startMonth), \(endMonth)"
+        }
+    }
+
+
+    private func displayWeeks() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM"
+
+        let startOfWeek = Calendar.current.startOfWeek(for: currentDate)
+        let endOfWeek = Calendar.current.endOfWeek(for: currentDate)
+
+        let startMonth = formatter.string(from: startOfWeek)
+        let endMonth = formatter.string(from: endOfWeek)
+        let weekOfYear = Calendar.current.component(.weekOfYear, from: startOfWeek)
+
+        // If the weeks are within the same month, display the week only once
+        if startMonth == endMonth {
+            return "\(startMonth), Week \(weekOfYear)"
+        } else {
+            // Display the week with both months for clarity
+            return "\(startMonth), Week \(weekOfYear), \(endMonth), Week \(weekOfYear)"
+        }
+    }
+
+
 }
 
-
-
 struct displayAllergicWatch: View {
-    @Query private var meals: [Meal]
+    var meals: [Meal]
 
     var body: some View {
         HStack {
@@ -76,7 +175,7 @@ struct displayAllergicWatch: View {
         }
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(meals.filter { $0.isLogged && $0.isAllergic }.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
+                ForEach(meals.filter { $0.isAllergic }.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
                     NavigationLink(destination: MealFeedbackView()) {
                         HistoryMealCardView(meal: meal)
                     }
@@ -87,7 +186,8 @@ struct displayAllergicWatch: View {
 }
 
 struct displayLogHistory: View {
-    @Query private var meals: [Meal]
+    var meals: [Meal]
+    var period: Int
 
     var body: some View {
         HStack {
@@ -96,9 +196,15 @@ struct displayLogHistory: View {
         }
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(meals.filter { $0.isLogged }.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
+                let displayedMeals = period == 0 ? Array(meals.prefix(2 * 7 * 5)) : meals // Limit to 2 weeks if monthly
+                ForEach(displayedMeals.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
                     NavigationLink(destination: MealFeedbackView()) {
                         HistoryMealCardView(meal: meal)
+                    }
+                }
+                if period == 0 && meals.count > 2 * 7 * 5 {
+                    Button("View All") {
+                        // Implement navigation to full history view
                     }
                 }
             }
@@ -140,6 +246,29 @@ struct HistoryMealCardView: View {
         )
     }
 }
+
+
+extension Calendar {
+    func startOfMonth(for date: Date) -> Date {
+        return self.date(from: self.dateComponents([.year, .month], from: date))!
+    }
+
+    func endOfMonth(for date: Date) -> Date {
+        let startOfMonth = self.startOfMonth(for: date)
+        return self.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
+    }
+
+    func startOfWeek(for date: Date) -> Date {
+        let components = self.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return self.date(from: components)!
+    }
+
+    func endOfWeek(for date: Date) -> Date {
+        let startOfWeek = self.startOfWeek(for: date)
+        return self.date(byAdding: .day, value: 6, to: startOfWeek)!
+    }
+}
+
 
 #Preview {
     ProgressView()
