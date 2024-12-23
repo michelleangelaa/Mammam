@@ -13,6 +13,7 @@ class FoodMenu {
     var name: String
     var image: String
     var isSaved: Bool
+    var desc: String
 
     @Relationship
     var ingredients: [Ingredient]?
@@ -20,11 +21,23 @@ class FoodMenu {
     @Relationship(inverse: \Allergen.menus)
     var allergens: [Allergen]?
 
-    init(name: String, image: String, isSaved: Bool, ingredients: [Ingredient], allergens: [Allergen]) {
+    init(name: String, image: String, isSaved: Bool, desc: String, ingredients: [Ingredient], allergens: [Allergen]) {
         self.name = name
         self.image = image
         self.isSaved = isSaved
+        self.desc = desc
         self.ingredients = ingredients
         self.allergens = allergens
+    }
+}
+
+extension FoodMenu: Hashable {
+    static func == (lhs: FoodMenu, rhs: FoodMenu) -> Bool {
+        lhs.name == rhs.name && lhs.image == rhs.image
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(image)
     }
 }

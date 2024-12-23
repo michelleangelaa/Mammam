@@ -31,6 +31,7 @@ extension Ingredient {
             name: "Meat Egg Porrige",
             image: "meateggporridge",
             isSaved: false,
+            desc: "60 grams of rice\n60 grams of minced beef\n½ egg, lightly beaten\n3 broccoli florets, cut into small pieces\n50 ml water\n1 clove of garlic\n1 shallot\n½ teaspoon soy sauce\n½ teaspoon sesame oil\n1 teaspoon butter\nGround pepper to taste\nSalt to taste (if needed)",
             ingredients: [egg],
             allergens: [eggAllergen].compactMap { $0 }
         )
@@ -39,6 +40,7 @@ extension Ingredient {
             name: "Cheese Macaroni",
             image: "cheesemacaroni",
             isSaved: false,
+            desc: "",
             ingredients: [egg],
             allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         )
@@ -47,6 +49,7 @@ extension Ingredient {
             name: "Butter Chicken Porriage",
             image: "butterchickenporridge",
             isSaved: false,
+            desc: "",
             ingredients: [egg],
             allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         )

@@ -14,10 +14,10 @@ struct SavedMenuView: View {
 
     var body: some View {
         VStack {
-            Button("Create Sample Menus") {
-                let newMenus = createSampleMenus(context: context)
-                print("Created \(newMenus.count) menus")
-            }
+//            Button("Create Sample Menus") {
+//                let newMenus = createSampleMenus(context: context)
+//                print("Created \(newMenus.count) menus")
+//            }
 
             List(menus, id: \.name) { menu in
                 HStack {
