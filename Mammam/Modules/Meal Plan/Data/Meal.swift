@@ -37,4 +37,10 @@ class Meal {
         self.isLogged = isLogged
         self.notes = notes
     }
+
+    var durationInMinutes: Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.minute], from: timeGiven, to: timeEnded)
+        return components.minute ?? 0
+    }
 }

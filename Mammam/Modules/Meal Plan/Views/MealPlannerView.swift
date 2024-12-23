@@ -93,7 +93,6 @@ struct MealPlannerView: View {
                                         ForEach(mealsForDate.sorted {
                                             mealTypeOrder($0.type) < mealTypeOrder($1.type)
                                         }) { meal in
-                                            // Wrap the card in a NavigationLink
                                             NavigationLink {
                                                 RateMealView(meal: meal)
                                             } label: {
