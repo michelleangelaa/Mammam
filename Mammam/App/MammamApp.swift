@@ -21,7 +21,8 @@ struct MammamApp: App {
         WindowGroup {
 //            CoordinatorView()
 //            SavedMenuView()
-            MealPlannerView()
+//            MealPlannerView()
+            ProgressView()
 //            FoodMenuView()
 //            MealDetailView(ingredient: myIngredients.first(where: { $0.name == "Egg" })!)
         }
