@@ -76,7 +76,6 @@ struct ProgressView: View {
             .padding()
             .navigationTitle(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
         }
-        
     }
 
     private var totalFilteredNutrientCount: Int {
@@ -90,20 +89,20 @@ struct ProgressView: View {
             let weekRange = calendar.dateInterval(of: .weekOfYear, for: currentDate)
             return meals.filter {
                 $0.isLogged &&
-                ($0.timeGiven >= (weekRange?.start ?? Date()) && $0.timeGiven <= (weekRange?.end ?? Date()))
+                    ($0.timeGiven >= (weekRange?.start ?? Date()) && $0.timeGiven <= (weekRange?.end ?? Date()))
             }
         } else { // Monthly
             let monthRange = calendar.dateInterval(of: .month, for: currentDate)
             return meals.filter {
                 $0.isLogged &&
-                ($0.timeGiven >= (monthRange?.start ?? Date()) && $0.timeGiven <= (monthRange?.end ?? Date()))
+                    ($0.timeGiven >= (monthRange?.start ?? Date()) && $0.timeGiven <= (monthRange?.end ?? Date()))
             }
         }
     }
 
     private var filteredNutrients: [Nutrient] {
         var nutrientCounts = [String: Int]()
-        filteredMeals.forEach { meal in
+        for meal in filteredMeals {
             meal.ingredient?.nutrients?.forEach { nutrient in
                 nutrientCounts[nutrient.name, default: 0] += 1
             }
@@ -119,6 +118,7 @@ struct ProgressView: View {
             currentDate = calendar.date(byAdding: .month, value: step, to: currentDate) ?? currentDate
         }
     }
+
     private var displayPeriodTitle: String {
         let calendar = Calendar.current
 
@@ -144,7 +144,6 @@ struct ProgressView: View {
         }
     }
 
-
     private func displayWeeks() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM"
@@ -164,8 +163,6 @@ struct ProgressView: View {
             return "\(startMonth), Week \(weekOfYear), \(endMonth), Week \(weekOfYear)"
         }
     }
-
-
 }
 
 struct displayAllergicWatch: View {
@@ -196,6 +193,12 @@ struct displayLogHistory: View {
         HStack {
             Image(systemName: "menucard")
             Text("Log History")
+            if period == 0 && meals.count > 2 * 7 * 5 {
+                Text("View all")
+                NavigationLink("View All") {
+                    LogHistoryView(meals: meals)
+                }
+            }
         }
         ScrollView {
             LazyVStack(spacing: 16) {
@@ -205,11 +208,7 @@ struct displayLogHistory: View {
                         HistoryMealCardView(meal: meal)
                     }
                 }
-                if period == 0 && meals.count > 2 * 7 * 5 {
-                    Button("View All") {
-                        // Implement navigation to full history view
-                    }
-                }
+                
             }
         }
     }
@@ -250,10 +249,9 @@ struct HistoryMealCardView: View {
     }
 }
 
-
 extension Calendar {
     func startOfMonth(for date: Date) -> Date {
-        return self.date(from: self.dateComponents([.year, .month], from: date))!
+        return self.date(from: dateComponents([.year, .month], from: date))!
     }
 
     func endOfMonth(for date: Date) -> Date {
@@ -262,7 +260,7 @@ extension Calendar {
     }
 
     func startOfWeek(for date: Date) -> Date {
-        let components = self.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        let components = dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
         return self.date(from: components)!
     }
 
@@ -271,7 +269,6 @@ extension Calendar {
         return self.date(byAdding: .day, value: 6, to: startOfWeek)!
     }
 }
-
 
 #Preview {
     ProgressView()
