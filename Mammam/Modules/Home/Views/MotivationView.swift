@@ -36,7 +36,7 @@ struct MotivationView: View {
 
 
 var body: some View {
-    NavigationStack {
+//    NavigationStack {
             ZStack {
                 
                 VStack {
@@ -236,7 +236,7 @@ var body: some View {
                                 .foregroundColor(.black)
                         }
                         .navigationDestination(isPresented: $navigateToHome) {
-                            HomeView()
+                            MainView()
                                 .navigationBarBackButtonHidden(true)
                         }
 
@@ -288,8 +288,9 @@ var body: some View {
                         ).padding(.top, 600) // Position QuestionChoiceComponent
                     }
                 }
-            }
-        }
+            }        .navigationBarBackButtonHidden(true) // Hide the back button
+
+//        }
 
 
     }

@@ -37,8 +37,7 @@ class Coordinator: ObservableObject {
     @ViewBuilder
     func build(page: AppPages) -> some View {
         switch page {
-        case .main: HomeView()
-        case .login: ProfileView()
+        case .main: MainView()
         case .logMeal: MealPlannerView()
         case .motivation : MotivationView()
         case .mealFeedback: MealPlannerView()
@@ -52,7 +51,6 @@ class Coordinator: ObservableObject {
         switch sheet {
         case .forgotPassword: MealPlanView()
         case .article : ArticleView()
-        case .rateMeal: MealPlanView()
         case .mealDetail: MealDetailView(ingredient: Ingredient.sampleIngredients[0])
 
         }

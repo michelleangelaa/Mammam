@@ -26,6 +26,7 @@ struct CoordinatorView: View {
                 }
         }
         .environmentObject(coordinator)
+        
     }
 }
 

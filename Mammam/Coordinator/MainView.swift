@@ -1,13 +1,15 @@
 //
-//  TabBarView.swift
+//  MainView.swift
 //  Mammam
 //
-//  Created by Evelyn Santoso on 05/12/24.
+//  Created by Michelle Angela Aryanto on 24/12/24.
 //
 
 import SwiftUI
 
-struct TabBarView: View {
+struct MainView: View {
+    @EnvironmentObject private var coordinator: Coordinator
+
     var body: some View {
         TabView {
             HomeView().tabItem({
@@ -27,5 +29,7 @@ struct TabBarView: View {
 }
 
 #Preview {
-    TabBarView()
+    MainView()
+        .environmentObject(Coordinator())
+
 }
