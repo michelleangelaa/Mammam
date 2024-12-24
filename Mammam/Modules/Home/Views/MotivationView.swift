@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct MotivationView: View {
-
+    @EnvironmentObject private var coordinator: Coordinator
+    
     @State private var currentImageIndex = 0 // Tracks the current image index
     @State private var currentIndicatorBar = 0
     @State private var activeImages: [String] = ["motivationimage1", "motivationimage2"] // Initial images array

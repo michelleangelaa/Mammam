@@ -41,6 +41,8 @@ class Coordinator: ObservableObject {
         case .login: ProfileView()
         case .logMeal: MealPlannerView()
         case .mealFeedback: MealFeedbackView()
+        case .motivation : MotivationView()
+        
 
 
         }
@@ -52,7 +54,8 @@ class Coordinator: ObservableObject {
         case .forgotPassword: MealPlanView()
         case .rateMeal: RateMealView()
         case .mealDetail: MealDetailView()
-
+        case .article : ArticleView()
+            
         }
     }
     
