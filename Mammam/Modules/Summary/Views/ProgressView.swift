@@ -17,8 +17,13 @@ struct ProgressView: View {
     @State private var currentDate = Date() // Tracks the current date for week/month navigation
 
     var body: some View {
-        NavigationStack {
             VStack {
+                VStack(alignment: .leading){
+                    Text(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                }
+                
                 Picker("Period", selection: $period) {
                     Text("Monthly").tag(0)
                     Text("Weekly").tag(1)
@@ -62,7 +67,7 @@ struct ProgressView: View {
                             }
                         }
                     }
-                    .frame(width: 324, height: 275)
+                    .frame(width: 324, height: 200)
                     .padding()
                 }
 
@@ -74,8 +79,7 @@ struct ProgressView: View {
                 }
             }
             .padding()
-            .navigationTitle(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
-        }
+            
     }
 
     private var totalFilteredNutrientCount: Int {

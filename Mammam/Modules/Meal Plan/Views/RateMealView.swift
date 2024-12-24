@@ -127,7 +127,7 @@ struct RateMealView: View {
                         }
                 
                 NavigationLink(
-                           destination: MealFeedbackView(meal: meal),
+                           destination: MealFeedbackView(meal: meal,fromRateMealView: true),
                            isActive: $navigateToMealFeedback
                        ) {
                            EmptyView() // Keeps the link hidden

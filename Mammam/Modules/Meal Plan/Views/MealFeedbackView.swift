@@ -125,18 +125,20 @@ struct MealFeedbackView: View {
                 Spacer()
 
                 // Back to Home Button
-
-                Button(action: {
-                    coordinator.dismissSheetAndNavigateToHome()
-                }) {
-                    Text("Back to Home")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.rose.rose500)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                if(fromRateMealView){
+                    Button(action: {
+                        coordinator.dismissSheetAndNavigateToHome()
+                    }) {
+                        Text("Back to Home")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.rose.rose500)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+                
 
                 Spacer()
             }
