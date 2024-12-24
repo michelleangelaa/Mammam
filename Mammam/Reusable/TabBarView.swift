@@ -11,17 +11,17 @@ struct TabBarView: View {
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
-                //view
+                HomeView()
             }
             
 
             Tab("Meal Planner", systemImage: "fork.knife") {
-                //view
+                MealPlannerView()
             }
 
 
             Tab("Progress", systemImage: "chart.line.text.clipboard.fill") {
-                //view
+                ProgressView()
             }
          
             Tab("Profile", systemImage: "person.crop.circle.fill") {
