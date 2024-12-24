@@ -40,10 +40,9 @@ class Coordinator: ObservableObject {
         case .main: HomeView()
         case .login: ProfileView()
         case .logMeal: MealPlannerView()
-        case .mealFeedback: MealFeedbackView()
         case .motivation : MotivationView()
+        case .mealFeedback: MealPlannerView()
         
-
 
         }
     }
@@ -52,10 +51,10 @@ class Coordinator: ObservableObject {
     func buildSheet(sheet: Sheet) -> some View {
         switch sheet {
         case .forgotPassword: MealPlanView()
-        case .rateMeal: RateMealView()
-        case .mealDetail: MealDetailView()
         case .article : ArticleView()
-            
+        case .rateMeal: MealPlanView()
+        case .mealDetail: MealDetailView(ingredient: Ingredient.sampleIngredients[0])
+
         }
     }
     
