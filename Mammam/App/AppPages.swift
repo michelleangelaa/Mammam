@@ -12,6 +12,7 @@ enum AppPages: Hashable {
     case login
     case logMeal
     case mealFeedback
+    case motivation
 
 
 }
@@ -22,8 +23,10 @@ enum Sheet: String, Identifiable {
     }
     
     case forgotPassword
+    case article
     case rateMeal
     case mealDetail
+  
 
 }
 
