@@ -12,27 +12,32 @@ enum AppPages: Hashable {
     case logMeal
     case mealFeedback
     case motivation
-
-
+    case mealPlan
+    case createMealPlan
 }
 
-enum Sheet: String, Identifiable {
+enum Sheet: Identifiable {
     var id: String {
-        self.rawValue
+        switch self {
+            case .forgotPassword: return "forgotPassword"
+            case .article: return "article"
+            case .mealDetail(let meal): return "mealDetail_\(meal.hashValue)"
+            case .logMeal(let meal): return "logMeal_\(meal.hashValue)"
+            case .mealFeedback(let meal): return "mealFeedback_\(meal.hashValue)"
+        }
     }
-    
+
     case forgotPassword
     case article
-    case mealDetail
-  
-
+    case mealDetail(meal: Meal)
+    case logMeal(meal: Meal)
+    case mealFeedback(meal: Meal)
 }
 
 enum FullSceenCover: String, Identifiable {
     var id: String {
         self.rawValue
     }
-    
-    case signUp
 
+    case signUp
 }

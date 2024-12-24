@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct MealDetailView: View {
-    let ingredient: Ingredient
+    @EnvironmentObject private var coordinator: Coordinator
+
+    @ObservedObject var meal: Meal
+    var ingredient: Ingredient
     
     var body: some View {
         ScrollView {
@@ -87,16 +90,26 @@ struct MealDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
+                Button(action: {
+                    coordinator.presentRateMealSheet(with: meal)
+                }) {
+                    Text("Review Meal")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
             }
             .padding()
         }
     }
 }
 
-#Preview {
-    NavigationStack {
-        if let eggIngredient = myIngredients.first(where: { $0.name == "Egg" }) {
-            MealDetailView(ingredient: eggIngredient)
-        }
-    }
-}
+// #Preview {
+//    NavigationStack {
+//        if let eggIngredient = myIngredients.first(where: { $0.name == "Egg" }) {
+//            MealDetailView(ingredient: eggIngredient)
+//        }
+//    }
+// }

@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Meal {
+class Meal: ObservableObject {
     @Relationship(inverse: \MealPlan.meals)
     var mealPlan: MealPlan?
     @Relationship
