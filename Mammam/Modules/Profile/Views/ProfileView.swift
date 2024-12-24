@@ -12,11 +12,11 @@ struct ProfileView: View {
 
     var body: some View {
         Text("This is profile page")
-        Button {
-            coordinator.presentSheet(sheet: .forgotPassword)
-        } label: {
-            Text("forgot password")
-        }
+//        Button {
+//            coordinator.presentSheet(sheet: .forgotPassword)
+//        } label: {
+//            Text("forgot password")
+//        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
 
     }

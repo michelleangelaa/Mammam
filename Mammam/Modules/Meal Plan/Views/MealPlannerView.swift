@@ -12,9 +12,8 @@
 //  Created by Michelle Angela Aryanto on 04/12/24.
 //
 
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MealPlannerView: View {
     @EnvironmentObject private var coordinator: Coordinator
@@ -23,42 +22,46 @@ struct MealPlannerView: View {
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
 
     var body: some View {
-        NavigationStack {
-            if plans.isEmpty {
-                emptyStateView
-            } else {
-                mealPlansScrollView
-            }
+        if plans.isEmpty {
+            emptyStateView
+        } else {
+            mealPlansScrollView
         }
-        .navigationTitle("Meal Planner")
-        .navigationBarBackButtonHidden(true)
     }
 
     private var emptyStateView: some View {
-        VStack {
+        VStack (alignment: .leading){
+            Text("Meal Planner")
+                .font(.title2)
+                .fontWeight(.bold)
             Label("No meal planner yet", systemImage: "doc.richtext.fill")
                 .font(.headline)
                 .padding()
             Text("No meal plans available. Create a new meal plan!")
                 .foregroundColor(.gray)
 
-            NavigationLink(destination: SelectDateView()) {
-                HStack {
-                    Label("Create your plan", systemImage: "lightbulb.fill")
-                        .font(.headline)
-                        .foregroundColor(.black)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
+            HStack {
+                Button(action: {
+                    coordinator.push(page: .createMealPlan) // Correct method for navigation
+                }) {
+                    HStack {
+                        Label("Create your plan", systemImage: "lightbulb.fill")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color(UIColor.systemGray6))
+                    )
                 }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(UIColor.systemGray6))
-                )
             }
             .padding(.horizontal)
         }
+        .padding(.horizontal)
     }
 
     private func mealTypeOrder(_ type: String) -> Int {
@@ -73,7 +76,11 @@ struct MealPlannerView: View {
     }
 
     private var mealPlansScrollView: some View {
-        VStack {
+        VStack (alignment: .leading){
+            Text("Meal Planner")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding(.horizontal)
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20) {
                     let allMeals = plans.flatMap { $0.meals ?? [] }
@@ -93,9 +100,9 @@ struct MealPlannerView: View {
                                         ForEach(mealsForDate.sorted {
                                             mealTypeOrder($0.type) < mealTypeOrder($1.type)
                                         }) { meal in
-                                            NavigationLink {
-                                                RateMealView(meal: meal)
-                                            } label: {
+                                            Button(action: {
+                                                coordinator.presentRateMealSheet(with: meal)
+                                            }) {
                                                 MealCardView(meal: meal)
                                             }
                                         }
@@ -108,11 +115,9 @@ struct MealPlannerView: View {
                     }
                 }
             }
-            .navigationTitle("Meal Planner")
         }
         .padding(.top)
     }
-
 
     func datesBetween(start: Date, end: Date) -> [Date] {
         var dates = [Date]()
@@ -148,7 +153,7 @@ struct MealCardView: View {
     var body: some View {
         VStack(spacing: 10) {
             if let ingredient = meal.ingredient {
-                Image(systemName: "leaf")
+                Image(ingredient.image ?? "leaf")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 70, height: 70)
@@ -158,7 +163,7 @@ struct MealCardView: View {
                     .frame(width: 70, height: 70)
                     .cornerRadius(8)
             }
-            
+
             Text(meal.type)
                 .font(.subheadline)
                 .bold()

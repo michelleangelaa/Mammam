@@ -15,7 +15,6 @@ struct MealFeedbackView: View {
     @Environment(\.modelContext) var context
     @State private var navigateToHome = false
 
-
     var meal: Meal
     var fromRateMealView: Bool = false
 
@@ -128,7 +127,7 @@ struct MealFeedbackView: View {
                 // Back to Home Button
                 if(fromRateMealView){
                     Button(action: {
-                        navigateToHome = true
+                        coordinator.dismissSheetAndNavigateToHome()
                     }) {
                         Text("Back to Home")
                             .frame(maxWidth: .infinity)

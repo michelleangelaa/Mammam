@@ -19,10 +19,11 @@ struct MammamApp: App {
 
     var body: some Scene {
         WindowGroup {
-//            CoordinatorView()
+//            HomeView()
+            CoordinatorView()
 //            SavedMenuView()
 //            MealPlannerView()
-            ProgressView()
+//            ProgressView()
 //            MealFeedbackView()
 //            MealFeedbackView(meal: meal, fromRateMealView: false))
 //            FoodMenuView()

@@ -18,13 +18,13 @@ struct MealPlanView: View {
                     Text("this is meal plan view")
                         .kerning(0.2)
 
-                    Button {
-                        navigateToRateMeal = true
-                                    coordinator.presentSheet(sheet: .rateMeal)
-                    } label: {
-                        Text("forgot password")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    Button {
+//                        navigateToRateMeal = true
+//                                    coordinator.presentSheet(sheet: .rateMeal)
+//                    } label: {
+//                        Text("forgot password")
+//                    }
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                    .navigationDestination(isPresented: $navigateToRateMeal) {
 //                        RateMealView() // This will show RateMealView within the same sheet
 //                    }

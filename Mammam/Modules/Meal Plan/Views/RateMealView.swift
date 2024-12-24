@@ -51,7 +51,6 @@ struct RateMealView: View {
     }
 
     var body: some View {
-        NavigationStack {
             VStack {
                 Text("Review Meal")
                     .font(.title2).fontWeight(.bold)
@@ -110,31 +109,52 @@ struct RateMealView: View {
                     }
 
                     TextField("Notes", text: $notes)
-                }
+                    
+                    
 
-                Button {
-                    if validateInputs() {
-                        updateMeal()  // <--- We call updateMeal() now
-                        navigateToMealFeedback = true
-                    } else {
-                        showAlert = true
-                    }
-                } label: {
-                    Text("Submit")
                 }
-                .buttonStyle(.borderedProminent)
-                .navigationDestination(isPresented: $navigateToMealFeedback) {
-                    MealFeedbackView(meal: meal, fromRateMealView: true)
-                }
-                .alert(isPresented: $showAlert) {
-                    Alert(
-                        title: Text("Invalid Input"),
-                        message: Text(alertMessage),
-                        dismissButton: .default(Text("OK"))
-                    )
-                }
+                Button(action: {
+                            updateMeal() // Call your update logic here
+                    navigateToMealFeedback = true // Trigger navigation
+
+                        }) {
+                            Text("Save")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.rose.rose500)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                
+                NavigationLink(
+                           destination: MealFeedbackView(meal: meal,fromRateMealView: true),
+                           isActive: $navigateToMealFeedback
+                       ) {
+                           EmptyView() // Keeps the link hidden
+                       }
+                
+//                Button {
+//                    if validateInputs() {
+//                        updateMeal()  // <--- We call updateMeal() now
+//                        navigateToMealFeedback = true
+//                    } else {
+//                        showAlert = true
+//                    }
+//                } label: {
+//                    Text("Submit")
+//                }
+//                .buttonStyle(.borderedProminent)
+//                .navigationDestination(isPresented: $navigateToMealFeedback) {
+//                    MealFeedbackView(meal: meal, fromRateMealView: true)
+//                }
+//                .alert(isPresented: $showAlert) {
+//                    Alert(
+//                        title: Text("Invalid Input"),
+//                        message: Text(alertMessage),
+//                        dismissButton: .default(Text("OK"))
+//                    )
+//                }
             }
-        }
     }
 
     // MARK: - Update the existing Meal
