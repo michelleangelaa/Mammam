@@ -37,4 +37,24 @@ class Meal {
         self.isLogged = isLogged
         self.notes = notes
     }
+
+    var durationInMinutes: Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.minute], from: timeGiven, to: timeEnded)
+        return components.minute ?? 0
+    }
+
+    var timeRange: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a" // Example: 8:00 PM
+
+        let startTime = formatter.string(from: timeGiven)
+        let endTime = formatter.string(from: timeEnded)
+
+        return "\(startTime) - \(endTime)"
+    }
+
+    var totalConsumption: String {
+        return "\(consumedQty)/\(servingQty) \(servingUnit)"
+    }
 }

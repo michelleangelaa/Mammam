@@ -20,4 +20,5 @@ class Nutrient {
         self.nutrientCount = nutrientCount
         self.ingredients = ingredients
     }
+    
 }

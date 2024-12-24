@@ -124,7 +124,7 @@ struct RateMealView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .navigationDestination(isPresented: $navigateToMealFeedback) {
-                    MealFeedbackView()
+                    MealFeedbackView(meal: meal, fromRateMealView: true)
                 }
                 .alert(isPresented: $showAlert) {
                     Alert(
