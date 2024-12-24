@@ -40,7 +40,7 @@ class Coordinator: ObservableObject {
         case .main: HomeView()
         case .login: ProfileView()
         case .logMeal: MealPlannerView()
-        case .mealFeedback: MealFeedbackView()
+        case .mealFeedback: MealPlannerView()
 
 
         }

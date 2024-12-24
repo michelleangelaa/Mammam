@@ -19,7 +19,8 @@ class DataController {
                 Ingredient.self,
                 FoodMenu.self,
                 Nutrient.self,
-                Allergen.self
+                Allergen.self,
+                Meal.self
             ])
             let modelConfiguration = ModelConfiguration(schema: schema)
             container = try ModelContainer(for: schema, configurations: modelConfiguration)

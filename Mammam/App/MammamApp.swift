@@ -23,6 +23,8 @@ struct MammamApp: App {
 //            SavedMenuView()
 //            MealPlannerView()
             ProgressView()
+//            MealFeedbackView()
+//            MealFeedbackView(meal: meal, fromRateMealView: false))
 //            FoodMenuView()
 //            MealDetailView(ingredient: myIngredients.first(where: { $0.name == "Egg" })!)
         }
