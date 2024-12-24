@@ -10,6 +10,7 @@ import SwiftData
 import SwiftUI
 
 struct ProgressView: View {
+    @EnvironmentObject private var coordinator: Coordinator
     @Environment(\.modelContext) private var context
     @Query private var nutrients: [Nutrient]
     @Query private var meals: [Meal]
@@ -17,69 +18,68 @@ struct ProgressView: View {
     @State private var currentDate = Date() // Tracks the current date for week/month navigation
 
     var body: some View {
-            VStack {
-                VStack(alignment: .leading){
-                    Text(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                }
-                
-                Picker("Period", selection: $period) {
-                    Text("Monthly").tag(0)
-                    Text("Weekly").tag(1)
-                }
-                .pickerStyle(.segmented)
-                .padding()
+        VStack {
+            VStack(alignment: .leading) {
+                Text(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
+                    .font(.title2)
+                    .fontWeight(.bold)
+            }
 
-                HStack {
-                    Button(action: { navigateDate(-1) }) {
-                        Image(systemName: "chevron.left")
-                    }
-                    Spacer()
-                    Text(displayPeriodTitle)
-                        .font(.headline)
-                    Spacer()
-                    Button(action: { navigateDate(1) }) {
-                        Image(systemName: "chevron.right")
-                    }
-                }
-                .padding(.horizontal)
+            Picker("Period", selection: $period) {
+                Text("Monthly").tag(0)
+                Text("Weekly").tag(1)
+            }
+            .pickerStyle(.segmented)
+            .padding()
 
-                VStack {
-                    Chart(filteredNutrients, id: \.name) { nutrient in
-                        SectorMark(
-                            angle: .value("Count", nutrient.nutrientCount),
-                            innerRadius: .ratio(0.618),
-                            angularInset: 1.5
-                        )
-                        .cornerRadius(5)
-                        .foregroundStyle(by: .value("Nutrient", nutrient.name))
-                    }
-                    .chartLegend(position: .automatic).padding(.vertical)
-                    .chartBackground { chartProxy in
-                        GeometryReader { geometry in
-                            if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
-                                VStack {
-                                    Text("TOTAL")
-                                    Text("\(totalFilteredNutrientCount) Times")
-                                }
-                                .position(x: frame.midX, y: frame.midY)
-                            }
-                        }
-                    }
-                    .frame(width: 324, height: 200)
-                    .padding()
+            HStack {
+                Button(action: { navigateDate(-1) }) {
+                    Image(systemName: "chevron.left")
                 }
-
-                ScrollView {
-                    LazyVStack(alignment: .leading) {
-                        displayAllergicWatch(meals: filteredMeals)
-                        displayLogHistory(meals: filteredMeals, period: period)
-                    }
+                Spacer()
+                Text(displayPeriodTitle)
+                    .font(.headline)
+                Spacer()
+                Button(action: { navigateDate(1) }) {
+                    Image(systemName: "chevron.right")
                 }
             }
-            .padding()
-            
+            .padding(.horizontal)
+
+            VStack {
+                Chart(filteredNutrients, id: \.name) { nutrient in
+                    SectorMark(
+                        angle: .value("Count", nutrient.nutrientCount),
+                        innerRadius: .ratio(0.618),
+                        angularInset: 1.5
+                    )
+                    .cornerRadius(5)
+                    .foregroundStyle(by: .value("Nutrient", nutrient.name))
+                }
+                .chartLegend(position: .automatic).padding(.vertical)
+                .chartBackground { chartProxy in
+                    GeometryReader { geometry in
+                        if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
+                            VStack {
+                                Text("TOTAL")
+                                Text("\(totalFilteredNutrientCount) Times")
+                            }
+                            .position(x: frame.midX, y: frame.midY)
+                        }
+                    }
+                }
+                .frame(width: 324, height: 200)
+                .padding()
+            }
+
+            ScrollView {
+                LazyVStack(alignment: .leading) {
+                    displayAllergicWatch(meals: filteredMeals, coordinator: coordinator)
+                    displayLogHistory(meals: filteredMeals, period: period, coordinator: coordinator)
+                }
+            }
+        }
+        .padding()
     }
 
     private var totalFilteredNutrientCount: Int {
@@ -171,6 +171,7 @@ struct ProgressView: View {
 
 struct displayAllergicWatch: View {
     var meals: [Meal]
+    var coordinator: Coordinator
 
     var body: some View {
         HStack {
@@ -180,7 +181,9 @@ struct displayAllergicWatch: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(meals.filter { $0.isAllergic }.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
-                    NavigationLink(destination: MealFeedbackView(meal: meal, fromRateMealView: false)) {
+                    Button(action: {
+                        coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
+                    }) {
                         HistoryMealCardView(meal: meal)
                     }
                 }
@@ -192,6 +195,7 @@ struct displayAllergicWatch: View {
 struct displayLogHistory: View {
     var meals: [Meal]
     var period: Int
+    var coordinator: Coordinator
 
     var body: some View {
         HStack {
@@ -208,11 +212,12 @@ struct displayLogHistory: View {
             LazyVStack(spacing: 16) {
                 let displayedMeals = period == 0 ? Array(meals.prefix(2 * 7 * 5)) : meals // Limit to 2 weeks if monthly
                 ForEach(displayedMeals.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
-                    NavigationLink(destination: MealFeedbackView(meal: meal, fromRateMealView: false)) {
+                    Button(action: {
+                        coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
+                    }) {
                         HistoryMealCardView(meal: meal)
                     }
                 }
-                
             }
         }
     }
