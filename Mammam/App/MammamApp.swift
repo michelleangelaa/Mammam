@@ -20,7 +20,8 @@ struct MammamApp: App {
     var body: some Scene {
         WindowGroup {
 //            HomeView()
-            CoordinatorView()
+            AccountView()
+//            CoordinatorView()
 //            SavedMenuView()
 //            MealPlannerView()
 //            ProgressView()
