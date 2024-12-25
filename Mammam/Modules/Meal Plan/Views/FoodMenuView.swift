@@ -19,7 +19,7 @@ struct FoodMenuView: View {
                 Text("is empty")
             } else {
                 ForEach(foodMenus, id: \.self) { food in
-                    FoodMenuCard(foodMenu: food)
+//                    FoodMenuCardComponent(foodMenu: food)
                 }
             }
         }
@@ -28,18 +28,18 @@ struct FoodMenuView: View {
     }
 }
     
-struct FoodMenuCard: View {
-    var foodMenu: FoodMenu
-    
-    var body: some View {
-        VStack {
-            Image(foodMenu.image)
-                .resizable()
-                .scaledToFit()
-            Text(foodMenu.name)
-        }
-    }
-}
+//struct FoodMenuCard: View {
+//    var foodMenu: FoodMenu
+//    
+//    var body: some View {
+//        VStack {
+//            Image(foodMenu.image)
+//                .resizable()
+//                .scaledToFit()
+//            Text(foodMenu.name)
+//        }
+//    }
+//}
 
  #Preview {
      FoodMenuView()
