@@ -119,9 +119,16 @@ struct HomeView: View {
             // Menu
             Text("Fresh-eye menu")
                 .font(.system(size: 17, weight: .bold))
-            ForEach(foodMenus, id: \.self) { food in
-                FoodMenuCardComponent(foodMenu: food)
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack {
+                    ForEach(foodMenus, id: \.self) { food in
+                        FoodMenuCardComponent(foodMenu: food)
+                    }
+                }
             }
+            .frame(height: 126)
+            
+            
             
             Spacer()
         }

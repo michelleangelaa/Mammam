@@ -17,7 +17,7 @@ struct FoodMenuCardComponent: View {
                 Image(foodMenu.image)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 200, height: 175)
+//                    .frame(width: 200, height: 175)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
 
                 // Bookmark Icon
@@ -42,7 +42,7 @@ struct FoodMenuCardComponent: View {
             Spacer()
         }
         .padding(.vertical, 8)
-        .frame(width: 200, height: 220)
+//        .frame(width: 200, height: 220)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(UIColor.systemGray6))
