@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct GenerateMealLoadingView: View {
-    @State private var navigateToMealPlanner = false // State to trigger navigation
+    @EnvironmentObject private var coordinator: Coordinator
+    @State private var navigateToMealPlanner = false
 
     var body: some View {
         NavigationStack {
@@ -21,15 +22,9 @@ struct GenerateMealLoadingView: View {
             .onAppear {
                 // Redirect after 3 seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigateToMealPlanner = true
+                    coordinator.push(page: .mealPlan) // Navigate to MealPlannerView using Coordinator
                 }
             }
-            .background(
-                NavigationLink(destination: MealPlannerView(),
-                               isActive: $navigateToMealPlanner) {
-                    EmptyView()
-                }
-            )
         }
     }
 }

@@ -25,6 +25,7 @@ struct MainView: View {
                 Label("Profile", systemImage: "person.crop.circle.fill")
             })
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

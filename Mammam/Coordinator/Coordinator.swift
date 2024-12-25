@@ -49,6 +49,8 @@ class Coordinator: ObservableObject {
         case .mealFeedback: MealPlannerView()
         case .mealPlan: MealPlannerView()
         case .createMealPlan: SelectDateView()
+        case .savedMenu: SavedMenuView()
+        case .loadingView: GenerateMealLoadingView()
         }
     }
 

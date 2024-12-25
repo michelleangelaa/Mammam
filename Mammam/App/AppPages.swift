@@ -14,6 +14,8 @@ enum AppPages: Hashable {
     case motivation
     case mealPlan
     case createMealPlan
+    case savedMenu
+    case loadingView
 }
 
 enum Sheet: Identifiable {
