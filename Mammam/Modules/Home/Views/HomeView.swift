@@ -6,10 +6,15 @@
 //
 //
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @State private var navigateToMotivation = false
+    @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
+    @Query private var foodMenus: [FoodMenu]
+
+
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -27,6 +32,10 @@ struct HomeView: View {
                 }
             }
                 
+            // Log Meal
+            Text("Let's Record Baby's Meal")
+                .font(.system(size: 17, weight: .bold))
+            
             // Motivation CTA
             VStack(alignment: .leading, spacing: 12) {
                 Text("Today's Story")
@@ -104,6 +113,15 @@ struct HomeView: View {
             }
             
             // Meal Plan
+            Text("Your Meal Plan")
+                .font(.system(size: 17, weight: .bold))
+            
+            // Menu
+            Text("Fresh-eye menu")
+                .font(.system(size: 17, weight: .bold))
+            ForEach(foodMenus, id: \.self) { food in
+                FoodMenuCardComponent(foodMenu: food)
+            }
             
             Spacer()
         }
@@ -130,6 +148,8 @@ struct HomeView: View {
 //            }
 //        TabBarView()
 }
+
+
 
 #Preview {
     HomeView()
