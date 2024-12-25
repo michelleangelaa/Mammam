@@ -10,43 +10,48 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var coordinator: Coordinator
+    @Environment(\.modelContext) private var context
+    @Query private var menus: [FoodMenu]
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // Heading
-            headerSection
-            
-            // Conditional Sections
-            if let todayPlan = todayMealPlan {
-                if let nextMealType = nextUnloggedMealType(from: todayPlan) {
-                    currentMealTypeView(mealType: nextMealType)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Heading
+                headerSection
+                
+                // Conditional Sections
+                if let todayPlan = todayMealPlan {
+                    if let nextMealType = nextUnloggedMealType(from: todayPlan) {
+                        currentMealTypeView(mealType: nextMealType)
+                    } else {
+                        allMealsLoggedView
+                    }
                 } else {
-                    allMealsLoggedView
+                    noMealPlanView
                 }
-            } else {
-                noMealPlanView
+                
+                // Story of the Day
+                storyOfTheDaySection
+                
+                // Article
+                articleSection
+                
+                // Meal Plan
+                if let todayPlan = todayMealPlan {
+                    mealPlanSection(for: todayPlan)
+                }
+                
+                // Menu
+                menuSection
+                
+                Spacer()
             }
-            
-            // Story of the Day
-            storyOfTheDaySection
-            
-            // Article
-            articleSection
-            
-            // Meal Plan
-            if let todayPlan = todayMealPlan {
-                mealPlanSection(for: todayPlan)
-            }
-            
-            // Menu
-            menuSection
-            
-            Spacer()
+            .padding()
+            .navigationBarBackButtonHidden(true)
         }
-        .padding()
-        .navigationBarBackButtonHidden(true)
+        
     }
     
     // MARK: - Subviews
@@ -182,7 +187,7 @@ struct HomeView: View {
                         .frame(height: 97)
 
                     HStack(alignment: .top, spacing: 20) {
-                        VStack(alignment: .leading){
+                        VStack(alignment: .leading) {
                             Image("motivationimage1")
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -197,7 +202,6 @@ struct HomeView: View {
                                     .font(.system(size: 12))
                             }
                               
-                            
                             Text("Introduce new food with food chaining")
                                 .font(.system(size: 16))
 //                                .frame(maxWidth: .infinity, alignment: .leading)
@@ -217,7 +221,7 @@ struct HomeView: View {
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    ForEach(plan.meals ?? [], id: \.self) { meal in
+                    ForEach(plan.meals?.filter(isTodayMeal) ?? [], id: \.self) { meal in
                         MealCardComponent(meal: meal)
                     }
                 }
@@ -230,15 +234,19 @@ struct HomeView: View {
             Text("Fresh-eye menu")
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack {
-                    ForEach(FoodMenu.sampleMenus, id: \.self) { food in
-                        FoodMenuCardComponent(foodMenu: food)
+                HStack {
+                    ForEach(menus) { food in
+                        FoodMenuCardComponent(foodMenu: .constant(food))
+                            .frame(width: 150)
                     }
                 }
             }
         }
+        .onAppear {
+            try? context.save() // Refresh data on view appear
+        }
     }
-    
+       
     // MARK: - Helpers
     
     private var todayMealPlan: MealPlan? {
@@ -257,6 +265,12 @@ struct HomeView: View {
             }
         }
         return nil
+    }
+    
+    private func isTodayMeal(meal: Meal) -> Bool {
+        let today = Calendar.current.startOfDay(for: Date())
+        let mealDate = Calendar.current.startOfDay(for: meal.timeGiven)
+        return today == mealDate
     }
 }
 

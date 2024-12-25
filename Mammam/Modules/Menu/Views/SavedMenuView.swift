@@ -9,24 +9,23 @@ import SwiftData
 import SwiftUI
 
 struct SavedMenuView: View {
-    @Query var menus: [FoodMenu]
-    @Environment(\.modelContext) private var context
-
+    @Query(filter: #Predicate<FoodMenu> { menu in
+        menu.isSaved == true
+    }) private var savedMenus: [FoodMenu]
+    
+    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    
     var body: some View {
-        VStack {
-//            Button("Create Sample Menus") {
-//                let newMenus = createSampleMenus(context: context)
-//                print("Created \(newMenus.count) menus")
-//            }
-            Text("Saved Menu")
-                .font(.title3)
-                .fontWeight(.bold)
-            List(menus, id: \.name) { menu in
-                HStack {
-                    Image(menu.image)
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                    Text(menu.name)
+        ScrollView {
+            VStack {
+                Text("Saved Menu")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(savedMenus) { menu in
+                        FoodMenuCardComponent(foodMenu: .constant(menu))
+                    }
                 }
             }
         }
@@ -34,5 +33,14 @@ struct SavedMenuView: View {
 }
 
 #Preview {
-//    SavedMenuView().modelContainer(for: [Menu.self, Ingredient.self, Nutrient.self, Allergen.self])
+    SavedMenuView().modelContainer(for: FoodMenu.self)
 }
+
+//#Preview {
+//    let previewContext = try! ModelContainer(for: FoodMenu.self)
+//    return SavedMenuView()
+//        .environment(\.modelContext, previewContext)
+//}
+
+
+

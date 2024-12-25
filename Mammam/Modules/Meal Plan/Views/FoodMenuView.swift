@@ -19,7 +19,7 @@ struct FoodMenuView: View {
                 Text("is empty")
             } else {
                 ForEach(foodMenus, id: \.self) { food in
-                    FoodMenuCardComponent(foodMenu: food)
+//                    FoodMenuCardComponent(foodMenu: food)
                 }
             }
         }
