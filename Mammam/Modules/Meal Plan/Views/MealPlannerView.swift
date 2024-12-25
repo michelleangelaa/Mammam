@@ -103,7 +103,7 @@ struct MealPlannerView: View {
                                             Button(action: {
                                                 coordinator.presentRateMealSheet(with: meal)
                                             }) {
-                                                MealCardView(meal: meal)
+                                                MealCardComponent(meal: meal)
                                             }
                                         }
                                     }
@@ -145,43 +145,6 @@ private func formattedDate(_ date: Date) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "EEEE, dd MMM"
     return formatter.string(from: date)
-}
-
-struct MealCardView: View {
-    var meal: Meal
-
-    var body: some View {
-        VStack(spacing: 10) {
-            if let ingredient = meal.ingredient {
-                Image(ingredient.image ?? "leaf")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 70, height: 70)
-                    .cornerRadius(8)
-            } else {
-                Color.gray
-                    .frame(width: 70, height: 70)
-                    .cornerRadius(8)
-            }
-
-            Text(meal.type)
-                .font(.subheadline)
-                .bold()
-
-            Text(formattedDate(meal.timeGiven))
-                .font(.caption)
-
-            Text(meal.ingredient?.name ?? "No ingredient")
-                .font(.footnote)
-                .foregroundColor(.gray)
-        }
-        .frame(width: 120)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(meal.isLogged ? Color(UIColor.systemGreen) : Color(UIColor.systemGray6))
-        )
-    }
 }
 
 #Preview {

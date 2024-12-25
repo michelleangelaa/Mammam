@@ -5,8 +5,8 @@
 //  Created by Michelle Angela Aryanto on 16/10/24.
 //
 //
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var coordinator: Coordinator
@@ -14,8 +14,8 @@ struct HomeView: View {
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
     @Query private var foodMenus: [FoodMenu]
 
+    private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // Heading
@@ -115,6 +115,14 @@ struct HomeView: View {
             // Meal Plan
             Text("Your Meal Plan")
                 .font(.system(size: 17, weight: .bold))
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack {
+                    ForEach(todaysMeals, id: \.self) { meal in
+                        MealCardComponent(meal: meal)
+                            .frame(width: 122)
+                    }
+                }
+            }
             
             // Menu
             Text("Fresh-eye menu")
@@ -123,12 +131,11 @@ struct HomeView: View {
                 LazyHStack {
                     ForEach(foodMenus, id: \.self) { food in
                         FoodMenuCardComponent(foodMenu: food)
+                            .frame(width: 122)
                     }
                 }
             }
-            .frame(height: 126)
-            
-            
+            .frame(height: 171)
             
             Spacer()
         }
@@ -136,7 +143,13 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
     }
     
-                
+    private var todaysMeals: [Meal] {
+        let today = Calendar.current.startOfDay(for: Date())
+        let meals = plans.flatMap { $0.meals ?? [] }
+        return meals.filter { meal in
+            Calendar.current.isDate(meal.timeGiven, inSameDayAs: today) && mealTypes.contains(meal.type)
+        }
+    }
     //        CustomLargeButtonComponent(state: .enabled, text: "mau ke profile page") {
     //            coordinator.push(page: .login)
     //        }
@@ -155,8 +168,6 @@ struct HomeView: View {
 //            }
 //        TabBarView()
 }
-
-
 
 #Preview {
     HomeView()

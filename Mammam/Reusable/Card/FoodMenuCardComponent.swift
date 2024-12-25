@@ -34,7 +34,7 @@ struct FoodMenuCardComponent: View {
                 }
             }
             Text(foodMenu.name)
-                .font(.headline)
+                .font(.caption2)
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.primary)
                 .lineLimit(2)
@@ -52,11 +52,5 @@ struct FoodMenuCardComponent: View {
 }
 
 #Preview {
-    if let sampleMenu = FoodMenu.sampleMenus.first {
-        FoodMenuCardComponent(foodMenu: sampleMenu)
-    } else {
-        Text("No sample menus available")
-            .foregroundColor(.gray)
-            .font(.headline)
-    }
+    
 }
