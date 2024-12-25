@@ -18,7 +18,9 @@ struct SavedMenuView: View {
 //                let newMenus = createSampleMenus(context: context)
 //                print("Created \(newMenus.count) menus")
 //            }
-
+            Text("Saved Menu")
+                .font(.title3)
+                .fontWeight(.bold)
             List(menus, id: \.name) { menu in
                 HStack {
                     Image(menu.image)

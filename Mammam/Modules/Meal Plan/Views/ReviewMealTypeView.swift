@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct ReviewMealTypeView: View {
+    @EnvironmentObject private var coordinator: Coordinator
     @Environment(\.modelContext) private var context
     @State private var currentMealTypeIndex: Int = 0
     @State private var meals: [Meal] = []
@@ -58,12 +59,11 @@ struct ReviewMealTypeView: View {
                     currentMealTypeIndex += 1
                 } else {
                     isLastMealType = true
+                    coordinator.push(page: .loadingView) // Navigate to GenerateMealLoadingView
                 }
             }
             .padding(.horizontal)
-            .navigationDestination(isPresented: $isLastMealType) {
-                GenerateMealLoadingView()
-            }
+            
         }
         .onAppear {
             

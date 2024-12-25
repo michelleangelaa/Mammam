@@ -168,7 +168,8 @@ var body: some View {
                     ZStack {
                         HStack {
                             Button(action: {
-                                closetohome = true // Navigate to HomeView
+                                coordinator.push(page: .main)
+                              //  closetohome = true // Navigate to HomeView
                             }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .resizable()
@@ -180,6 +181,7 @@ var body: some View {
                             .padding()
                             .padding(.bottom, 660)
                             .padding(.leading,16)
+                            
                             .navigationDestination(isPresented: $closetohome) {
                                 HomeView()
                                     .navigationBarBackButtonHidden(true)
