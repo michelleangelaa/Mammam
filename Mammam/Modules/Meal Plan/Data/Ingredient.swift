@@ -12,6 +12,7 @@ import SwiftData
 class Ingredient {
     var name: String
     var image: String?
+//    var desc: String?
    
     @Relationship(inverse: \Nutrient.ingredients)
     var nutrients: [Nutrient]?
@@ -23,10 +24,12 @@ class Ingredient {
     var menus: [FoodMenu]?
 
 //    @Relationship(inverse: \Nutrition.ingredients)
+    // desc: String? = nil,
     
     init(name: String, image: String? = nil, nutrients: [Nutrient]? = nil) {
         self.name = name
         self.image = image
+//        self.desc = desc
         self.nutrients = nutrients
     }
 }
