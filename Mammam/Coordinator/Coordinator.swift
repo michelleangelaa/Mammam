@@ -45,7 +45,7 @@ class Coordinator: ObservableObject {
         switch page {
         case .main: MainView()
         case .logMeal: MealPlannerView()
-        case .motivation: MotivationView()
+//        case .motivation: MotivationView()
         case .mealFeedback: MealPlannerView()
         case .mealPlan: MealPlannerView()
         case .createMealPlan: SelectDateView()
@@ -59,7 +59,10 @@ class Coordinator: ObservableObject {
     func buildSheet(sheet: Sheet) -> some View {
         switch sheet {
         case .forgotPassword: MealPlanView()
-        case .article: ArticleView()
+        case .articleDetail (let article):
+            NavigationStack{
+                ArticleView(article : article)
+            }
         case .mealDetail(let meal):
             if let ingredient = meal.ingredient {
                 NavigationStack {
@@ -91,6 +94,10 @@ class Coordinator: ObservableObject {
         sheet = .logMeal(meal: meal)
     }
 
+    func presentArticleDetailSheet(with article: Article) {
+        sheet = .articleDetail(article: article)
+    }
+    
     func dismissSheetAndNavigateToHome() {
         dismissSheet()
         path = .init() // Reset the navigation stack

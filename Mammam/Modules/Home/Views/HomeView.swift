@@ -13,6 +13,8 @@ struct HomeView: View {
     @Environment(\.modelContext) private var context
     @Query private var menus: [FoodMenu]
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
+    @Query private var articles: [Article] // Query for articles
+    @State private var randomizedArticles: [Article] = []
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
     var body: some View {
@@ -142,7 +144,7 @@ struct HomeView: View {
             Text("Today's Story")
                 .font(.headline)
             Button(action: {
-                coordinator.push(page: .motivation)
+//                coordinator.push(page: .motivation)
             }) {
                 ZStack {
                     Image("motivationimage1")
@@ -176,24 +178,25 @@ struct HomeView: View {
     
     private var articleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Understand Your Child Better")
-                .font(.headline)
+            Text("Articles")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            if let firstArticle = articles.first {
             Button(action: {
-                coordinator.presentSheet(sheet: .article)
+                coordinator.presentArticleDetailSheet(with: firstArticle)
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 18)
                         .fill(Color(.systemGray5))
                         .frame(height: 97)
-
+                    
                     HStack(alignment: .top, spacing: 20) {
-                        VStack(alignment: .leading) {
-                            Image("motivationimage1")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 65, height: 65, alignment: .topLeading)
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                        }
+                        Image(firstArticle.articleImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 65, height: 65)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         
                         VStack(alignment: .leading, spacing: 4) {
                             HStack(spacing: 5) {
@@ -201,19 +204,28 @@ struct HomeView: View {
                                 Text("Article")
                                     .font(.system(size: 12))
                             }
-                              
-                            Text("Introduce new food with food chaining")
+                            
+                            Text(firstArticle.articleTitle)
                                 .font(.system(size: 16))
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                 }
             }
+            } else {
+                        Text("No articles available")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+            
+        }.onAppear {
+            try? context.save() // Refresh data on view appear
         }
     }
+        
     
     private func mealPlanSection(for plan: MealPlan) -> some View {
         VStack(alignment: .leading) {

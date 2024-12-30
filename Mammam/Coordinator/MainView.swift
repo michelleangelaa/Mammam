@@ -21,7 +21,7 @@ struct MainView: View {
             ProgressView().tabItem({
                 Label("Progress", systemImage: "chart.line.text.clipboard.fill")
             })
-            RegisterFormView().tabItem({
+            ProfileView().tabItem({
                 Label("Profile", systemImage: "person.crop.circle.fill")
             })
         }

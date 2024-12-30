@@ -56,8 +56,7 @@ struct MammamApp: App {
         print(URL.documentsDirectory.path())
 
         dataController.initializeDataIfNeeded()
-        dataController.generateSampleData()
-
+   
 
     }
 }
