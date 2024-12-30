@@ -17,6 +17,10 @@ enum AppPages: Hashable {
     case savedMenu
     case loadingView
 //    case onBoarding
+    case updateProfile
+    case foodRestrictions
+    case account
+    
 }
 
 enum Sheet: Identifiable {

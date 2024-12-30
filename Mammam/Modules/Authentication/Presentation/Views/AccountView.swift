@@ -139,3 +139,11 @@
 //    AccountView(user : User.sampleUser)
 //}
 
+
+import SwiftUI
+struct AccountView: View {
+    
+    var body: some View {
+        Text("hello acc")
+    }
+}
