@@ -11,7 +11,7 @@ enum AppPages: Hashable {
     case main
     case logMeal
     case mealFeedback
-//    case motivation
+    case motivation
     case mealPlan
     case createMealPlan
     case savedMenu

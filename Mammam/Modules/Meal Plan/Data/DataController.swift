@@ -24,7 +24,7 @@ class DataController {
                 Nutrient.self,
                 Allergen.self,
                 Meal.self,
-//                Motivation.self,
+                Motivation.self,
                 Article.self,
                 Baby.self,
                 User.self
@@ -80,7 +80,7 @@ class DataController {
             let context = container.mainContext
 
             generateBabyData(context: context)
-//            generateMotivationData(context: context)
+            generateMotivationData(context: context)
             generateArticleData(context: context)
             generateallergenData(context:context)
 
@@ -102,39 +102,35 @@ class DataController {
             let article = Article(
                 articleTitle: "Introduce new food with food chaining",
                 articleImage: "motivationimage1",
-                articleSubheader: "What is Food Chaining?",
-                articleDesc: """
-                    Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.
+                articleSubheader: ["What is Food Chaining?","Tips For Success:","Additional Tips:"],
+                articleDesc: ["Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.","""
 
                     Tips For Success:
                     - Have fun and make it a game. Encourage your child to take \"mouse bites,\" \"alligator bites,\" or touch the food with their tongue.
                     - Focus on small steps & try one new item at a time. Keep trying!
                     - Many children have to try a food more than 10 times before they start to like it.
-
+""","""
                     Additional Tips:
                     - Minimize distractions while your child is eating. (For example, turn off screens, put pets in another room, etc.)
                     - Don't pressure your child; let them decide when they want to stop.
                     - Plan meals & snacks ahead of time. Let your child know when to expect a meal or snack.
-                    """
+                    """]
             )
             context.insert(article)
         }
 
-//        private func generateMotivationData(context: ModelContext) {
-//            let motivation = Motivation(
-//                imageStory1: "motivationimage1",
-//                imageStory2: "motivationimage2",
-//                imageTrue: "motivationimage3_true",
-//                imageFalse: "motivationimage3_false",
-////                adviceImage: ["motivationimage3_false","motivationimage3_false"],
-//                quotes: "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!",
-//                tips: """
-//                    - Give baby more time and offer the meal again later.
-//                    - You still can offer her to eat for a maximum of 30 minutes.
-//                    """
-//            )
-//            context.insert(motivation)
-//        }
+        private func generateMotivationData(context: ModelContext) {
+            let motivation = Motivation(
+                imageStory1: ["motivationimage1", "motivationimage2"],
+                imageTrue: "motivationimage3_true",
+                imageFalse: "motivationimage3_false",
+                imageAdvice: ["motivationimage3_false","motivationimage3_false"],
+                quotes: "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!",
+                quotesSource : "who",
+                tips: ["- Give baby more time and offer the meal again later.","- You still can offer her to eat for a maximum of 30 minutes."]
+            )
+            context.insert(motivation)
+        }
     
     private func generateallergenData(context: ModelContext) {
         // Create and insert allergens

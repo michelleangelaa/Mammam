@@ -144,7 +144,7 @@ struct HomeView: View {
             Text("Today's Story")
                 .font(.headline)
             Button(action: {
-//                coordinator.push(page: .motivation)
+                coordinator.push(page: .motivation)
             }) {
                 ZStack {
                     Image("motivationimage1")
@@ -178,7 +178,7 @@ struct HomeView: View {
     
     private var articleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Articles")
+            Text("Understand your child better")
                 .font(.title2)
                 .fontWeight(.bold)
             
