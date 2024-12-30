@@ -83,7 +83,8 @@ class DataController {
             generateMotivationData(context: context)
             generateArticleData(context: context)
             generateallergenData(context:context)
-
+        generateUserData(context: context)
+       
             do {
                 try context.save()
                 print("data saved")
@@ -98,6 +99,12 @@ class DataController {
             print("data saved")
         }
 
+    private func generateUserData(context: ModelContext){
+        let user = User(
+            userId: "1", email: "eve@gmail.com", firstName: "eve", lastName: "san"
+        )
+        context.insert(user)
+    }
     private func generateArticleData(context: ModelContext) {
             let article = Article(
                 articleTitle: "Introduce new food with food chaining",

@@ -1,11 +1,3 @@
-////
-////  AccountView.swift
-////  Mammam
-////
-////  Created by Michelle Angela Aryanto on 21/10/24.
-////
-//
-////
 ////  AccountView.swift
 ////  Mammam
 ////
@@ -18,17 +10,36 @@
 //struct AccountView: View {
 //    @Environment(\.colorScheme) var colorScheme
 //    @Environment(\.modelContext) private var modelContext // Access SwiftData model context
+//    @EnvironmentObject private var coordinator: Coordinator
+//    @State private var isFirstTimeSignIn: Bool = false // Track first-time sign-in
+//        @State private var isLoggedIn: Bool = false // Track login state
+//    var user : User
+//    
+//    private var isSignIn : Bool {
+//        !user.userId.isEmpty
+//    }
 //
 //    var body: some View {
 //        VStack {
-//            SignInWithAppleButton(.continue, onRequest: { request in
-//                request.requestedScopes = [.fullName, .email]
-//            }, onCompletion: { result in
-//                handleAppleSignIn(result: result)
-//            })
-//            .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
-//            .frame(height: 50)
-//            .padding(.horizontal)
+//            if !isLoggedIn {
+//                SignInWithAppleButton(.continue, onRequest: { request in
+//                    request.requestedScopes = [.fullName, .email]
+//                }, onCompletion: { result in
+//                    handleAppleSignIn(result: result)
+//                })
+//                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+//                .frame(height: 50)
+//                .padding(.horizontal)
+//                
+//                
+//            }else{
+//                if isFirstTimeSignIn {
+//                    coordinator.build(page: .onBoarding)
+//                } else {
+//                    coordinator.build(page: .main)
+//                }
+//            }
+//            
 //        }
 //    }
 //
@@ -70,6 +81,7 @@
 //                    existingUser.lastName = lastName
 //                }
 //                saveContext()
+//                isFirstTimeSignIn = false // Existing user
 //
 //            } else {
 //                // Create and save a new user
@@ -77,8 +89,11 @@
 //                modelContext.insert(newUser)
 //                saveContext()
 //                print("User saved successfully:", newUser)
+//                
+//                isFirstTimeSignIn = true // New user
 //            }
 //
+//            isLoggedIn = true // User is now logged in
 //        case .failure(let error):
 //            print("Sign-in failed with error:", error.localizedDescription)
 //        }
@@ -106,6 +121,20 @@
 //    }
 //}
 //
+//extension User {
+//    static var sampleUser: User {
+//        
+//        User(
+//            userId: "1",
+//            email: "eve@gmail.com",
+//            firstName: "eve",
+//            lastName: "san"
+//        )
+//    
+//    }
+//}
+//
+//
 //#Preview {
-//    AccountView()
+//    AccountView(user : User.sampleUser)
 //}
