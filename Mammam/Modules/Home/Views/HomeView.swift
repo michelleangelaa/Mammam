@@ -142,7 +142,7 @@ struct HomeView: View {
             Text("Today's Story")
                 .font(.headline)
             Button(action: {
-                coordinator.push(page: .motivation)
+//                coordinator.push(page: .motivation)
             }) {
                 ZStack {
                     Image("motivationimage1")
@@ -179,7 +179,7 @@ struct HomeView: View {
             Text("Understand Your Child Better")
                 .font(.headline)
             Button(action: {
-                coordinator.presentSheet(sheet: .article)
+//                coordinator.presentSheet(sheet: .article)
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 18)
