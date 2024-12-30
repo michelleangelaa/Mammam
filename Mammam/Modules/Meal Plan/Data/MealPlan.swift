@@ -14,10 +14,14 @@ class MealPlan {
     var endDate: Date
     @Relationship(deleteRule: .cascade)
     var meals: [Meal]?
+    
+    @Relationship(inverse: \Baby.mealPlans)
+    var baby: Baby?
 
-    init(startDate: Date, endDate: Date) {
+    init(startDate: Date, endDate: Date, meals: [Meal]? = nil, baby: Baby? = nil) {
         self.startDate = startDate
         self.endDate = endDate
-        self.meals = [] // Initialize empty array
+        self.meals = meals
+        self.baby = baby
     }
 }

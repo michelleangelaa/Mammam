@@ -14,9 +14,14 @@ class Allergen {
     var image: String
     var menus: [FoodMenu]?
     
-    init(name: String, image: String, menus: [FoodMenu]? = nil) {
+    @Relationship(inverse: \Baby.allergen)
+    var baby: Baby?
+    
+    
+    init(name: String, image: String, menus: [FoodMenu]? = nil, baby: Baby? = nil) {
         self.name = name
         self.image = image
         self.menus = menus
+        self.baby = baby
     }
 }
