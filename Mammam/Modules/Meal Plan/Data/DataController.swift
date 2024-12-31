@@ -20,7 +20,11 @@ class DataController {
                 FoodMenu.self,
                 Nutrient.self,
                 Allergen.self,
-                Meal.self
+                Meal.self,
+                Motivation.self,
+                Article.self,
+                Baby.self,
+                User.self
             ])
             let modelConfiguration = ModelConfiguration(schema: schema)
             container = try ModelContainer(for: schema, configurations: modelConfiguration)
@@ -46,7 +50,7 @@ class DataController {
 //            print("Error checking for existing data: \(error)")
 //        }
 //    }
-//    
+    
     func initializeDataIfNeeded() {
         let ingredientsFetchDescriptor = FetchDescriptor<Ingredient>()
         do {
@@ -66,8 +70,75 @@ class DataController {
             print("Failed to check or initialize data: \(error)")
         }
     }
+   func generateSampleData() {
+            let context = container.mainContext
+
+            generateBabyData(context: context)
+            generateMotivationData(context: context)
+            generateArticleData(context: context)
+            generateallergenData(context:context)
+
+            do {
+                try context.save()
+                print("data saved")
+            } catch {
+                print("Error saving sample data: \(error)")
+            }
+        }
+
+        private func generateBabyData(context: ModelContext) {
+            let baby = Baby(babyProfileImage: "i_profile_person", babyName: "Eve", babyBirthDate: Date())
+            context.insert(baby)
+            print("data saved")
+        }
+
+    private func generateArticleData(context: ModelContext) {
+            let article = Article(
+                articleTitle: "Introduce new food with food chaining",
+                articleImage: "motivationimage1",
+                articleSubheader: "What is Food Chaining?",
+                articleDesc: """
+                    Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.
+
+                    Tips For Success:
+                    - Have fun and make it a game. Encourage your child to take \"mouse bites,\" \"alligator bites,\" or touch the food with their tongue.
+                    - Focus on small steps & try one new item at a time. Keep trying!
+                    - Many children have to try a food more than 10 times before they start to like it.
+
+                    Additional Tips:
+                    - Minimize distractions while your child is eating. (For example, turn off screens, put pets in another room, etc.)
+                    - Don't pressure your child; let them decide when they want to stop.
+                    - Plan meals & snacks ahead of time. Let your child know when to expect a meal or snack.
+                    """
+            )
+            context.insert(article)
+        }
+
+        private func generateMotivationData(context: ModelContext) {
+            let motivation = Motivation(
+                imageStory1: "motivationimage1",
+                imageStory2: "motivationimage2",
+                imageTrue: "motivationimage3_true",
+                imageFalse: "motivationimage3_false",
+                quotes: "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!",
+                tips: """
+                    - Give baby more time and offer the meal again later.
+                    - You still can offer her to eat for a maximum of 30 minutes.
+                    """
+            )
+            context.insert(motivation)
+        }
     
+    private func generateallergenData(context: ModelContext) {
+        // Create and insert allergens
+        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg")
+        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy")
+        
+        [eggAllergen, dairyAllergen].forEach { context.insert($0) }
+        
+    }
     private func generateInitialData(context: ModelContext) {
+        
         // Create and insert nutrients
         let protein = Nutrient(name: "Protein", nutrientCount: 0)
         let fat = Nutrient(name: "Fat", nutrientCount: 0)
@@ -159,7 +230,55 @@ class DataController {
             }
         }
         
+
+        
         // Save the context
         try? context.save()
+    }
+    
+    
+    func generateautendata(context : ModelContext){
+        //create and insert baby
+        let baby = Baby(babyProfileImage: "i_profile_person", babyName: "eve", babyBirthDate:Date())
+        context.insert(baby)
+        
+        //create and insert article
+        let article = Article(
+            articleTitle: "Introduce new food with food chaining",
+            articleImage: "motivationimage1",
+            articleSubheader: "What is Food Chaining?",
+            articleDesc: """
+                        Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.
+                        
+                        Tips For Success:
+                        - Have fun and make it a game. Encourage your child to take "mouse bites," "alligator bites," or touch the food with their tongue.
+                        - Focus on small steps & try one new item at a time. Keep trying!
+                        - Many children have to try a food more than 10 times before they start to like it.
+                        
+                        Additional Tips:
+                        - Minimize distractions while your child is eating. (For example, turn off screens, put pets in another room, etc.)
+                        - Don't pressure your child; let them decide when they want to stop.
+                        - Plan meals & snacks ahead of time. Let your child know when to expect a meal or snack.
+                        """
+        
+        )
+        context.insert(article)
+        
+        //create and insert motivation
+        let motivation = Motivation(
+            imageStory1: "motivationimage1",
+            imageStory2: "motivationimage2",
+            imageTrue: "motivationimage3_true",
+            imageFalse: "motivationimage3_false",
+            quotes: "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!",
+            tips: """
+                - Give baby more time and offer the meal again later.
+                - You still can offer her to eat for a maximum of 30 minutes.
+                """
+            
+            
+        )
+        context.insert(motivation)
+        
     }
 }

@@ -17,7 +17,7 @@ struct MotivationView: View {
     @State private var closetohome = false
     
     //user data
-    let currentUser = User(id: "1", fullname: "Eve", email: "eve@example.com", username: "eve123", profileImageUrl: nil)
+//    let currentUser = User(id: "1", fullname: "Eve", email: "eve@example.com", username: "eve123", profileImageUrl: nil)
 
     
     //predefined sets of quotes and advice page
@@ -91,7 +91,8 @@ var body: some View {
                                 VStack(alignment: .leading) {
                                     if activeImages == images_false {
                                         Image("i_motivation_crackheart")
-                                        Text("\(currentUser.fullname) sad to hear that 😥")
+//                                        Text("\(currentUser.fullname) sad to hear that 😥")
+                                        Text("eve sad to hear that 😥")
                                             .font(.system(size: 28))
                                             .fontWeight(.bold)
                                             .foregroundColor(Color(red: 0.97, green: 0, blue: 0))
