@@ -11,7 +11,7 @@ import SwiftUI
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @Environment(\.modelContext) private var context
-    
+
     @State private var navigateToMealFeedback = false
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
@@ -51,88 +51,85 @@ struct RateMealView: View {
     }
 
     var body: some View {
-            VStack {
-                Text("Review Meal")
-                    .font(.title2).fontWeight(.bold)
+        VStack {
+            Text("Review Meal")
+                .font(.title2).fontWeight(.bold)
 
-                Form {
-                    TextField("Ingredient Name", text: $ingredient)
-                    TextField("Type", text: $type)
-                    DatePicker("Time Given", selection: $timeGiven, displayedComponents: .hourAndMinute)
-                    DatePicker("Time Ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
-                        .onChange(of: timeEnded) { _ in
-                            validateTimes()
-                        }
+            Form {
+                TextField("Ingredient Name", text: $ingredient)
+                TextField("Type", text: $type)
+                DatePicker("Time Given", selection: $timeGiven, displayedComponents: .hourAndMinute)
+                DatePicker("Time Ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
+                    .onChange(of: timeEnded) { _ in
+                        validateTimes()
+                    }
 
+                HStack {
+                    Text("Meal serving size")
+                    Spacer()
                     HStack {
-                        Text("Meal serving size")
-                        Spacer()
-                        HStack {
-                            TextField("Qty", value: $servingQty, format: .number)
-                                .keyboardType(.decimalPad)
-                                .fixedSize()
-                            Picker("", selection: $servingUnit) {
-                                ForEach(units, id: \.self) { unit in
-                                    Text(unit)
-                                }
+                        TextField("Qty", value: $servingQty, format: .number)
+                            .keyboardType(.decimalPad)
+                            .fixedSize()
+                        Picker("", selection: $servingUnit) {
+                            ForEach(units, id: \.self) { unit in
+                                Text(unit)
                             }
-                            .labelsHidden()
                         }
+                        .labelsHidden()
                     }
-
-                    HStack {
-                        Text("Meal consumed")
-                        Spacer()
-                        HStack {
-                            TextField("Qty", value: $consumedQty, format: .number)
-                                .keyboardType(.decimalPad)
-                                .fixedSize()
-                                .onChange(of: consumedQty) { _ in
-                                    validateQuantities()
-                                }
-                            Picker("", selection: $servingUnit) {
-                                ForEach(units, id: \.self) { unit in
-                                    Text(unit)
-                                }
-                            }
-                            .labelsHidden()
-                        }
-                    }
-
-                    HStack {
-                        Text("Allergic Reaction")
-                        Picker("Allergic Reaction", selection: $isAllergic) {
-                            Text("Yes").tag(true)
-                            Text("No").tag(false)
-                        }
-                        .pickerStyle(.segmented)
-                    }
-
-                    TextField("Notes", text: $notes)
-                    
-                    
-
                 }
-                Button(action: {
-                            updateMeal() // Call your update logic here
-                    navigateToMealFeedback = true // Trigger navigation
 
-                        }) {
-                            Text("Save")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.rose.rose500)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
+                HStack {
+                    Text("Meal consumed")
+                    Spacer()
+                    HStack {
+                        TextField("Qty", value: $consumedQty, format: .number)
+                            .keyboardType(.decimalPad)
+                            .fixedSize()
+                            .onChange(of: consumedQty) { _ in
+                                validateQuantities()
+                            }
+                        Picker("", selection: $servingUnit) {
+                            ForEach(units, id: \.self) { unit in
+                                Text(unit)
+                            }
                         }
-                
-                NavigationLink(
-                           destination: MealFeedbackView(meal: meal,fromRateMealView: true),
-                           isActive: $navigateToMealFeedback
-                       ) {
-                           EmptyView() // Keeps the link hidden
-                       }
-                
+                        .labelsHidden()
+                    }
+                }
+
+                HStack {
+                    Text("Allergic Reaction")
+                    Picker("Allergic Reaction", selection: $isAllergic) {
+                        Text("Yes").tag(true)
+                        Text("No").tag(false)
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                TextField("Notes", text: $notes)
+            }
+            Button(action: {
+                updateMeal() // Call your update logic here
+                navigateToMealFeedback = true // Trigger navigation
+
+            }) {
+                Text("Save")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.rose.rose500)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+
+            NavigationLink(
+                destination: MealFeedbackView(meal: meal, fromRateMealView: true),
+                isActive: $navigateToMealFeedback
+            ) {
+                EmptyView() // Keeps the link hidden
+            }
+
 //                Button {
 //                    if validateInputs() {
 //                        updateMeal()  // <--- We call updateMeal() now
@@ -154,12 +151,23 @@ struct RateMealView: View {
 //                        dismissButton: .default(Text("OK"))
 //                    )
 //                }
-            }
+        }
     }
 
     // MARK: - Update the existing Meal
+
     private func updateMeal() {
         meal.isLogged = true // Force isLogged to true if you want
+
+        // Update fields
+        meal.ingredient?.name = ingredient
+
+        // Increment nutrient counts for all nutrients of this ingredient
+        if let ingredientNutrients = meal.ingredient?.nutrients {
+            for nutrient in ingredientNutrients {
+                nutrient.nutrientCount += 1
+            }
+        }
 
         // Update fields
         meal.ingredient?.name = ingredient
@@ -182,6 +190,7 @@ struct RateMealView: View {
     }
 
     // MARK: - Validation
+
     private func validateInputs() -> Bool {
         if timeEnded < timeGiven {
             alertMessage = "Time Ended must be later than or equal to Time Given."
@@ -209,6 +218,6 @@ struct RateMealView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    RateMealView(meal: <#Meal#>)
-//}
+// }
