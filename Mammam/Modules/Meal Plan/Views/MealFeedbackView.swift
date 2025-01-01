@@ -37,7 +37,7 @@ struct MealFeedbackView: View {
                     Text("Well done! 🎉")
                         .font(.headline)
                         .fontWeight(.bold)
-                    Text(feedbackMessage(for: meal.durationInMinutes))
+                    Text(feedbackMessage(for: meal))
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.gray)
@@ -125,7 +125,7 @@ struct MealFeedbackView: View {
                 Spacer()
 
                 // Back to Home Button
-                if fromRateMealView {
+                if(fromRateMealView){
                     Button(action: {
                         coordinator.dismissSheetAndNavigateToHome()
                     }) {
@@ -138,6 +138,7 @@ struct MealFeedbackView: View {
                     }
                     .padding(.horizontal)
                 }
+                
 
                 Spacer()
             }
@@ -227,13 +228,14 @@ func calculateDuration(timeGiven: Date, timeEnded: Date) -> String {
     }
 }
 
-private func feedbackMessage(for duration: Int) -> String {
-    if duration <= 30 {
+private func feedbackMessage(for meal: Meal) -> String {
+    if meal.consumedQty >= meal.servingQty - 1.0 {
         return "Even a little progress counts. New foods take time to become favorites."
     } else {
         return "Don’t worry, mom! It’s all part of the journey. Keep trying—your patience is building their love for food."
     }
 }
+
 
 #Preview {
     let sampleIngredient = Ingredient(name: "Egg", image: "egg")
