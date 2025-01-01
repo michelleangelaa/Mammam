@@ -106,55 +106,84 @@ struct SelectDateView: View {
 
     private func generateMeals(for mealPlan: MealPlan) {
         let ingredientsFetchDescriptor = FetchDescriptor<Ingredient>()
-            let existingIngredients: [Ingredient]
-            do {
-                existingIngredients = try context.fetch(ingredientsFetchDescriptor)
-            } catch {
-                print("Failed to fetch ingredients: \(error)")
-                return
-            }
+        let existingIngredients: [Ingredient]
+        do {
+            existingIngredients = try context.fetch(ingredientsFetchDescriptor)
+        } catch {
+            print("Failed to fetch ingredients: \(error)")
+            return
+        }
             
-            guard !existingIngredients.isEmpty else {
-                print("No existing ingredients found in database")
-                return
-            }
+        guard !existingIngredients.isEmpty else {
+            print("No existing ingredients found in database")
+            return
+        }
         
         let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
         let calendar = Calendar.current
-        let totalDays = calendar.dateComponents([.day], from: mealPlan.startDate, to: mealPlan.endDate).day ?? 0
-
-        for dayOffset in 0 ... totalDays {
-            guard let currentDate = calendar.date(byAdding: .day, value: dayOffset, to: mealPlan.startDate) else { continue }
-
+        
+        // Calculate days including both start and end date
+        let numberOfDays = calendar.dateComponents([.day], from: calendar.startOfDay(for: mealPlan.startDate),
+                                                 to: calendar.startOfDay(for: mealPlan.endDate)).day ?? 0
+        let totalDays = numberOfDays + 1
+        
+        print("Generating meals for \(totalDays) days from \(mealPlan.startDate) to \(mealPlan.endDate)")
+        
+        // Initialize meals array if needed
+        if mealPlan.meals == nil {
+            mealPlan.meals = []
+        }
+        
+        for dayOffset in 0..<totalDays {
+            // Use noon time to avoid any timezone issues
+            guard let currentDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of:
+                calendar.date(byAdding: .day, value: dayOffset, to: calendar.startOfDay(for: mealPlan.startDate))!) else {
+                continue
+            }
+            
+            print("Generating meals for date: \(currentDate)")
+            
             for mealType in mealTypes {
-                let timeGiven = currentDate
-                let timeEnded = calendar.date(byAdding: .hour, value: 1, to: timeGiven) ?? timeGiven
+                // Set specific times for each meal type
+                let mealHour: Int
+                switch mealType {
+                case "Breakfast": mealHour = 8
+                case "Morning Snack": mealHour = 10
+                case "Lunch": mealHour = 12
+                case "Evening Snack": mealHour = 15
+                case "Dinner": mealHour = 18
+                default: mealHour = 12
+                }
+                
+                guard let mealTime = calendar.date(bySettingHour: mealHour, minute: 0, second: 0, of: currentDate),
+                      let timeEnded = calendar.date(byAdding: .hour, value: 1, to: mealTime) else {
+                    continue
+                }
+                
                 let randomIngredient = existingIngredients.randomElement()!
-
+                
                 let meal = Meal(
                     ingredient: randomIngredient,
                     mealPlan: mealPlan,
                     type: mealType,
-                    timeGiven: timeGiven,
+                    timeGiven: mealTime,
                     timeEnded: timeEnded,
                     servingUnit: "Cup",
-                    servingQty: 100,
+                    servingQty: 3,
                     consumedQty: 0,
                     isAllergic: false,
                     isLogged: false,
                     notes: ""
                 )
-                print("Created Meal: \(meal.type) for MealPlan with start date: \(mealPlan.startDate)")
-
-                context.insert(meal) // Add the meal to the context
-
-                // Explicitly add meal to mealPlan's meals array
-                if mealPlan.meals == nil {
-                    mealPlan.meals = []
-                }
+                
+                print("Created \(mealType) for date: \(mealTime)")
+                
+                context.insert(meal)
                 mealPlan.meals?.append(meal)
             }
         }
+        
+        print("Total meals generated: \(mealPlan.meals?.count ?? 0)")
     }
 }
 

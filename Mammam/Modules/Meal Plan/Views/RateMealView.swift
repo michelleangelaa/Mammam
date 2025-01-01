@@ -5,8 +5,8 @@
 //  Created by Michelle Angela Aryanto on 16/10/24.
 //
 
-import SwiftData
 import SwiftUI
+import SwiftData
 
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
@@ -16,7 +16,6 @@ struct RateMealView: View {
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
 
-    // Passed-in Meal
     @State var meal: Meal
 
     // Local State for form fields
@@ -28,16 +27,13 @@ struct RateMealView: View {
     @State private var servingQty: Double = 1.0
     @State private var consumedQty: Double = 1.0
     @State private var isAllergic: Bool = false
-    @State private var isLogged: Bool = true
     @State private var notes: String = ""
 
     var units = ["Tea Spoon", "Table Spoon", "Cup"]
 
     init(meal: Meal) {
-        // Initialize the meal as a State property
         _meal = State(initialValue: meal)
 
-        // Copy properties into local form states
         _ingredient = State(initialValue: meal.ingredient?.name ?? "")
         _type = State(initialValue: meal.type)
         _timeGiven = State(initialValue: meal.timeGiven)
@@ -46,7 +42,6 @@ struct RateMealView: View {
         _servingQty = State(initialValue: meal.servingQty)
         _consumedQty = State(initialValue: meal.consumedQty)
         _isAllergic = State(initialValue: meal.isAllergic)
-        _isLogged = State(initialValue: meal.isLogged)
         _notes = State(initialValue: meal.notes)
     }
 
@@ -110,67 +105,55 @@ struct RateMealView: View {
 
                 TextField("Notes", text: $notes)
             }
-            Button(action: {
-                updateMeal() // Call your update logic here
-                navigateToMealFeedback = true // Trigger navigation
 
+            // Save Button with Validation
+            Button(action: {
+                if validateInputs() {
+                    updateMeal()
+                    navigateToMealFeedback = true
+                } else {
+                    showAlert = true
+                }
             }) {
                 Text("Save")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.rose.rose500)
+                    .background(validateInputs() ? Color.rose.rose500 : Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(10)
+            }
+            .disabled(!validateInputs()) // Disable button if inputs are invalid
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Invalid Input"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
             }
 
             NavigationLink(
                 destination: MealFeedbackView(meal: meal, fromRateMealView: true),
                 isActive: $navigateToMealFeedback
             ) {
-                EmptyView() // Keeps the link hidden
+                EmptyView()
             }
-
-//                Button {
-//                    if validateInputs() {
-//                        updateMeal()  // <--- We call updateMeal() now
-//                        navigateToMealFeedback = true
-//                    } else {
-//                        showAlert = true
-//                    }
-//                } label: {
-//                    Text("Submit")
-//                }
-//                .buttonStyle(.borderedProminent)
-//                .navigationDestination(isPresented: $navigateToMealFeedback) {
-//                    MealFeedbackView(meal: meal, fromRateMealView: true)
-//                }
-//                .alert(isPresented: $showAlert) {
-//                    Alert(
-//                        title: Text("Invalid Input"),
-//                        message: Text(alertMessage),
-//                        dismissButton: .default(Text("OK"))
-//                    )
-//                }
         }
     }
 
     // MARK: - Update the existing Meal
 
     private func updateMeal() {
-        meal.isLogged = true // Force isLogged to true if you want
+        meal.isLogged = true
 
-        // Update fields
         meal.ingredient?.name = ingredient
 
-        // Increment nutrient counts for all nutrients of this ingredient
+        // Increment nutrient counts
         if let ingredientNutrients = meal.ingredient?.nutrients {
             for nutrient in ingredientNutrients {
                 nutrient.nutrientCount += 1
             }
         }
 
-        // Update fields
-        meal.ingredient?.name = ingredient
         meal.type = type
         meal.timeGiven = timeGiven
         meal.timeEnded = timeEnded
@@ -180,7 +163,6 @@ struct RateMealView: View {
         meal.isAllergic = isAllergic
         meal.notes = notes
 
-        // Save changes
         do {
             try context.save()
             print("Meal updated and saved!")
@@ -205,18 +187,23 @@ struct RateMealView: View {
 
     private func validateTimes() {
         if timeEnded < timeGiven {
-            alertMessage = "Time Ended must be later than or equal to Time Given."
-            showAlert = true
+            DispatchQueue.main.async {
+                alertMessage = "Time Ended must be later than or equal to Time Given."
+                showAlert = true
+            }
         }
     }
 
     private func validateQuantities() {
         if consumedQty > servingQty {
-            alertMessage = "Consumed quantity cannot exceed the serving size."
-            showAlert = true
+            DispatchQueue.main.async {
+                alertMessage = "Consumed quantity cannot exceed the serving size."
+                showAlert = true
+            }
         }
     }
 }
+
 
 // #Preview {
 //    RateMealView(meal: <#Meal#>)
