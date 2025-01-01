@@ -113,7 +113,7 @@ struct MealPlannerView: View {
                         if let mealsForDate = groupedMeals[date] {
                             // Filter for unlogged meals
                             let unloggedMeals = mealsForDate.filter { !$0.isLogged }
-                            
+
                             // Only display the section if there are unlogged meals
                             if !unloggedMeals.isEmpty {
                                 Section(header: Text(formattedDate(date))
@@ -129,7 +129,7 @@ struct MealPlannerView: View {
                                                     }
                                             ) { meal in
                                                 Button(action: {
-                                                    coordinator.presentRateMealSheet(with: meal)
+                                                    coordinator.presentMealDetailSheet (with: meal)
                                                 }) {
                                                     MealCardComponent(meal: meal)
                                                 }

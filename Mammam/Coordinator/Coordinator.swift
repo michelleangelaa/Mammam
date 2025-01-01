@@ -89,6 +89,17 @@ class Coordinator: ObservableObject {
     func presentMealDetailSheet(with meal: Meal) {
         sheet = .mealDetail(meal: meal)
     }
+    
+//    func presentMealDetailAndLogMeal(with meal: Meal) {
+//        // Present the MealDetailView first
+//        sheet = .mealDetail(meal: meal)
+//        
+//        // After dismissing MealDetailView, navigate to RateMealView
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            self.sheet = .logMeal(meal: meal)
+//        }
+//    }
+
 
     func presentRateMealSheet(with meal: Meal) {
         sheet = .logMeal(meal: meal)

@@ -96,7 +96,7 @@ struct MealDetailView: View {
                     Text("Review Meal")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.rose.rose500)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }

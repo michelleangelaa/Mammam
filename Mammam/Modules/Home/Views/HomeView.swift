@@ -231,7 +231,7 @@ struct HomeView: View {
                         LazyHStack {
                             ForEach(unloggedMeals, id: \.self) { meal in
                                 Button(action: {
-                                    coordinator.presentRateMealSheet(with: meal)
+                                    coordinator.presentMealDetailSheet(with: meal)
                                 }) {
                                     MealCardComponent(meal: meal)
                                 }
@@ -243,7 +243,6 @@ struct HomeView: View {
             }
         }
     }
-
 
     private var menuSection: some View {
         VStack(alignment: .leading) {
@@ -293,7 +292,6 @@ struct HomeView: View {
         return sortedMeals.first(where: { !$0.isLogged })
     }
 
-    
     private func isTodayMeal(meal: Meal) -> Bool {
         let today = Calendar.current.startOfDay(for: Date())
         let mealDate = Calendar.current.startOfDay(for: meal.timeGiven)
