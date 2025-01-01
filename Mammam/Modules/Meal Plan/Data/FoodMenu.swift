@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class FoodMenu {
+class FoodMenu: ObservableObject{
     var name: String
     var image: String
     var isSaved: Bool

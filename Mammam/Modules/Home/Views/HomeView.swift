@@ -234,14 +234,17 @@ struct HomeView: View {
             Text("Fresh-eye menu")
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                LazyHStack {
                     ForEach(menus) { food in
-                        FoodMenuCardComponent(foodMenu: .constant(food))
+                        FoodMenuCardComponent(foodMenu: food)
                             .frame(width: 150)
                     }
                 }
             }
         }
+        .onChange(of: menus) { _ in
+                try? context.save() // Force refresh on data changes
+            }
         .onAppear {
             try? context.save() // Refresh data on view appear
         }

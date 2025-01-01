@@ -10,13 +10,15 @@ import SwiftUI
 
 struct FoodMenuCardComponent: View {
     @Environment(\.modelContext) private var context
-    @Binding var foodMenu: FoodMenu
-    @State private var isBookmarked: Bool
-    
-    init(foodMenu: Binding<FoodMenu>) {
-        self._foodMenu = foodMenu
-        self._isBookmarked = State(initialValue: foodMenu.wrappedValue.isSaved)
-    }
+    @ObservedObject var foodMenu: FoodMenu
+//
+//    @Binding var foodMenu: FoodMenu
+//    @State private var isBookmarked: Bool
+//
+//    init(foodMenu: Binding<FoodMenu>) {
+//        self._foodMenu = foodMenu
+//        self._isBookmarked = State(initialValue: foodMenu.wrappedValue.isSaved)
+//    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
@@ -27,7 +29,7 @@ struct FoodMenuCardComponent: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 
                 Button(action: { toggleBookmark() }) {
-                    Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+                    Image(systemName: foodMenu.isSaved ? "bookmark.fill" : "bookmark")
                         .font(.title3)
                         .padding(8)
                         .background(Color.white.opacity(0.8))
@@ -55,11 +57,17 @@ struct FoodMenuCardComponent: View {
         .padding(.horizontal, 8)
     }
     
+//    private func toggleBookmark() {
+//        isBookmarked.toggle()
+//        foodMenu.isSaved = isBookmarked
+//        try? context.save()
+//        print("\(foodMenu.name) bookmark status: \(isBookmarked)")
+//    }
+    
     private func toggleBookmark() {
-        isBookmarked.toggle()
-        foodMenu.isSaved = isBookmarked
+        foodMenu.isSaved.toggle()
         try? context.save()
-        print("\(foodMenu.name) bookmark status: \(isBookmarked)")
+        print("\(foodMenu.name) bookmark status: \(foodMenu.isSaved)")
     }
 }
 
