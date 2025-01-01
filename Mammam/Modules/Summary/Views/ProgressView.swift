@@ -62,7 +62,7 @@ struct ProgressView: View {
                         if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
                             VStack {
                                 Text("TOTAL")
-                                Text("\(totalFilteredNutrientCount) Times")
+                                Text("\(totalLoggedMealsCount) Meals")
                             }
                             .position(x: frame.midX, y: frame.midY)
                         }
@@ -85,6 +85,11 @@ struct ProgressView: View {
     private var totalFilteredNutrientCount: Int {
         return filteredNutrients.reduce(0) { $0 + $1.nutrientCount }
     }
+    
+    private var totalLoggedMealsCount: Int {
+        return filteredMeals.count
+    }
+
 
     private var filteredMeals: [Meal] {
         let calendar = Calendar.current
