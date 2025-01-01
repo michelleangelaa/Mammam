@@ -37,7 +37,7 @@ struct MealFeedbackView: View {
                     Text("Well done! 🎉")
                         .font(.headline)
                         .fontWeight(.bold)
-                    Text("Perfect timing! Consistent meal times help build a healthy routine")
+                    Text(feedbackMessage(for: meal.durationInMinutes))
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.gray)
@@ -91,7 +91,7 @@ struct MealFeedbackView: View {
                 // Allergy Feedback
                 HStack(alignment: .top) {
                     Image(systemName: "star.fill")
-                    Text(meal.isAllergic ? "huhu allergic reactions today — please take care!" : "No allergic reactions today — great job introducing new tastes!")
+                    Text(meal.isAllergic ? "Eve has a reaction to \(meal.ingredient?.name ?? "this ingredient"). Let’s explore safer options next time." : "No allergic reactions today — great job introducing new tastes!")
                         .font(.subheadline)
 
                     Spacer()
@@ -125,7 +125,7 @@ struct MealFeedbackView: View {
                 Spacer()
 
                 // Back to Home Button
-                if(fromRateMealView){
+                if fromRateMealView {
                     Button(action: {
                         coordinator.dismissSheetAndNavigateToHome()
                     }) {
@@ -138,7 +138,6 @@ struct MealFeedbackView: View {
                     }
                     .padding(.horizontal)
                 }
-                
 
                 Spacer()
             }
@@ -225,6 +224,14 @@ func calculateDuration(timeGiven: Date, timeEnded: Date) -> String {
         return "\(hours) hour(s) and \(minutes) minute(s)"
     } else {
         return "\(minutes) minute(s)"
+    }
+}
+
+private func feedbackMessage(for duration: Int) -> String {
+    if duration <= 30 {
+        return "Even a little progress counts. New foods take time to become favorites."
+    } else {
+        return "Don’t worry, mom! It’s all part of the journey. Keep trying—your patience is building their love for food."
     }
 }
 
