@@ -63,10 +63,8 @@ struct ReviewMealTypeView: View {
                 }
             }
             .padding(.horizontal)
-            
         }
         .onAppear {
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 print("OnAppear - MealPlan contains \(mealPlan.meals?.count ?? 0) meals.")
                 print(mealPlan.endDate)
@@ -102,8 +100,6 @@ struct ReviewMealTypeView: View {
 //
 //        return groupedMeals
 //    }
-
-
 
     private func generateDefaultIngredients() -> [String: Ingredient] {
         let dayRanges = ["Sun-Tue", "Wed-Thu", "Fri-Sat"]
@@ -179,10 +175,10 @@ struct ReviewMealCardView: View {
                     )
                 Text(meal.ingredient?.name ?? "Unknown")
                     .font(.headline)
-                Text("20 variants")
+                Text("\(meal.ingredient?.menus?.count ?? 0) menu(s)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                
+
                 Text(meal.type)
             }
             Spacer()
@@ -246,11 +242,13 @@ enum ReviewMealPreviewData {
         return mealPlan
     }
 }
+
 private func formattedDate(_ date: Date) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "MMM dd"
     return formatter.string(from: date)
 }
+
 #Preview {
     let startDate = Date()
     let endDate = Calendar.current.date(byAdding: .day, value: 6, to: startDate)!
