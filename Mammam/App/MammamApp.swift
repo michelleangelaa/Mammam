@@ -19,19 +19,14 @@ struct MammamApp: App {
 
     var body: some Scene {
         WindowGroup {
-//            HomeView()
             CoordinatorView()
-//            SavedMenuView()
-//            MealPlannerView()
-//            ProgressView()
-//            MealFeedbackView()
-//            MealFeedbackView(meal: meal, fromRateMealView: false))
-//            FoodMenuView()
-//            MealDetailView(ingredient: myIngredients.first(where: { $0.name == "Egg" })!)
+                .modelContainer(dataController.container)
+                .onAppear {
+                    // Move initialization here to ensure database is ready
+                    dataController.initializeDataIfNeeded()
+                }
         }
-        .modelContainer(dataController.container)
-        
-//        .modelContainer(for: [Meal.self])
+
     }
 
     init() {
@@ -55,10 +50,8 @@ struct MammamApp: App {
 //        dataController.initializeDataIfNeeded()
         print(URL.documentsDirectory.path())
 
-        dataController.initializeDataIfNeeded()
-        dataController.generateSampleData()
-
-
+//        dataController.initializeDataIfNeeded()
+//        dataController.generateSampleData()
     }
 }
 
