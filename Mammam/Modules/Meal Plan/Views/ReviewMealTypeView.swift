@@ -145,7 +145,12 @@ struct ReviewMealTypeView: View {
 
     private func updateMealIngredient(_ meal: Meal, newIngredient: Ingredient) {
         meal.ingredient = newIngredient
-        try? context.save()
+        do {
+            try context.save() // Save changes to the database
+            print("Meal ingredient updated to \(newIngredient.name)")
+        } catch {
+            print("Failed to update meal ingredient: \(error)")
+        }
     }
 
 //    private func createDefaultMeals(for mealType: String) -> [Meal] {
@@ -173,10 +178,11 @@ struct ReviewMealCardView: View {
     var meal: Meal
     var dayRange: String
     var onReplace: (Ingredient) -> Void
+    @Environment(\.modelContext) private var context
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: "leaf") // Placeholder for the meal image
+            Image(meal.ingredient?.image ?? "leaf") // Placeholder for the meal image
                 .resizable()
                 .frame(width: 70, height: 70)
                 .background(Color(UIColor.systemGray5))
@@ -203,10 +209,15 @@ struct ReviewMealCardView: View {
 
             // Replace Button
             Button(action: {
-                let availableIngredients = Ingredient.sampleIngredients.filter { $0.name != meal.ingredient?.name }
+                if let currentIngredient = meal.ingredient {
+                    // Filter out the current ingredient
+                    let availableIngredients = Ingredient.getExistingIngredients(context: context)
+                        .filter { $0.name != currentIngredient.name }
 
-                if let newIngredient = availableIngredients.randomElement() {
-                    onReplace(newIngredient)
+                    if let newIngredient = availableIngredients.randomElement() {
+                        // Just update the reference, don't create new data
+                        onReplace(newIngredient)
+                    }
                 }
             }) {
                 Image(systemName: "arrow.clockwise")
