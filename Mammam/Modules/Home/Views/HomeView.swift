@@ -23,8 +23,8 @@ struct HomeView: View {
                 
                 // Conditional Sections
                 if let todayPlan = todayMealPlan {
-                    if let nextMealType = nextUnloggedMealType(from: todayPlan) {
-                        currentMealTypeView(mealType: nextMealType)
+                    if let unloggedMeal = nextUnloggedMeal(from: todayPlan) {
+                        currentMealTypeView(meal: unloggedMeal)
                     } else {
                         allMealsLoggedView
                     }
@@ -90,10 +90,10 @@ struct HomeView: View {
         }
     }
     
-    private func currentMealTypeView(mealType: String) -> some View {
+    private func currentMealTypeView(meal: Meal) -> some View {
         Button(action: {
-            // Navigate to logging view for the current meal type
-            coordinator.push(page: .logMeal)
+            // Present the Rate Meal Sheet for the specific meal
+            coordinator.presentRateMealSheet(with: meal)
         }) {
             HStack {
                 Image(systemName: "fork.knife.circle")
@@ -102,7 +102,7 @@ struct HomeView: View {
                 VStack(alignment: .leading) {
                     Text("Log Meal")
                         .font(.headline)
-                    Text(mealType)
+                    Text(meal.type)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
@@ -117,7 +117,7 @@ struct HomeView: View {
             )
         }
     }
-    
+
     private var allMealsLoggedView: some View {
         HStack {
             Image(systemName: "calendar")
@@ -228,7 +228,11 @@ struct HomeView: View {
                             } ?? [],
                         id: \.self
                     ) { meal in
-                        MealCardComponent(meal: meal)
+                        Button(action: {
+                            coordinator.presentRateMealSheet(with: meal)
+                        }) {
+                            MealCardComponent(meal: meal)
+                        }
                     }
                 }
             }
@@ -267,14 +271,22 @@ struct HomeView: View {
         })
     }
     
-    private func nextUnloggedMealType(from plan: MealPlan) -> String? {
-        for type in mealTypes {
-            if plan.meals?.first(where: { $0.type == type && !$0.isLogged }) != nil {
-                return type
-            }
+    private func nextUnloggedMeal(from plan: MealPlan) -> Meal? {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        // Filter meals scheduled for today
+        let todaysMeals = plan.meals?
+            .filter { isTodayMeal(meal: $0) } ?? []
+
+        // Sort by MealType order
+        let sortedMeals = todaysMeals.sorted {
+            MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
         }
-        return nil
+
+        // Return the first unlogged meal
+        return sortedMeals.first(where: { !$0.isLogged })
     }
+
     
     private func isTodayMeal(meal: Meal) -> Bool {
         let today = Calendar.current.startOfDay(for: Date())
