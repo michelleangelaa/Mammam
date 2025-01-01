@@ -23,8 +23,8 @@ struct HomeView: View {
                 
                 // Conditional Sections
                 if let todayPlan = todayMealPlan {
-                    if let nextMealType = nextUnloggedMealType(from: todayPlan) {
-                        currentMealTypeView(mealType: nextMealType)
+                    if let unloggedMeal = nextUnloggedMeal(from: todayPlan) {
+                        currentMealTypeView(meal: unloggedMeal)
                     } else {
                         allMealsLoggedView
                     }
@@ -51,7 +51,6 @@ struct HomeView: View {
             .padding()
             .navigationBarBackButtonHidden(true)
         }
-        
     }
     
     // MARK: - Subviews
@@ -91,10 +90,10 @@ struct HomeView: View {
         }
     }
     
-    private func currentMealTypeView(mealType: String) -> some View {
+    private func currentMealTypeView(meal: Meal) -> some View {
         Button(action: {
-            // Navigate to logging view for the current meal type
-            coordinator.push(page: .logMeal)
+            // Present the Rate Meal Sheet for the specific meal
+            coordinator.presentRateMealSheet(with: meal)
         }) {
             HStack {
                 Image(systemName: "fork.knife.circle")
@@ -103,7 +102,7 @@ struct HomeView: View {
                 VStack(alignment: .leading) {
                     Text("Log Meal")
                         .font(.headline)
-                    Text(mealType)
+                    Text(meal.type)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
@@ -118,7 +117,7 @@ struct HomeView: View {
             )
         }
     }
-    
+
     private var allMealsLoggedView: some View {
         HStack {
             Image(systemName: "calendar")
@@ -216,31 +215,50 @@ struct HomeView: View {
     }
     
     private func mealPlanSection(for plan: MealPlan) -> some View {
-        VStack(alignment: .leading) {
-            Text("Your Meal Plan")
-                .font(.headline)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack {
-                    ForEach(plan.meals?.filter(isTodayMeal) ?? [], id: \.self) { meal in
-                        MealCardComponent(meal: meal)
+        // Filter today's unlogged meals
+        let unloggedMeals = plan.meals?
+            .filter { isTodayMeal(meal: $0) && !$0.isLogged }
+            .sorted {
+                MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
+            } ?? []
+
+        return Group {
+            if !unloggedMeals.isEmpty {
+                VStack(alignment: .leading) {
+                    Text("Today's Meal Plan")
+                        .font(.headline)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack {
+                            ForEach(unloggedMeals, id: \.self) { meal in
+                                Button(action: {
+                                    coordinator.presentMealDetailSheet(with: meal)
+                                }) {
+                                    MealCardComponent(meal: meal)
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
                     }
                 }
             }
         }
     }
-    
+
     private var menuSection: some View {
         VStack(alignment: .leading) {
             Text("Fresh-eye menu")
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                LazyHStack {
                     ForEach(menus) { food in
-                        FoodMenuCardComponent(foodMenu: .constant(food))
+                        FoodMenuCardComponent(foodMenu: food)
                             .frame(width: 150)
                     }
                 }
             }
+        }
+        .onChange(of: menus) { _ in
+            try? context.save() // Force refresh on data changes
         }
         .onAppear {
             try? context.save() // Refresh data on view appear
@@ -258,15 +276,22 @@ struct HomeView: View {
         })
     }
     
-    private func nextUnloggedMealType(from plan: MealPlan) -> String? {
-        for type in mealTypes {
-            if plan.meals?.first(where: { $0.type == type && !$0.isLogged }) != nil {
-                return type
-            }
+    private func nextUnloggedMeal(from plan: MealPlan) -> Meal? {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        // Filter meals scheduled for today
+        let todaysMeals = plan.meals?
+            .filter { isTodayMeal(meal: $0) } ?? []
+
+        // Sort by MealType order
+        let sortedMeals = todaysMeals.sorted {
+            MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
         }
-        return nil
+
+        // Return the first unlogged meal
+        return sortedMeals.first(where: { !$0.isLogged })
     }
-    
+
     private func isTodayMeal(meal: Meal) -> Bool {
         let today = Calendar.current.startOfDay(for: Date())
         let mealDate = Calendar.current.startOfDay(for: meal.timeGiven)

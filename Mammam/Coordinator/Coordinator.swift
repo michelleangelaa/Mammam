@@ -11,6 +11,7 @@ class Coordinator: ObservableObject {
     @Published var path: NavigationPath = .init()
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullSceenCover?
+    @Published var selectedTab: MainView.Tab? // Add this to track selected tab
 
     func push(page: AppPages) {
         path.append(page)
@@ -43,15 +44,16 @@ class Coordinator: ObservableObject {
     @ViewBuilder
     func build(page: AppPages) -> some View {
         switch page {
-        case .main: MainView()
+        case .main: MainView().environmentObject(self)
         case .logMeal: MealPlannerView()
         case .motivation: MotivationView()
-        case .mealFeedback: MealPlannerView()
         case .mealPlan: MealPlannerView()
         case .createMealPlan: SelectDateView()
         case .savedMenu: SavedMenuView()
         case .loadingView: GenerateMealLoadingView()
 //        case .onBoarding : RegisterFormView()
+        case .reviewMealType(let mealPlan):
+            ReviewMealTypeView(mealPlan: mealPlan) // Navigate to ReviewMealTypeView
         }
     }
 
@@ -80,6 +82,7 @@ class Coordinator: ObservableObject {
     func buildCover(cover: FullSceenCover) -> some View {
         switch cover {
         case .signUp: MealPlanView()
+        case .loadingView: GenerateMealLoadingView()
         }
     }
 
@@ -87,6 +90,17 @@ class Coordinator: ObservableObject {
         sheet = .mealDetail(meal: meal)
     }
     
+//    func presentMealDetailAndLogMeal(with meal: Meal) {
+//        // Present the MealDetailView first
+//        sheet = .mealDetail(meal: meal)
+//        
+//        // After dismissing MealDetailView, navigate to RateMealView
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            self.sheet = .logMeal(meal: meal)
+//        }
+//    }
+
+
     func presentRateMealSheet(with meal: Meal) {
         sheet = .logMeal(meal: meal)
     }

@@ -19,12 +19,13 @@ struct GenerateMealLoadingView: View {
                 Text("Generating Meal")
                     .font(.title3)
             }
-            .onAppear {
-                // Redirect after 3 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    coordinator.push(page: .mealPlan) // Navigate to MealPlannerView using Coordinator
-                }
-            }
+//            .onAppear {
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                    coordinator.dismissCover() // Dismiss the full-screen loading view
+//                    coordinator.push(page: .mealPlan) // Navigate to MealPlannerView
+//                }
+//            }
+        
         }
     }
 }

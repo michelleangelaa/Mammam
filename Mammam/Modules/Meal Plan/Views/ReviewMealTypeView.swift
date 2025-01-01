@@ -59,17 +59,21 @@ struct ReviewMealTypeView: View {
                     currentMealTypeIndex += 1
                 } else {
                     isLastMealType = true
-                    coordinator.push(page: .loadingView) // Navigate to GenerateMealLoadingView
+                    coordinator.presentFullScreenCover(fullScreenCover: .loadingView) // Present GenerateMealLoadingView
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        coordinator.dismissCover()
+                        coordinator.selectedTab = .mealPlanner
+                        coordinator.push(page: .main) // Navigate to MealPlannerView after loading
+                    }
                 }
             }
+
             .padding(.horizontal)
-            
         }
         .onAppear {
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                print("OnAppear - MealPlan contains \(mealPlan.meals?.count ?? 0) meals.")
-                print(mealPlan.endDate)
+            print("OnAppear - Initial MealPlan meals count: \(mealPlan.meals?.count ?? 0)")
+            // Add a slight delay to ensure meals are loaded
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 loadMealsForCurrentMealType()
             }
         }
@@ -103,8 +107,6 @@ struct ReviewMealTypeView: View {
 //        return groupedMeals
 //    }
 
-
-
     private func generateDefaultIngredients() -> [String: Ingredient] {
         let dayRanges = ["Sun-Tue", "Wed-Thu", "Fri-Sat"]
         let randomIngredients = Ingredient.sampleIngredients.shuffled()
@@ -115,23 +117,40 @@ struct ReviewMealTypeView: View {
     private func loadMealsForCurrentMealType() {
         let currentMealType = mealTypes[currentMealTypeIndex]
 
-        print("MealPlan has \(mealPlan.meals?.count ?? 0) total meals")
-        print("Current meal type: \(currentMealType)")
+        // Ensure we have the latest meals from the meal plan
+        if let mealPlanMeals = mealPlan.meals {
+            // Filter meals for current type and sort by date
+            meals = mealPlanMeals
+                .filter { $0.type == currentMealType }
+                .sorted { $0.timeGiven < $1.timeGiven }
 
-        // Manually filter meals for the current meal type
+            print("Loading meals for \(currentMealType)")
+            print("Total meals in plan: \(mealPlanMeals.count)")
+            print("Filtered meals for \(currentMealType): \(meals.count)")
 
-        meals = mealPlan.meals?.filter { $0.type == currentMealType } ?? []
-        print("Filtered meals count: \(meals.count)")
+            meals = mealPlanMeals
+                .filter { meal in
+                    let isSameType = meal.type == currentMealType
+                    print("Checking meal: \(meal.type) at \(meal.timeGiven) - matches type: \(isSameType)")
+                    return isSameType
+                }
+                .sorted { $0.timeGiven < $1.timeGiven }
 
-        // Print each meal to verify the data
-        mealPlan.meals?.forEach { meal in
-            print("Meal: \(meal.type), Time: \(meal.timeGiven)")
+            print("Filtered meals for \(currentMealType): \(meals.count)")
+            for meal in meals {
+                print("\(currentMealType) on \(formattedDate(meal.timeGiven))")
+            }
         }
     }
 
     private func updateMealIngredient(_ meal: Meal, newIngredient: Ingredient) {
         meal.ingredient = newIngredient
-        try? context.save()
+        do {
+            try context.save() // Save changes to the database
+            print("Meal ingredient updated to \(newIngredient.name)")
+        } catch {
+            print("Failed to update meal ingredient: \(error)")
+        }
     }
 
 //    private func createDefaultMeals(for mealType: String) -> [Meal] {
@@ -159,10 +178,11 @@ struct ReviewMealCardView: View {
     var meal: Meal
     var dayRange: String
     var onReplace: (Ingredient) -> Void
+    @Environment(\.modelContext) private var context
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: "leaf") // Placeholder for the meal image
+            Image(meal.ingredient?.image ?? "leaf") // Placeholder for the meal image
                 .resizable()
                 .frame(width: 70, height: 70)
                 .background(Color(UIColor.systemGray5))
@@ -179,20 +199,25 @@ struct ReviewMealCardView: View {
                     )
                 Text(meal.ingredient?.name ?? "Unknown")
                     .font(.headline)
-                Text("20 variants")
+                Text("\(meal.ingredient?.menus?.count ?? 0) menu(s)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                
+
                 Text(meal.type)
             }
             Spacer()
 
             // Replace Button
             Button(action: {
-                let availableIngredients = Ingredient.sampleIngredients.filter { $0.name != meal.ingredient?.name }
+                if let currentIngredient = meal.ingredient {
+                    // Filter out the current ingredient
+                    let availableIngredients = Ingredient.getExistingIngredients(context: context)
+                        .filter { $0.name != currentIngredient.name }
 
-                if let newIngredient = availableIngredients.randomElement() {
-                    onReplace(newIngredient)
+                    if let newIngredient = availableIngredients.randomElement() {
+                        // Just update the reference, don't create new data
+                        onReplace(newIngredient)
+                    }
                 }
             }) {
                 Image(systemName: "arrow.clockwise")
@@ -246,11 +271,13 @@ enum ReviewMealPreviewData {
         return mealPlan
     }
 }
+
 private func formattedDate(_ date: Date) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "MMM dd"
     return formatter.string(from: date)
 }
+
 #Preview {
     let startDate = Date()
     let endDate = Calendar.current.date(byAdding: .day, value: 6, to: startDate)!

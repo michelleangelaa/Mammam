@@ -1,12 +1,5 @@
-//
-//  DataController.swift
-//  Mammam
-//
-//  Created by Michelle Angela Aryanto on 23/12/24.
-//
-
-import SwiftData
 import Foundation
+import SwiftData
 
 @MainActor
 class DataController {
@@ -33,238 +26,178 @@ class DataController {
         }
     }
     
-//    func initializeDataIfNeeded() {
-//        // Check if data already exists
-//        let context = container.mainContext
-//        let fetchDescriptor = FetchDescriptor<Ingredient>()
-//        
-//        do {
-//            let existingIngredients = try context.fetch(fetchDescriptor)
-//            if existingIngredients.isEmpty {
-//                print("Generating initial data...")
-//                generateInitialData(context: context)
-//            } else {
-//                print("Data already exists, skipping initialization")
-//            }
-//        } catch {
-//            print("Error checking for existing data: \(error)")
+    func initializeDataIfNeeded() {
+        let context = container.mainContext
+        
+        do {
+            // Check each entity type independently
+//            try initializeNutrientsIfNeeded(context: context)
+            try initializeIngredientsIfNeeded(context: context)
+            try initializeFoodMenuIfNeeded(context: context)
+            try initializeBabyIfNeeded(context: context)
+            try initializeMotivationIfNeeded(context: context)
+            try initializeArticleIfNeeded(context: context)
+            try initializeAllergenIfNeeded(context: context)
+            
+        } catch {
+            print("Failed to initialize data: \(error)")
+        }
+    }
+
+//    private func initializeNutrientsIfNeeded(context: ModelContext) throws {
+//        let nutrientsFetch = FetchDescriptor<Nutrient>()
+//        let existingNutrients = try context.fetch(nutrientsFetch)
+//            
+//        if existingNutrients.isEmpty {
+//            let nutrients = Nutrient.sampleNutrients
+//            nutrients.forEach { context.insert($0) }
+//            try context.save()
+//            print("Nutrients initialized")
 //        }
 //    }
-    
-    func initializeDataIfNeeded() {
-        let ingredientsFetchDescriptor = FetchDescriptor<Ingredient>()
-        do {
-            let existingIngredients = try container.mainContext.fetch(ingredientsFetchDescriptor)
-            if existingIngredients.isEmpty {
-                // Only initialize sample data if no ingredients exist
-                let nutrients = Nutrient.sampleNutrients
-                let ingredients = Ingredient.sampleIngredients(with: nutrients)
-                
-                // Insert nutrients and ingredients
-                nutrients.forEach { container.mainContext.insert($0) }
-                ingredients.forEach { container.mainContext.insert($0) }
-                
-                try container.mainContext.save()
-            }
-        } catch {
-            print("Failed to check or initialize data: \(error)")
+        
+    private func initializeFoodMenuIfNeeded(context: ModelContext) throws {
+        let foodMenuFetch = FetchDescriptor<FoodMenu>()
+        let existingFoodMenus = try context.fetch(foodMenuFetch)
+            
+        if existingFoodMenus.isEmpty {
+            let foodMenus = FoodMenu.sampleMenus
+            foodMenus.forEach { context.insert($0) }
+            try context.save()
+            print("FoodMenu initialized")
         }
     }
-   func generateSampleData() {
-            let context = container.mainContext
-
+    
+    private func initializeIngredientsIfNeeded(context: ModelContext) throws {
+        let ingredientsFetch = FetchDescriptor<Ingredient>()
+        let existingIngredients = try context.fetch(ingredientsFetch)
+        
+        if existingIngredients.isEmpty {
+//            let nutrients = Nutrient.sampleNutrients
+            let ingredients = Ingredient.sampleIngredients
+            //(with: nutrients)
+            
+            ingredients.forEach { context.insert($0) }
+//            nutrients.forEach { context.insert($0) }
+            try context.save()
+            print("Ingredients and nutrients initialized")
+        }
+    }
+    
+    private func initializeBabyIfNeeded(context: ModelContext) throws {
+        let babyFetch = FetchDescriptor<Baby>()
+        let existingBabies = try context.fetch(babyFetch)
+        
+        if existingBabies.isEmpty {
             generateBabyData(context: context)
+            try context.save()
+            print("Baby data initialized")
+        }
+    }
+    
+    private func initializeMotivationIfNeeded(context: ModelContext) throws {
+        let motivationFetch = FetchDescriptor<Motivation>()
+        let existingMotivations = try context.fetch(motivationFetch)
+        
+        if existingMotivations.isEmpty {
             generateMotivationData(context: context)
+            try context.save()
+            print("Motivation data initialized")
+        }
+    }
+    
+    private func initializeArticleIfNeeded(context: ModelContext) throws {
+        let articleFetch = FetchDescriptor<Article>()
+        let existingArticles = try context.fetch(articleFetch)
+        
+        if existingArticles.isEmpty {
             generateArticleData(context: context)
-            generateallergenData(context:context)
-
-            do {
-                try context.save()
-                print("data saved")
-            } catch {
-                print("Error saving sample data: \(error)")
-            }
+            try context.save()
+            print("Article data initialized")
         }
-
-        private func generateBabyData(context: ModelContext) {
-            let baby = Baby(babyProfileImage: "i_profile_person", babyName: "Eve", babyBirthDate: Date())
-            context.insert(baby)
-            print("data saved")
-        }
-
-    private func generateArticleData(context: ModelContext) {
-            let article = Article(
-                articleTitle: "Introduce new food with food chaining",
-                articleImage: "motivationimage1",
-                articleSubheader: "What is Food Chaining?",
-                articleDesc: """
-                    Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.
-
-                    Tips For Success:
-                    - Have fun and make it a game. Encourage your child to take \"mouse bites,\" \"alligator bites,\" or touch the food with their tongue.
-                    - Focus on small steps & try one new item at a time. Keep trying!
-                    - Many children have to try a food more than 10 times before they start to like it.
-
-                    Additional Tips:
-                    - Minimize distractions while your child is eating. (For example, turn off screens, put pets in another room, etc.)
-                    - Don't pressure your child; let them decide when they want to stop.
-                    - Plan meals & snacks ahead of time. Let your child know when to expect a meal or snack.
-                    """
-            )
-            context.insert(article)
-        }
-
-        private func generateMotivationData(context: ModelContext) {
-            let motivation = Motivation(
-                imageStory1: "motivationimage1",
-                imageStory2: "motivationimage2",
-                imageTrue: "motivationimage3_true",
-                imageFalse: "motivationimage3_false",
-                quotes: "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!",
-                tips: """
-                    - Give baby more time and offer the meal again later.
-                    - You still can offer her to eat for a maximum of 30 minutes.
-                    """
-            )
-            context.insert(motivation)
-        }
-    
-    private func generateallergenData(context: ModelContext) {
-        // Create and insert allergens
-        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg")
-        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy")
-        
-        [eggAllergen, dairyAllergen].forEach { context.insert($0) }
-        
-    }
-    private func generateInitialData(context: ModelContext) {
-        
-        // Create and insert nutrients
-        let protein = Nutrient(name: "Protein", nutrientCount: 0)
-        let fat = Nutrient(name: "Fat", nutrientCount: 0)
-        let zinc = Nutrient(name: "Zinc", nutrientCount: 0)
-        let micro = Nutrient(name: "MicroNutrient", nutrientCount: 0)
-        let iron = Nutrient(name: "Iron", nutrientCount: 0)
-        let carbo = Nutrient(name: "Carbo", nutrientCount: 0)
-        
-        let nutrients = [protein, fat, zinc, micro, iron, carbo]
-        nutrients.forEach { context.insert($0) }
-        
-        // Create and insert allergens
-        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg")
-        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy")
-        
-        [eggAllergen, dairyAllergen].forEach { context.insert($0) }
-        
-        // Create egg ingredient
-        let egg = Ingredient(
-            name: "Egg",
-            image: "egg",
-            nutrients: [protein, fat, iron]
-        )
-        context.insert(egg)
-        
-        // Create menus
-        let meatEggPorrige = FoodMenu(
-            name: "Meat Egg Porrige",
-            image: "meateggporridge",
-            isSaved: false,
-            desc: "60 grams of rice\n60 grams of minced beef\n½ egg, lightly beaten\n3 broccoli florets, cut into small pieces\n50 ml water\n1 clove of garlic\n1 shallot\n½ teaspoon soy sauce\n½ teaspoon sesame oil\n1 teaspoon butter\nGround pepper to taste\nSalt to taste (if needed)",
-            ingredients: [egg],
-            allergens: [eggAllergen]
-        )
-        
-        let cheeseMacaroni = FoodMenu(
-            name: "Cheese Macaroni",
-            image: "cheesemacaroni",
-            isSaved: false,
-            desc: "",
-            ingredients: [egg],
-            allergens: [eggAllergen, dairyAllergen]
-        )
-        
-        let butterChickenPorriage = FoodMenu(
-            name: "Butter Chicken Porriage",
-            image: "butterchickenporridge",
-            isSaved: false,
-            desc: "",
-            ingredients: [egg],
-            allergens: [eggAllergen, dairyAllergen]
-        )
-        
-        [meatEggPorrige, cheeseMacaroni, butterChickenPorriage].forEach { context.insert($0) }
-        
-        // Connect menus to egg ingredient
-        egg.menus = [meatEggPorrige, cheeseMacaroni, butterChickenPorriage]
-        
-        // Create other ingredients
-        let potato = Ingredient(
-            name: "Potato",
-            image: "potato",
-            nutrients: [carbo, micro]
-        )
-        
-        let tomato = Ingredient(
-            name: "Tomato",
-            image: "tomato",
-            nutrients: [micro]
-        )
-        
-        let berries = Ingredient(
-            name: "Berries",
-            image: "berries",
-            nutrients: [zinc, micro]
-        )
-        
-        [potato, tomato, berries].forEach { context.insert($0) }
-        
-        // Link ingredients and nutrients
-        [egg, potato, tomato, berries].forEach { ingredient in
-            ingredient.nutrients?.forEach { nutrient in
-                if nutrient.ingredients == nil {
-                    nutrient.ingredients = []
-                }
-                if !(nutrient.ingredients?.contains(ingredient) ?? false) {
-                    nutrient.ingredients?.append(ingredient)
-                }
-            }
-        }
-        
-
-        
-        // Save the context
-        try? context.save()
     }
     
+    private func initializeAllergenIfNeeded(context: ModelContext) throws {
+        let allergenFetch = FetchDescriptor<Allergen>()
+        let existingAllergens = try context.fetch(allergenFetch)
+        
+        if existingAllergens.isEmpty {
+            generateallergenData(context: context)
+            try context.save()
+            print("Allergen data initialized")
+        }
+    }
     
-    func generateautendata(context : ModelContext){
-        //create and insert baby
-        let baby = Baby(babyProfileImage: "i_profile_person", babyName: "eve", babyBirthDate:Date())
+//    private func generateNutrientData() -> [Nutrient] {
+//        return [
+//            Nutrient(name: "Protein", amount: 20, unit: "g"),
+//            Nutrient(name: "Carbohydrates", amount: 30, unit: "g"),
+//            Nutrient(name: "Fat", amount: 10, unit: "g"),
+//            Nutrient(name: "Fiber", amount: 5, unit: "g"),
+//            Nutrient(name: "Iron", amount: 8, unit: "mg"),
+//            Nutrient(name: "Calcium", amount: 200, unit: "mg"),
+//            Nutrient(name: "Vitamin C", amount: 60, unit: "mg"),
+//            Nutrient(name: "Vitamin D", amount: 10, unit: "mcg")
+//        ]
+//    }
+        
+//    private func generateFoodMenuData() -> [FoodMenu] {
+//        return [
+//            FoodMenu(
+//                name: "Breakfast",
+//                description: "Morning meals suitable for babies",
+//                image: "breakfast_icon",
+//                isSelected: true
+//            ),
+//            FoodMenu(
+//                name: "Lunch",
+//                description: "Midday meals for growing babies",
+//                image: "lunch_icon",
+//                isSelected: true
+//            ),
+//            FoodMenu(
+//                name: "Dinner",
+//                description: "Evening meals for babies",
+//                image: "dinner_icon",
+//                isSelected: true
+//            ),
+//            FoodMenu(
+//                name: "Snacks",
+//                description: "Healthy snacks between meals",
+//                image: "snack_icon",
+//                isSelected: true
+//            )
+//        ]
+//    }
+    
+    private func generateBabyData(context: ModelContext) {
+        let baby = Baby(babyProfileImage: "i_profile_person", babyName: "Eve", babyBirthDate: Date())
         context.insert(baby)
-        
-        //create and insert article
+    }
+    
+    private func generateArticleData(context: ModelContext) {
         let article = Article(
             articleTitle: "Introduce new food with food chaining",
             articleImage: "motivationimage1",
             articleSubheader: "What is Food Chaining?",
             articleDesc: """
-                        Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.
-                        
-                        Tips For Success:
-                        - Have fun and make it a game. Encourage your child to take "mouse bites," "alligator bites," or touch the food with their tongue.
-                        - Focus on small steps & try one new item at a time. Keep trying!
-                        - Many children have to try a food more than 10 times before they start to like it.
-                        
-                        Additional Tips:
-                        - Minimize distractions while your child is eating. (For example, turn off screens, put pets in another room, etc.)
-                        - Don't pressure your child; let them decide when they want to stop.
-                        - Plan meals & snacks ahead of time. Let your child know when to expect a meal or snack.
-                        """
-        
+            Food chaining is a method that starts with feeding a food a child likes, then using small changes to work toward a new food.
+
+            Tips For Success:
+            - Have fun and make it a game. Encourage your child to take \"mouse bites,\" \"alligator bites,\" or touch the food with their tongue.
+            - Focus on small steps & try one new item at a time. Keep trying!
+            - Many children have to try a food more than 10 times before they start to like it.
+
+            Additional Tips:
+            - Minimize distractions while your child is eating. (For example, turn off screens, put pets in another room, etc.)
+            - Don't pressure your child; let them decide when they want to stop.
+            - Plan meals & snacks ahead of time. Let your child know when to expect a meal or snack.
+            """
         )
         context.insert(article)
-        
-        //create and insert motivation
+    }
+    
+    private func generateMotivationData(context: ModelContext) {
         let motivation = Motivation(
             imageStory1: "motivationimage1",
             imageStory2: "motivationimage2",
@@ -272,13 +205,17 @@ class DataController {
             imageFalse: "motivationimage3_false",
             quotes: "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!",
             tips: """
-                - Give baby more time and offer the meal again later.
-                - You still can offer her to eat for a maximum of 30 minutes.
-                """
-            
-            
+            - Give baby more time and offer the meal again later.
+            - You still can offer her to eat for a maximum of 30 minutes.
+            """
         )
         context.insert(motivation)
+    }
+    
+    private func generateallergenData(context: ModelContext) {
+        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg")
+        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy")
         
+        [eggAllergen, dairyAllergen].forEach { context.insert($0) }
     }
 }

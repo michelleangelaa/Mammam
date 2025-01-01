@@ -10,12 +10,12 @@ import Foundation
 enum AppPages: Hashable {
     case main
     case logMeal
-    case mealFeedback
     case motivation
     case mealPlan
     case createMealPlan
     case savedMenu
     case loadingView
+    case reviewMealType(mealPlan: MealPlan)
 //    case onBoarding
 }
 
@@ -43,4 +43,5 @@ enum FullSceenCover: String, Identifiable {
     }
 
     case signUp
+    case loadingView
 }

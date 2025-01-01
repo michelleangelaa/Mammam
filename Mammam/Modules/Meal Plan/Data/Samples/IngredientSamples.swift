@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 extension Ingredient {
     static func sampleIngredients(with nutrients: [Nutrient]) -> [Ingredient] {
@@ -76,6 +77,22 @@ extension Ingredient {
         )
 
         return [egg, potato, tomato, berries]
+    }
+    
+    // Add this new method to fetch existing ingredients
+    static func getExistingIngredients(context: ModelContext) -> [Ingredient] {
+        let descriptor = FetchDescriptor<Ingredient>()
+        return (try? context.fetch(descriptor)) ?? []
+    }
+    
+    // Add this method to find a specific ingredient by name
+    static func findIngredient(named name: String, context: ModelContext) -> Ingredient? {
+        let descriptor = FetchDescriptor<Ingredient>(
+            predicate: #Predicate<Ingredient> { ingredient in
+                ingredient.name == name
+            }
+        )
+        return try? context.fetch(descriptor).first
     }
 }
 

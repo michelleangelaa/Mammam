@@ -24,7 +24,7 @@ struct SavedMenuView: View {
                 
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(savedMenus) { menu in
-                        FoodMenuCardComponent(foodMenu: .constant(menu))
+                        FoodMenuCardComponent(foodMenu: menu)
                     }
                 }
             }
