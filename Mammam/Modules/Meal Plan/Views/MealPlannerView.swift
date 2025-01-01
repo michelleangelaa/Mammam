@@ -140,6 +140,7 @@ struct MealPlannerView: View {
         return calendar.isDate(date1, inSameDayAs: date2)
     }
 }
+    
 
 private func formattedDate(_ date: Date) -> String {
     let formatter = DateFormatter()

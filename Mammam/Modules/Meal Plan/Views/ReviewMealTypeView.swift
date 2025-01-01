@@ -59,9 +59,15 @@ struct ReviewMealTypeView: View {
                     currentMealTypeIndex += 1
                 } else {
                     isLastMealType = true
-                    coordinator.push(page: .loadingView) // Navigate to GenerateMealLoadingView
+                    coordinator.presentFullScreenCover(fullScreenCover: .loadingView) // Present GenerateMealLoadingView
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        coordinator.dismissCover()
+                        coordinator.selectedTab = .mealPlanner
+                        coordinator.push(page: .main) // Navigate to MealPlannerView after loading
+                    }
                 }
             }
+
             .padding(.horizontal)
         }
         .onAppear {

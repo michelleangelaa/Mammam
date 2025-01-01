@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct SelectDateView: View {
+    @EnvironmentObject private var coordinator: Coordinator
+
     @Environment(\.modelContext) private var context
     @State private var startDate: Date = .init()
     @State private var endDate: Date = .init()
@@ -65,21 +67,35 @@ struct SelectDateView: View {
 //            ) {
 //                EmptyView()
 //            }
-            NavigationLink(
-                destination: ReviewMealTypeView(mealPlan: createdMealPlan ?? MealPlan(startDate: startDate, endDate: endDate)),
-                isActive: $navigateToReviewMealType
-            ) {
-                EmptyView()
-            }
+//            NavigationLink(
+//                destination: ReviewMealTypeView(mealPlan: createdMealPlan ?? MealPlan(startDate: startDate, endDate: endDate)),
+//                isActive: $navigateToReviewMealType
+//            ) {
+//                EmptyView()
+//            }
 
+//            CustomLargeButtonComponent(state: .enabled, text: "Next") {
+//                print("pressed button")
+//                guard createdMealPlan == nil else { return } // Prevent duplicate creation
+//
+//                createMealPlan()
+//            }
+//            .padding(.horizontal)
+//            .frame(maxWidth: .infinity)
+            
             CustomLargeButtonComponent(state: .enabled, text: "Next") {
                 print("pressed button")
                 guard createdMealPlan == nil else { return } // Prevent duplicate creation
 
                 createMealPlan()
+                if let mealPlan = createdMealPlan {
+                    // Use the coordinator to navigate to ReviewMealTypeView
+                    coordinator.push(page: .reviewMealType(mealPlan: mealPlan))
+                }
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
+
         }
     }
 

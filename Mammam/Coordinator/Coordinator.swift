@@ -11,6 +11,7 @@ class Coordinator: ObservableObject {
     @Published var path: NavigationPath = .init()
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullSceenCover?
+    @Published var selectedTab: MainView.Tab? // Add this to track selected tab
 
     func push(page: AppPages) {
         path.append(page)
@@ -43,15 +44,16 @@ class Coordinator: ObservableObject {
     @ViewBuilder
     func build(page: AppPages) -> some View {
         switch page {
-        case .main: MainView()
+        case .main: MainView().environmentObject(self)
         case .logMeal: MealPlannerView()
         case .motivation: MotivationView()
-        case .mealFeedback: MealPlannerView()
         case .mealPlan: MealPlannerView()
         case .createMealPlan: SelectDateView()
         case .savedMenu: SavedMenuView()
         case .loadingView: GenerateMealLoadingView()
 //        case .onBoarding : RegisterFormView()
+        case .reviewMealType(let mealPlan):
+            ReviewMealTypeView(mealPlan: mealPlan) // Navigate to ReviewMealTypeView
         }
     }
 
@@ -80,13 +82,14 @@ class Coordinator: ObservableObject {
     func buildCover(cover: FullSceenCover) -> some View {
         switch cover {
         case .signUp: MealPlanView()
+        case .loadingView: GenerateMealLoadingView()
         }
     }
 
     func presentMealDetailSheet(with meal: Meal) {
         sheet = .mealDetail(meal: meal)
     }
-    
+
     func presentRateMealSheet(with meal: Meal) {
         sheet = .logMeal(meal: meal)
     }

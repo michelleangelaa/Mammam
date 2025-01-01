@@ -9,23 +9,45 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject private var coordinator: Coordinator
+    @State private var selectedTab: Tab = .home
 
     var body: some View {
-        TabView {
-            HomeView().tabItem({
-                Label("Home", systemImage: "house.fill")
-            })
-            MealPlannerView().tabItem({
-                Label("Meal Planner", systemImage: "fork.knife")
-            })
-            ProgressView().tabItem({
-                Label("Progress", systemImage: "chart.line.text.clipboard.fill")
-            })
-            ProfileView().tabItem({
-                Label("Profile", systemImage: "person.crop.circle.fill")
-            })
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+                .tag(Tab.home)
+            MealPlannerView()
+                .tabItem {
+                    Label("Meal Planner", systemImage: "fork.knife")
+                }
+                .tag(Tab.mealPlanner)
+            ProgressView()
+                .tabItem {
+                    Label("Progress", systemImage: "chart.line.text.clipboard.fill")
+                }
+                .tag(Tab.progress)
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person.crop.circle.fill")
+                }
+                .tag(Tab.profile)
+        }
+        .onAppear {
+            if coordinator.selectedTab != nil {
+                selectedTab = coordinator.selectedTab!
+                coordinator.selectedTab = nil // Reset after navigation
+            }
         }
         .navigationBarBackButtonHidden(true)
+    }
+
+    enum Tab: Hashable {
+        case home
+        case mealPlanner
+        case progress
+        case profile
     }
 }
 
