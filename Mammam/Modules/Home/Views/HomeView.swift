@@ -51,7 +51,6 @@ struct HomeView: View {
             .padding()
             .navigationBarBackButtonHidden(true)
         }
-        
     }
     
     // MARK: - Subviews
@@ -221,14 +220,21 @@ struct HomeView: View {
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    ForEach(plan.meals?.filter(isTodayMeal) ?? [], id: \.self) { meal in
+                    ForEach(
+                        plan.meals?
+                            .filter(isTodayMeal) // Keep only today's meals
+                            .sorted {
+                                MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
+                            } ?? [],
+                        id: \.self
+                    ) { meal in
                         MealCardComponent(meal: meal)
                     }
                 }
             }
         }
     }
-    
+
     private var menuSection: some View {
         VStack(alignment: .leading) {
             Text("Fresh-eye menu")
@@ -243,8 +249,8 @@ struct HomeView: View {
             }
         }
         .onChange(of: menus) { _ in
-                try? context.save() // Force refresh on data changes
-            }
+            try? context.save() // Force refresh on data changes
+        }
         .onAppear {
             try? context.save() // Refresh data on view appear
         }

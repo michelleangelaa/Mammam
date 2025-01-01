@@ -76,7 +76,7 @@ struct MealPlannerView: View {
     }
 
     private var mealPlansScrollView: some View {
-        VStack (alignment: .leading){
+        VStack(alignment: .leading) {
             Text("Meal Planner")
                 .font(.title2)
                 .fontWeight(.bold)
@@ -98,7 +98,7 @@ struct MealPlannerView: View {
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack(spacing: 16) {
                                         ForEach(mealsForDate.sorted {
-                                            mealTypeOrder($0.type) < mealTypeOrder($1.type)
+                                            MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
                                         }) { meal in
                                             Button(action: {
                                                 coordinator.presentRateMealSheet(with: meal)
