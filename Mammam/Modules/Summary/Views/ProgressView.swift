@@ -159,14 +159,15 @@ struct ProgressView: View {
         let endMonth = formatter.string(from: endOfWeek)
         let weekOfYear = Calendar.current.component(.weekOfYear, from: startOfWeek)
 
-        // If the weeks are within the same month, display the week only once
         if startMonth == endMonth {
+            // If the weeks are within the same month, display normally
             return "\(startMonth), Week \(weekOfYear)"
         } else {
-            // Display the week with both months for clarity
-            return "\(startMonth), Week \(weekOfYear), \(endMonth), Week \(weekOfYear)"
+            // If the weeks span two different months, display both months
+            return "\(startMonth) - \(endMonth), Week \(weekOfYear)"
         }
     }
+
 }
 
 struct displayAllergicWatch: View {
