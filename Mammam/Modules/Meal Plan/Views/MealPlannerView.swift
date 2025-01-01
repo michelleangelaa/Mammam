@@ -30,7 +30,7 @@ struct MealPlannerView: View {
     }
 
     private var emptyStateView: some View {
-        VStack (alignment: .leading){
+        VStack(alignment: .leading) {
             Text("Meal Planner")
                 .font(.title2)
                 .fontWeight(.bold)
@@ -81,6 +81,26 @@ struct MealPlannerView: View {
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.horizontal)
+            HStack {
+                Button(action: {
+                    coordinator.push(page: .createMealPlan) // Correct method for navigation
+                }) {
+                    HStack {
+                        Label("Create your plan", systemImage: "lightbulb.fill")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color(UIColor.systemGray6))
+                    )
+                }
+            }
+            .padding(.horizontal)
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20) {
                     let allMeals = plans.flatMap { $0.meals ?? [] }
@@ -91,24 +111,33 @@ struct MealPlannerView: View {
 
                     ForEach(sortedDates, id: \.self) { date in
                         if let mealsForDate = groupedMeals[date] {
-                            Section(header: Text(formattedDate(date))
-                                .font(.headline)
-                                .padding(.horizontal)
-                            ) {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    LazyHStack(spacing: 16) {
-                                        ForEach(mealsForDate.sorted {
-                                            MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
-                                        }) { meal in
-                                            Button(action: {
-                                                coordinator.presentRateMealSheet(with: meal)
-                                            }) {
-                                                MealCardComponent(meal: meal)
+                            // Filter for unlogged meals
+                            let unloggedMeals = mealsForDate.filter { !$0.isLogged }
+                            
+                            // Only display the section if there are unlogged meals
+                            if !unloggedMeals.isEmpty {
+                                Section(header: Text(formattedDate(date))
+                                    .font(.headline)
+                                    .padding(.horizontal)
+                                ) {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        LazyHStack(spacing: 16) {
+                                            ForEach(
+                                                unloggedMeals
+                                                    .sorted {
+                                                        MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
+                                                    }
+                                            ) { meal in
+                                                Button(action: {
+                                                    coordinator.presentRateMealSheet(with: meal)
+                                                }) {
+                                                    MealCardComponent(meal: meal)
+                                                }
                                             }
                                         }
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 8)
                                     }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 8)
                                 }
                             }
                         }
@@ -140,7 +169,6 @@ struct MealPlannerView: View {
         return calendar.isDate(date1, inSameDayAs: date2)
     }
 }
-    
 
 private func formattedDate(_ date: Date) -> String {
     let formatter = DateFormatter()

@@ -215,29 +215,35 @@ struct HomeView: View {
     }
     
     private func mealPlanSection(for plan: MealPlan) -> some View {
-        VStack(alignment: .leading) {
-            Text("Your Meal Plan")
-                .font(.headline)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack {
-                    ForEach(
-                        plan.meals?
-                            .filter(isTodayMeal) // Keep only today's meals
-                            .sorted {
-                                MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
-                            } ?? [],
-                        id: \.self
-                    ) { meal in
-                        Button(action: {
-                            coordinator.presentRateMealSheet(with: meal)
-                        }) {
-                            MealCardComponent(meal: meal)
+        // Filter today's unlogged meals
+        let unloggedMeals = plan.meals?
+            .filter { isTodayMeal(meal: $0) && !$0.isLogged }
+            .sorted {
+                MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
+            } ?? []
+
+        return Group {
+            if !unloggedMeals.isEmpty {
+                VStack(alignment: .leading) {
+                    Text("Today's Meal Plan")
+                        .font(.headline)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack {
+                            ForEach(unloggedMeals, id: \.self) { meal in
+                                Button(action: {
+                                    coordinator.presentRateMealSheet(with: meal)
+                                }) {
+                                    MealCardComponent(meal: meal)
+                                }
+                            }
                         }
+                        .padding(.horizontal)
                     }
                 }
             }
         }
     }
+
 
     private var menuSection: some View {
         VStack(alignment: .leading) {
