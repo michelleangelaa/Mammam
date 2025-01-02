@@ -109,7 +109,7 @@ struct MealDetailView: View {
 // #Preview {
 //    NavigationStack {
 //        if let eggIngredient = myIngredients.first(where: { $0.name == "Egg" }) {
-//            MealDetailView(ingredient: eggIngredient)
+//            MealDetailView(meal: Meal, ingredient: eggIngredient)
 //        }
 //    }
 // }

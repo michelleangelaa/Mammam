@@ -213,9 +213,17 @@ class DataController {
     }
     
     private func generateallergenData(context: ModelContext) {
-        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg")
-        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy")
+        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg", isAllergy: false)
+        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy", isAllergy: false)
+        let fishAllergen = Allergen(name: "Fish", image: "i_authentication_fish", isAllergy: false)
+        let glutenAllergen = Allergen(name: "Gluten", image: "i_authentication_gluten",isAllergy: false)
+        let nonhalalAllergen =  Allergen(name: "Non-halal", image: "i_authentication_nonhalal", isAllergy: false)
+        let soyAllergen = Allergen(name: "Soy", image: "i_authentication_soy", isAllergy: false)
+        let treenutAllergen = Allergen(name: "Treenut", image: "i_authentication_treenut", isAllergy: false)
+        let shellfishAllergen = Allergen(name: "Shellfish", image: "i_authentication_shellfish", isAllergy: false)
+        let peanutAllergen = Allergen(name: "Peanut", image: "i_authentication_peanut", isAllergy: false)
         
-        [eggAllergen, dairyAllergen].forEach { context.insert($0) }
+        [eggAllergen, dairyAllergen, fishAllergen, glutenAllergen, nonhalalAllergen, soyAllergen, treenutAllergen, shellfishAllergen, peanutAllergen].forEach { context.insert($0) }
+        print("generated all")
     }
 }
