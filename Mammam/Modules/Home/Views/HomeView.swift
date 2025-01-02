@@ -12,6 +12,7 @@ struct HomeView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @Environment(\.modelContext) private var context
     @Query private var menus: [FoodMenu]
+    @Query private var baby: [Baby]
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
@@ -57,8 +58,14 @@ struct HomeView: View {
     
     private var headerSection: some View {
         HStack {
-            Image(systemName: "leaf")
-            Text("Hi, [Name]'s Mom")
+            Circle()
+                .fill(Color.pink.opacity(0.2))
+                .frame(width: 36, height: 36)
+                .overlay(
+                    Text(baby.first?.babyProfileImage ?? "􀉪")
+                        .font(.title2)
+                )
+            Text("Hi, \(baby.first?.babyName ?? "")'s Mom")
                 .font(.title2)
                 .fontWeight(.bold)
             Spacer()
@@ -237,7 +244,7 @@ struct HomeView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal)
+//                        .padding(.horizontal)
                     }
                 }
             }

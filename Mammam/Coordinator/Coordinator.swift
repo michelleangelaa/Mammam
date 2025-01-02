@@ -54,11 +54,14 @@ class Coordinator: ObservableObject {
 //        case .onBoarding : RegisterFormView()
         case .reviewMealType(let mealPlan):
             ReviewMealTypeView(mealPlan: mealPlan) // Navigate to ReviewMealTypeView
+//        case .account: AccountView()
+        case .updateProfile(let baby): UpdateBabyProfileView(baby: baby)
+//        case .foodRestrictions: UpdateFoodRestrictionView()
         }
     }
 
     @ViewBuilder
-    func buildSheet(sheet: Sheet) -> some View {
+    func buildSheet(sheet: Sheet) -> some View {    
         switch sheet {
         case .forgotPassword: MealPlanView()
         case .article: ArticleView()
@@ -89,17 +92,16 @@ class Coordinator: ObservableObject {
     func presentMealDetailSheet(with meal: Meal) {
         sheet = .mealDetail(meal: meal)
     }
-    
+
 //    func presentMealDetailAndLogMeal(with meal: Meal) {
 //        // Present the MealDetailView first
 //        sheet = .mealDetail(meal: meal)
-//        
+//
 //        // After dismissing MealDetailView, navigate to RateMealView
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 //            self.sheet = .logMeal(meal: meal)
 //        }
 //    }
-
 
     func presentRateMealSheet(with meal: Meal) {
         sheet = .logMeal(meal: meal)
