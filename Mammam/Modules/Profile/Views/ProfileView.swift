@@ -103,8 +103,7 @@ struct ProfileView: View {
                 Text("Food Restriction")
                     .fontWeight(.medium)
                 Spacer()
-                Text("\(babies.first?.allergen?.count ?? 0) restrictions")
-                    .foregroundColor(.gray)
+                Text("\(allergens.filter { $0.isAllergy }.count) restrictions")
             }
             .padding()
             .frame(maxWidth: .infinity)
