@@ -21,7 +21,7 @@ struct MainView: View {
             ProgressView().tabItem({
                 Label("Progress", systemImage: "chart.line.text.clipboard.fill")
             })
-            ProfileView().tabItem({
+            UpdateBabyProfileView(baby: Baby.sampleBaby).tabItem({
                 Label("Profile", systemImage: "person.crop.circle.fill")
             })
         }
