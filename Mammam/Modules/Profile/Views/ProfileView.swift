@@ -39,6 +39,7 @@ struct ProfileView: View {
     }
     
     // MARK: - Subviews
+
     private var headerSection: some View {
         Text("Update Baby Data")
             .font(.title2)
@@ -48,7 +49,7 @@ struct ProfileView: View {
     private var showBabyProfile: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let currentBaby = babies.first {
-                HStack(spacing: 12){
+                HStack(spacing: 12) {
                     Circle()
                         .fill(Color.pink.opacity(0.2))
                         .frame(width: 100, height: 100)
@@ -57,7 +58,7 @@ struct ProfileView: View {
                                 .font(.system(size: 50))
                         )
                     
-                    VStack(alignment: .leading, spacing: 4){
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(currentBaby.babyName)
                             .font(.title)
                             .fontWeight(.bold)
@@ -93,7 +94,9 @@ struct ProfileView: View {
     
     private var updateAllergic: some View {
         Button(action: {
-            // coordinator.push(page: .foodRestrictions)
+            if let currentBaby = babies.first {
+                coordinator.push(page: .foodRestrictions(baby: currentBaby))
+            }
         }) {
             HStack {
                 Image(systemName: "nosign")
@@ -128,6 +131,7 @@ struct ProfileView: View {
     }
     
     // MARK: - Helpers
+
     private func calculateAge(birthDate: Date) -> String {
         let now = Date()
         let components = Calendar.current.dateComponents([.year, .month], from: birthDate, to: now)
@@ -137,7 +141,6 @@ struct ProfileView: View {
     }
 }
     
-
 #Preview {
     ProfileView()
         .environmentObject(Coordinator())

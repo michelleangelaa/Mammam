@@ -56,7 +56,8 @@ class Coordinator: ObservableObject {
             ReviewMealTypeView(mealPlan: mealPlan) // Navigate to ReviewMealTypeView
 //        case .account: AccountView()
         case .updateProfile(let baby): UpdateBabyProfileView(baby: baby)
-//        case .foodRestrictions: UpdateFoodRestrictionView()
+        case .foodRestrictions: UpdateFoodRestrictionView()
+//        case .foodRestrictions(let baby): UpdateFoodRestrictionView(baby: baby)
         }
     }
 

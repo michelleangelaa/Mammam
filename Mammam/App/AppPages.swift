@@ -18,7 +18,7 @@ enum AppPages: Hashable {
     case reviewMealType(mealPlan: MealPlan)
 //    case onBoarding
     case updateProfile(baby: Baby)
-//    case foodRestrictions
+    case foodRestrictions(baby: Baby)
 //    case account
 }
 
