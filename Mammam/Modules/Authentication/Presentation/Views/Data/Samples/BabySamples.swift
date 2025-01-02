@@ -9,15 +9,15 @@ import Foundation
 
 
 extension Baby {
-    static var sampleBaby: [Baby] {
-        [
+    static var sampleBaby: Baby {
+        
             Baby(
                 babyProfileImage: "i_profile_person",
                 babyName: "eve",
                 babyBirthDate: Date()
             )
       
-        ]
+        
     }
 }
 

@@ -16,6 +16,7 @@ enum AppPages: Hashable {
     case createMealPlan
     case savedMenu
     case loadingView
+    case updateProfile(baby: Baby)
 //    case onBoarding
 }
 
