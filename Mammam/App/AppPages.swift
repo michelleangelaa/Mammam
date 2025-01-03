@@ -1,51 +1,53 @@
-//
-//  AppPages.swift
-//  Mammam
-//
-//  Created by Michelle Angela Aryanto on 15/10/24.
-//
+    //
+    //  AppPages.swift
+    //  Mammam
+    //
+    //  Created by Michelle Angela Aryanto on 15/10/24.
+    //
 
-import Foundation
+    import Foundation
 
-enum AppPages: Hashable {
-    case main
-    case logMeal
-    case motivation
-    case mealPlan
-    case createMealPlan
-    case savedMenu		
-    case loadingView
-    case reviewMealType(mealPlan: MealPlan)
-//    case onBoarding
-    case updateProfile(baby: Baby)
-    case foodRestrictions(baby: Baby)
-//    case account
-    case registrationForm
-}
+    enum AppPages: Hashable {
+        case main
+        case logMeal
+        case motivation
+        case mealPlan
+        case createMealPlan
+        case savedMenu
+        case loadingView
+        case reviewMealType(mealPlan: MealPlan)
+    //    case onBoarding
+        case updateProfile(baby: Baby)
+        case foodRestrictions(baby: Baby)
+        case account
+        case registrationForm
+        case splashScreen
+        case successSignUp
+    }
 
-enum Sheet: Identifiable {
-    var id: String {
-        switch self {
-            case .forgotPassword: return "forgotPassword"
-            case .article: return "article"
-            case .mealDetail(let meal): return "mealDetail_\(meal.hashValue)"
-            case .logMeal(let meal): return "logMeal_\(meal.hashValue)"
-            case .mealFeedback(let meal): return "mealFeedback_\(meal.hashValue)"
+    enum Sheet: Identifiable {
+        var id: String {
+            switch self {
+                case .forgotPassword: return "forgotPassword"
+                case .article: return "article"
+                case .mealDetail(let meal): return "mealDetail_\(meal.hashValue)"
+                case .logMeal(let meal): return "logMeal_\(meal.hashValue)"
+                case .mealFeedback(let meal): return "mealFeedback_\(meal.hashValue)"
+            }
         }
+
+        case forgotPassword
+        case article
+        case mealDetail(meal: Meal)
+        case logMeal(meal: Meal)
+        case mealFeedback(meal: Meal)
     }
 
-    case forgotPassword
-    case article
-    case mealDetail(meal: Meal)
-    case logMeal(meal: Meal)
-    case mealFeedback(meal: Meal)
-}
+    enum FullSceenCover: String, Identifiable {
+        var id: String {
+            self.rawValue
+        }
 
-enum FullSceenCover: String, Identifiable {
-    var id: String {
-        self.rawValue
+        case signUp
+        case loadingView
     }
-
-    case signUp
-    case loadingView
-}

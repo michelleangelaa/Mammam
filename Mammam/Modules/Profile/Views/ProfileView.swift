@@ -114,7 +114,7 @@ struct ProfileView: View {
     
     private var logOut: some View {
         Button(action: {
-            // coordinator.push(page: .account)
+             coordinator.push(page: .account)
         }) {
             HStack {
                 Image(systemName: "rectangle.portrait.and.arrow.right")

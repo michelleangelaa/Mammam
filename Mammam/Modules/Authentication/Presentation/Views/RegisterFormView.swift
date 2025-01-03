@@ -56,6 +56,7 @@ struct RegisterFormView: View {
             .padding(.horizontal)
         }
         .padding()
+        .navigationBarBackButtonHidden()
     }
 
     // Check if form is valid
