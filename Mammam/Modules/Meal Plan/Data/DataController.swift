@@ -33,11 +33,11 @@ class DataController {
             // Check each entity type independently
 //            try initializeNutrientsIfNeeded(context: context)
             try initializeIngredientsIfNeeded(context: context)
+            try initializeAllergenIfNeeded(context: context)
             try initializeFoodMenuIfNeeded(context: context)
             try initializeBabyIfNeeded(context: context)
             try initializeMotivationIfNeeded(context: context)
             try initializeArticleIfNeeded(context: context)
-            try initializeAllergenIfNeeded(context: context)
             
         } catch {
             print("Failed to initialize data: \(error)")

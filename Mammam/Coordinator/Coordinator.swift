@@ -65,10 +65,15 @@ class Coordinator: ObservableObject {
     }
 
     @ViewBuilder
-    func buildSheet(sheet: Sheet) -> some View {    
+    func buildSheet(sheet: Sheet) -> some View {
         switch sheet {
         case .forgotPassword: MealPlanView()
         case .article: ArticleView()
+        case .foodMenuDetail(let foodMenu):
+            NavigationStack {
+                FoodMenuDetailView(foodMenu: foodMenu)
+            }
+
         case .mealDetail(let meal):
             if let ingredient = meal.ingredient {
                 NavigationStack {

@@ -11,6 +11,8 @@ import SwiftUI
 struct FoodMenuCardComponent: View {
     @Environment(\.modelContext) private var context
     @ObservedObject var foodMenu: FoodMenu
+    @EnvironmentObject private var coordinator: Coordinator
+
 //
 //    @Binding var foodMenu: FoodMenu
 //    @State private var isBookmarked: Bool

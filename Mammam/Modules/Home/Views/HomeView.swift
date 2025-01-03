@@ -260,6 +260,9 @@ struct HomeView: View {
                     ForEach(menus) { food in
                         FoodMenuCardComponent(foodMenu: food)
                             .frame(width: 150)
+                            .onTapGesture {
+                                coordinator.presentSheet(sheet: .foodMenuDetail(foodMenu: food))
+                            }
                     }
                 }
             }

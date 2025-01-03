@@ -22,6 +22,8 @@ extension Ingredient {
             image: "egg",
             nutrients: [protein, fat, iron].compactMap { $0 }
         )
+        let allergenFetch = FetchDescriptor<Allergen>()
+//        let existingAllergens = (try? context.fetch(allergenFetch)) ?? []
 
         // Create allergens
         let eggAllergen = Allergen.sampleAllergens.first(where: { $0.name == "Egg" })
@@ -36,6 +38,9 @@ extension Ingredient {
             ingredients: [egg],
             allergens: [eggAllergen].compactMap { $0 }
         )
+        
+        eggAllergen?.menus?.append(meatEggPorrige)
+
 
         let cheeseMacaroni = FoodMenu(
             name: "Cheese Macaroni",
@@ -45,6 +50,11 @@ extension Ingredient {
             ingredients: [egg],
             allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         )
+        
+        eggAllergen?.menus?.append(cheeseMacaroni)
+        dairyAllergen?.menus?.append(meatEggPorrige)
+
+
 
         let butterChickenPorriage = FoodMenu(
             name: "Butter Chicken Porriage",
@@ -54,6 +64,11 @@ extension Ingredient {
             ingredients: [egg],
             allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         )
+        
+        eggAllergen?.menus?.append(butterChickenPorriage)
+        dairyAllergen?.menus?.append(butterChickenPorriage)
+
+
 
         // Connect menus to egg ingredient
         egg.menus = [meatEggPorrige, cheeseMacaroni, butterChickenPorriage]
@@ -78,13 +93,13 @@ extension Ingredient {
 
         return [egg, potato, tomato, berries]
     }
-    
+
     // Add this new method to fetch existing ingredients
     static func getExistingIngredients(context: ModelContext) -> [Ingredient] {
         let descriptor = FetchDescriptor<Ingredient>()
         return (try? context.fetch(descriptor)) ?? []
     }
-    
+
     // Add this method to find a specific ingredient by name
     static func findIngredient(named name: String, context: ModelContext) -> Ingredient? {
         let descriptor = FetchDescriptor<Ingredient>(
