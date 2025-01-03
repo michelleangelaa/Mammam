@@ -114,6 +114,8 @@ struct ProfileView: View {
     
     private var logOut: some View {
         Button(action: {
+            @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+            isLoggedIn = false // Reset logged-in state
              coordinator.push(page: .account)
         }) {
             HStack {

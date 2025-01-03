@@ -12,7 +12,9 @@ struct AccountView: View {
     @Environment(\.modelContext) private var modelContext // Access SwiftData model context
     @EnvironmentObject private var coordinator: Coordinator
     @State private var isFirstTimeSignIn: Bool = false // Track first-time sign-in
-    @State private var isLoggedIn: Bool = false // Track login state
+//    @State private var isLoggedIn: Bool = false // Track login state
+    @State private var isLoggedInState: Bool = false
+
 //    var user : User
     @Query private var users: [User] // Query all users
     @State private var currentUser: User? // Track current user
@@ -23,7 +25,7 @@ struct AccountView: View {
 
     var body: some View {
         VStack {
-            if !isLoggedIn {
+            if !isLoggedInState {
                 SignInWithAppleButton(.continue, onRequest: { request in
                     request.requestedScopes = [.fullName, .email]
                 }, onCompletion: { result in
@@ -44,9 +46,12 @@ struct AccountView: View {
         .navigationBarBackButtonHidden()
     }
 
+    
     private func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
         switch result {
         case .success(let auth):
+//            isLoggedIn = true // Save logged-in state
+            isLoggedInState = true // Update local state
             guard let appleCredential = auth.credential as? ASAuthorizationAppleIDCredential else { return }
 
             let userId = appleCredential.user
@@ -96,7 +101,8 @@ struct AccountView: View {
                 isFirstTimeSignIn = true // New user
             }
 
-            isLoggedIn = true // User is now logged in
+//            isLoggedInState = true // User is now logged in
+            
         case .failure(let error):
             print("Sign-in failed with error:", error.localizedDescription)
         }
@@ -136,6 +142,6 @@ extension User {
     }
 }
 
-//#Preview {
+// #Preview {
 //    AccountView(user: User.sampleUser)
-//}
+// }
