@@ -58,6 +58,7 @@ class Coordinator: ObservableObject {
         case .updateProfile(let baby): UpdateBabyProfileView(baby: baby)
         case .foodRestrictions: UpdateFoodRestrictionView()
 //        case .foodRestrictions(let baby): UpdateFoodRestrictionView(baby: baby)
+        case .registrationForm: RegisterFormView()
         }
     }
 

@@ -171,8 +171,8 @@ class DataController {
 //    }
     
     private func generateBabyData(context: ModelContext) {
-        let baby = Baby(babyProfileImage: "i_profile_person", babyName: "Eve", babyBirthDate: Date())
-        context.insert(baby)
+//        let baby = Baby(babyProfileImage: "✨", babyName: "Eve", babyBirthDate: Date())
+//        context.insert(baby)
     }
     
     private func generateArticleData(context: ModelContext) {

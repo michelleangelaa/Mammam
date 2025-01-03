@@ -5,11 +5,7 @@
 ////  Created by Michelle Angela Aryanto on 21/10/24.
 ////
 //
-////
-////  AccountView.swift
-////  Mammam
-////
-////  Created by Michelle Angela Aryanto on 21/10/24.
+
 //
 //import SwiftUI
 //import AuthenticationServices
