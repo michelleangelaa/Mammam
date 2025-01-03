@@ -91,7 +91,7 @@ struct ProfileView: View {
         }
         .disabled(babies.isEmpty)
     }
-    
+
     private var updateAllergic: some View {
         Button(action: {
             if let currentBaby = babies.first {
