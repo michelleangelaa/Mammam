@@ -54,10 +54,13 @@ class Coordinator: ObservableObject {
 //        case .onBoarding : RegisterFormView()
         case .reviewMealType(let mealPlan):
             ReviewMealTypeView(mealPlan: mealPlan) // Navigate to ReviewMealTypeView
-//        case .account: AccountView()
+        case .account: AccountView()
         case .updateProfile(let baby): UpdateBabyProfileView(baby: baby)
         case .foodRestrictions: UpdateFoodRestrictionView()
 //        case .foodRestrictions(let baby): UpdateFoodRestrictionView(baby: baby)
+        case .registrationForm: RegisterFormView()
+        case .splashScreen: SplashScreenView()
+        case .successSignUp: AccountSuccessView()
         }
     }
 

@@ -114,7 +114,9 @@ struct ProfileView: View {
     
     private var logOut: some View {
         Button(action: {
-            // coordinator.push(page: .account)
+            @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+            isLoggedIn = false // Reset logged-in state
+             coordinator.push(page: .account)
         }) {
             HStack {
                 Image(systemName: "rectangle.portrait.and.arrow.right")
