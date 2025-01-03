@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct MammamApp: App {
 //    let container: ModelContainer
+    @StateObject private var coordinator = Coordinator() // Create Coordinator instance
     let dataController = DataController.shared
 
     @Environment(\.modelContext) private var context
@@ -19,14 +20,15 @@ struct MammamApp: App {
 
     var body: some Scene {
         WindowGroup {
+//            RegisterFormView()
             CoordinatorView()
+//                .environmentObject(coordinator)
                 .modelContainer(dataController.container)
                 .onAppear {
                     // Move initialization here to ensure database is ready
                     dataController.initializeDataIfNeeded()
                 }
         }
-
     }
 
     init() {

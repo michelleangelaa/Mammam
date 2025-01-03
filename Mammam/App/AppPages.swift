@@ -20,6 +20,7 @@ enum AppPages: Hashable {
     case updateProfile(baby: Baby)
     case foodRestrictions(baby: Baby)
 //    case account
+    case registrationForm
 }
 
 enum Sheet: Identifiable {
