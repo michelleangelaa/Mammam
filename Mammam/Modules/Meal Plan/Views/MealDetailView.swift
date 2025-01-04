@@ -53,34 +53,21 @@ struct MealDetailView: View {
                 
                 // Available Meals Section
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Available Meals")
-                        .font(.headline)
                     
-                    if let menus = ingredient.menus {
-                        ForEach(menus, id: \.self) { menu in
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Image(menu.image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60)
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(menu.name)
-                                            .font(.subheadline)
-                                            .fontWeight(.medium)
-                                        
-                                        if let allergens = menu.allergens, !allergens.isEmpty {
-                                            Text("Allergens: " + allergens.map { $0.name }.joined(separator: ", "))
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
+                    
+                    if let menus = ingredient.menus, !menus.isEmpty {
+                        Text("Available Meals")
+                            .font(.headline)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack {
+                                ForEach(menus) { food in
+                                    FoodMenuCardComponent(foodMenu: food)
+                                        .frame(width: 150)
+                                        .onTapGesture {
+                                            coordinator.presentSheet(sheet: .foodMenuDetail(foodMenu: food))
                                         }
-                                    }
                                 }
                             }
-                            .padding(.vertical, 4)
-                            Divider()
                         }
                     } else {
                         Text("No meals available")

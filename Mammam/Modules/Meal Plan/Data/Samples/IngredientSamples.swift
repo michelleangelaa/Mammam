@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 extension Ingredient {
-    static func sampleIngredients(with nutrients: [Nutrient]) -> [Ingredient] {
+    static func sampleIngredients(with nutrients: [Nutrient], context: ModelContext? = nil) -> [Ingredient] {
         let protein = nutrients.first(where: { $0.name == "Protein" })
         let fat = nutrients.first(where: { $0.name == "Fat" })
         let zinc = nutrients.first(where: { $0.name == "Zinc" })
@@ -23,11 +23,23 @@ extension Ingredient {
             nutrients: [protein, fat, iron].compactMap { $0 }
         )
 
+        var eggAllergen: Allergen?
+        var dairyAllergen: Allergen?
+
+        if let context = context {
+            let allergenFetch = FetchDescriptor<Allergen>()
+            if let existingAllergens = try? context.fetch(allergenFetch) {
+                eggAllergen = existingAllergens.first(where: { $0.name == "Egg" })
+                dairyAllergen = existingAllergens.first(where: { $0.name == "Dairy" })
+            }
+        }
+
         let chickenLiver = Ingredient(
             name: "Chicken Liver",
             image: "i_chickenliver",
             nutrients: [protein, fat, iron].compactMap { $0 }
         )
+
 
         let lamb = Ingredient(
             name: "Lamb",
@@ -35,17 +47,31 @@ extension Ingredient {
             nutrients: [protein, fat].compactMap { $0 }
         )
 
+
+        let cheeseMacaroni = FoodMenu(
+            name: "Cheese Macaroni",
+            image: "cheesemacaroni",
+            isSaved: false,
+            desc: "",
+            ingredients: [egg],
+            allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         let duck = Ingredient(
             name: "Duck",
             image: "i_duck",
             nutrients: [protein, fat].compactMap { $0 }
+
         )
+
 
         let beefLiver = Ingredient(
             name: "Beef Liver",
             image: "i_beefliver",
             nutrients: [protein, iron].compactMap { $0 }
         )
+
+
+        // Connect menus to egg ingredient
+        egg.menus = [meatEggPorrige, cheeseMacaroni, butterChickenPorriage]
 
         let mincedBeef = Ingredient(
             name: "Minced Beef",
@@ -173,6 +199,7 @@ extension Ingredient {
             image: "i_peanuts",
             nutrients: [protein, fat].compactMap { $0 }
         )
+
 
         let potato = Ingredient(
             name: "Potato",
@@ -1302,13 +1329,13 @@ extension Ingredient {
 
         return [chickenLiver, lamb, duck,  beefLiver,mincedBeef, tofu,shrimp,catfish,longJawedMackerel,quail,egg, tilapiaFish,snapperFish,chickenBroth, fishBroth, yogurt, whiteBread, macaroni, candlenut, cheese, tunaFish, dori, fishBalls, peas, tempeh, mungBeans,soyBeans,redBeans,peanuts, potato, eggNoodle, oatFlour, glutinousRice, jellyPowder, bihun, ricePorridge, macaroni, whiteRice, whiteBread, cassava, taro, riceFlour, flour, ubi, coconutOil, coconutMilk, cornOil,canolaOil, soybeanOil, sesameOil, butter, candlenut, squid, buffaloMeat, saltedFish, catfish, carp,tilapiaFish, clams, meatball, eggYolk, duckEgg, chicken, okra, cucumber, avocado, blackJellyMushroom, radish, blackJellyMushroom,waterGourd, eggPlant, babyCorn, cabbage, cassavaLeaves, grape,langsat, durian, wateryRoseApples, Dates,pear,watermelon,snakeFruit,mangosteen,soursop,lychee, ambarella, broccoli, carrot, tomato, greenBeans, mackarel, orange, banana, apple, spinach ]
     }
-    
+
     // Add this new method to fetch existing ingredients
     static func getExistingIngredients(context: ModelContext) -> [Ingredient] {
         let descriptor = FetchDescriptor<Ingredient>()
         return (try? context.fetch(descriptor)) ?? []
     }
-    
+
     // Add this method to find a specific ingredient by name
     static func findIngredient(named name: String, context: ModelContext) -> Ingredient? {
         let descriptor = FetchDescriptor<Ingredient>(
