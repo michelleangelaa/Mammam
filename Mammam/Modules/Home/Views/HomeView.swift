@@ -17,41 +17,48 @@ struct HomeView: View {
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Heading
-                headerSection
-                
-                // Conditional Sections
-                if let todayPlan = todayMealPlan {
-                    if let unloggedMeal = nextUnloggedMeal(from: todayPlan) {
-                        currentMealTypeView(meal: unloggedMeal)
+        ZStack {
+            Image("BG_Home")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Heading
+                    headerSection
+                        
+                    // Conditional Sections
+                    if let todayPlan = todayMealPlan {
+                        if let unloggedMeal = nextUnloggedMeal(from: todayPlan) {
+                            currentMealTypeView(meal: unloggedMeal)
+                        } else {
+                            allMealsLoggedView
+                        }
                     } else {
-                        allMealsLoggedView
+                        noMealPlanView
                     }
-                } else {
-                    noMealPlanView
+                        
+                    // Story of the Day
+                    storyOfTheDaySection
+                        
+                    // Article
+                    articleSection
+                        
+                    // Meal Plan
+                    if let todayPlan = todayMealPlan {
+                        mealPlanSection(for: todayPlan)
+                    }
+                        
+                    // Menu
+                    menuSection
+                        
+                    Spacer()
                 }
-                
-                // Story of the Day
-                storyOfTheDaySection
-                
-                // Article
-                articleSection
-                
-                // Meal Plan
-                if let todayPlan = todayMealPlan {
-                    mealPlanSection(for: todayPlan)
-                }
-                
-                // Menu
-                menuSection
-                
-                Spacer()
+                .padding()
+                .padding(.top, 65)
             }
-            .padding()
-            .navigationBarBackButtonHidden(true)
         }
+        .navigationBarBackButtonHidden(true)
     }
     
     // MARK: - Subviews
