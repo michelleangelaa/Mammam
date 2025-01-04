@@ -108,7 +108,7 @@ struct RegisterFormView: View {
 
             // Create a new Baby
             let newBaby = Baby(
-                babyProfileImage: "👶🏻",
+                babyProfileImage: "👶",
                 babyName: babyName,
                 babyBirthDate: birthdate,
                 user: currentUser
@@ -145,8 +145,7 @@ struct InputBabyNameView: View {
         VStack(spacing: 16) {
             Text("👶")
                 .font(.system(size: 80))
-
-            Spacer()
+                .padding(.bottom, 40)
 
             Text("Baby's Name")
                 .font(.headline)
@@ -167,8 +166,7 @@ struct InputBabyAgeView: View {
         VStack(spacing: 16) {
             Text("👶")
                 .font(.system(size: 80))
-
-            Spacer()
+                .padding(.bottom, 40)
 
             Text("Baby's Birthdate")
                 .font(.headline)
@@ -192,8 +190,7 @@ struct InputBabyAllergiesView: View {
         VStack(spacing: 16) {
             Text("😷")
                 .font(.system(size: 80))
-
-            Spacer()
+                .padding(.bottom, 40)
 
             Text("Food Restrictions")
                 .font(.headline)
@@ -201,7 +198,7 @@ struct InputBabyAllergiesView: View {
             // Allergens grid
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3), spacing: 16) {
                 ForEach(localAllergens, id: \.self) { allergen in
-                    AllergyCard(allergen: allergen) { toggledAllergen in
+                    AllergyCardComponent(allergen: allergen) { toggledAllergen in
                         if let index = localAllergens.firstIndex(where: { $0.name == toggledAllergen.name }) {
                             localAllergens[index] = toggledAllergen
                             if toggledAllergen.isAllergy {

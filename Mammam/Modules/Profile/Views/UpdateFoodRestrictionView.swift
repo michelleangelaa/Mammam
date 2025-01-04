@@ -24,7 +24,7 @@ struct UpdateFoodRestrictionView: View {
             // Allergens grid
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3), spacing: 16) {
                 ForEach(localAllergens, id: \.self) { allergen in
-                    AllergyCard(allergen: allergen) { toggledAllergen in
+                    AllergyCardComponent(allergen: allergen) { toggledAllergen in
                         if let index = localAllergens.firstIndex(where: { $0.name == toggledAllergen.name }) {
                             localAllergens[index] = toggledAllergen
                         }
@@ -81,36 +81,6 @@ struct UpdateFoodRestrictionView: View {
     }
 }
 
-struct AllergyCard: View {
-    @State var allergen: Allergen
-    var onToggle: (Allergen) -> Void
-
-    var body: some View {
-        Button(action: {
-            allergen.isAllergy.toggle()
-            onToggle(allergen) // Notify the parent view of the change
-        }) {
-            VStack {
-                Image(allergen.image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 40, height: 40)
-
-                Text(allergen.name)
-                    .font(.caption)
-                    .fontWeight(.bold)
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(allergen.isAllergy ? Color.pink.opacity(0.2) : Color.gray.opacity(0.1))
-            .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(allergen.isAllergy ? Color.pink : Color.gray, lineWidth: 2)
-            )
-        }
-    }
-}
 
 #Preview {
     UpdateFoodRestrictionView()
