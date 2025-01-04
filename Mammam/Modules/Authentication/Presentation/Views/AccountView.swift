@@ -1,7 +1,7 @@
-///  AccountView.swift
-////  Mammam
-////
-////  Created by Michelle Angela Aryanto on 21/10/24.
+//  AccountView.swift
+//  Mammam
+//
+//  Created by Michelle Angela Aryanto on 21/10/24.
 //
 import AuthenticationServices
 import SwiftData
@@ -46,22 +46,18 @@ struct AccountView: View {
         .navigationBarBackButtonHidden()
     }
 
-    
     private func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
         switch result {
         case .success(let auth):
-//            isLoggedIn = true // Save logged-in state
-            isLoggedInState = true // Update local state
+            isLoggedInState = true
             guard let appleCredential = auth.credential as? ASAuthorizationAppleIDCredential else { return }
 
             let userId = appleCredential.user
-
-            // Retrieve or fallback to saved data in UserDefaults
             let email = appleCredential.email ?? UserDefaults.standard.string(forKey: "\(userId)_email") ?? "Unavailable"
             let firstName = appleCredential.fullName?.givenName ?? UserDefaults.standard.string(forKey: "\(userId)_firstName") ?? "Unavailable"
             let lastName = appleCredential.fullName?.familyName ?? UserDefaults.standard.string(forKey: "\(userId)_lastName") ?? "Unavailable"
 
-            // Save to UserDefaults for future sign-ins
+            // Save to UserDefaults
             if appleCredential.email != nil {
                 UserDefaults.standard.setValue(email, forKey: "\(userId)_email")
             }
@@ -72,11 +68,7 @@ struct AccountView: View {
                 UserDefaults.standard.setValue(lastName, forKey: "\(userId)_lastName")
             }
 
-            // Check if the user already exists in the database
             if let existingUser = fetchUser(by: userId) {
-                print("User already exists:", existingUser)
-
-                // Update existing user with new data if available
                 if email != "Unavailable" {
                     existingUser.email = email
                 }
@@ -86,27 +78,30 @@ struct AccountView: View {
                 if lastName != "Unavailable" {
                     existingUser.lastName = lastName
                 }
+                currentUser = existingUser
                 saveContext()
-                isFirstTimeSignIn = false // Existing user
-
+                isFirstTimeSignIn = false
             } else {
-                // Create and save a new user
                 let newUser = User(userId: userId, email: email, firstName: firstName, lastName: lastName)
                 modelContext.insert(newUser)
                 currentUser = newUser
-
                 saveContext()
-                print("User saved successfully:", newUser)
-
-                isFirstTimeSignIn = true // New user
+                isFirstTimeSignIn = true
             }
 
-//            isLoggedInState = true // User is now logged in
-            
         case .failure(let error):
             print("Sign-in failed with error:", error.localizedDescription)
         }
     }
+
+    // Link a Baby to the User if not already linked
+//    private func linkBabyToUser(_ user: User) {
+//        if user.baby == nil {
+//            let newBaby = Baby(babyProfileImage: "👶🏻", babyName: "Default Name", babyBirthDate: Date(), user: user)
+//            modelContext.insert(newBaby)
+//            user.baby = newBaby
+//        }
+//    }
 
     private func fetchUser(by userId: String) -> User? {
         let fetchRequest = FetchDescriptor<User>(
@@ -131,16 +126,16 @@ struct AccountView: View {
     }
 }
 
-extension User {
-    static var sampleUser: User {
-        User(
-            userId: "1",
-            email: "eve@gmail.com",
-            firstName: "eve",
-            lastName: "san"
-        )
-    }
-}
+//extension User {
+//    static var sampleUser: User {
+//        User(
+//            userId: "1",
+//            email: "eve@gmail.com",
+//            firstName: "eve",
+//            lastName: "san"
+//        )
+//    }
+//}
 
 // #Preview {
 //    AccountView(user: User.sampleUser)

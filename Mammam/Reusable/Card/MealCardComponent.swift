@@ -13,7 +13,7 @@ struct MealCardComponent: View {
     var body: some View {
         VStack(spacing: 10) {
             if let ingredient = meal.ingredient {
-                Image(ingredient.image ?? "leaf")
+                Image(ingredient.image ?? "fork.knife")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 70, height: 70)

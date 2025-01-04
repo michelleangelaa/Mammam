@@ -57,6 +57,7 @@ struct FoodMenuCardComponent: View {
                 .fill(Color(UIColor.systemGray6))
         )
         .padding(.horizontal, 8)
+        
     }
     
 //    private func toggleBookmark() {

@@ -46,50 +46,89 @@ struct ProgressView: View {
             }
             .padding(.horizontal)
 
-            VStack {
-                Chart(filteredNutrients, id: \.name) { nutrient in
-                    SectorMark(
-                        angle: .value("Count", nutrient.nutrientCount),
-                        innerRadius: .ratio(0.618),
-                        angularInset: 1.5
-                    )
-                    .cornerRadius(5)
-                    .foregroundStyle(by: .value("Nutrient", nutrient.name))
+            if filteredMeals.isEmpty {
+                // Empty State View
+                VStack(spacing: 16) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray)
+                    Text("Nothing was logged during this period")
+                        .font(.body)
+                        .foregroundColor(.gray)
                 }
-                .chartLegend(position: .automatic).padding(.vertical)
-                .chartBackground { chartProxy in
-                    GeometryReader { geometry in
-                        if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
-                            VStack {
-                                Text("TOTAL")
-                                Text("\(totalLoggedMealsCount) Meals")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack {
+                    // Pie Chart for Nutrients
+                    Chart(filteredNutrients, id: \.name) { nutrient in
+                        SectorMark(
+                            angle: .value("Count", nutrient.nutrientCount),
+                            innerRadius: .ratio(0.618),
+                            angularInset: 1.5
+                        )
+                        .cornerRadius(5)
+                        .foregroundStyle(by: .value("Nutrient", nutrient.name))
+                    }
+                    .chartLegend(position: .automatic).padding(.vertical)
+                    .chartBackground { chartProxy in
+                        GeometryReader { geometry in
+                            if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
+                                VStack {
+                                    Text("TOTAL")
+                                    Text("\(totalLoggedMealsCount) Meals")
+                                }
+                                .position(x: frame.midX, y: frame.midY)
                             }
-                            .position(x: frame.midX, y: frame.midY)
                         }
                     }
+                    .frame(width: 324, height: 200)
+                    .padding()
                 }
-                .frame(width: 324, height: 200)
-                .padding()
-            }
 
-            ScrollView {
-                LazyVStack(alignment: .leading) {
-                    displayAllergicWatch(meals: filteredMeals, coordinator: coordinator)
-                    displayLogHistory(meals: filteredMeals, period: period, coordinator: coordinator)
+                ScrollView {
+                    LazyVStack(alignment: .leading) {
+                        displayAllergicWatch(meals: filteredMeals, coordinator: coordinator)
+                        displayLogHistory(meals: filteredMeals, period: period, coordinator: coordinator)
+                    }
                 }
             }
         }
         .padding()
     }
 
-    private var totalFilteredNutrientCount: Int {
-        return filteredNutrients.reduce(0) { $0 + $1.nutrientCount }
+    // MARK: - Computed Properties
+
+    private var percentageChange: Double {
+        let previousCount = totalLoggedMealsCount(for: -1)
+        let currentCount = totalLoggedMealsCount
+        guard previousCount > 0 else { return 0 }
+        return Double(currentCount - previousCount) / Double(previousCount) * 100
     }
-    
+
+    private var percentageChangeText: String {
+        if percentageChange > 0 {
+            return "+\(String(format: "%.1f", percentageChange))% from last \(period == 0 ? "month" : "week")"
+        } else if percentageChange < 0 {
+            return "\(String(format: "%.1f", percentageChange))% from last \(period == 0 ? "month" : "week")"
+        } else {
+            return "No change from last \(period == 0 ? "month" : "week")"
+        }
+    }
+
     private var totalLoggedMealsCount: Int {
         return filteredMeals.count
     }
 
+    private func totalLoggedMealsCount(for offset: Int) -> Int {
+        let calendar = Calendar.current
+        let date = calendar.date(byAdding: period == 0 ? .month : .weekOfYear, value: offset, to: currentDate) ?? currentDate
+        let range = period == 0 ? calendar.dateInterval(of: .month, for: date) : calendar.dateInterval(of: .weekOfYear, for: date)
+
+        return meals.filter {
+            $0.isLogged &&
+                ($0.timeGiven >= (range?.start ?? Date()) && $0.timeGiven <= (range?.end ?? Date()))
+        }.count
+    }
 
     private var filteredMeals: [Meal] {
         let calendar = Calendar.current
@@ -172,7 +211,6 @@ struct ProgressView: View {
             return "\(startMonth) - \(endMonth), Week \(weekOfYear)"
         }
     }
-
 }
 
 struct displayAllergicWatch: View {
@@ -204,28 +242,57 @@ struct displayLogHistory: View {
     var coordinator: Coordinator
 
     var body: some View {
-        HStack {
-            Image(systemName: "menucard")
-            Text("Log History")
-            if period == 0 && meals.count > 2 * 7 * 5 {
-                Text("View all")
-                NavigationLink("View All") {
-                    LogHistoryView(meals: meals)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "menucard")
+                Text("Log History")
+                Spacer()
+                if period == 0 && meals.count > 14 * 5 {
+                    NavigationLink("View All") {
+                        LogHistoryView(meals: meals)
+                    }
                 }
             }
-        }
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                let displayedMeals = period == 0 ? Array(meals.prefix(2 * 7 * 5)) : meals // Limit to 2 weeks if monthly
-                ForEach(displayedMeals.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
-                    Button(action: {
-                        coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
-                    }) {
-                        HistoryMealCardView(meal: meal)
+            .padding(.horizontal)
+
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 16) {
+                    ForEach(groupMealsByDate(), id: \.key) { date, dailyMeals in
+                        VStack(alignment: .leading, spacing: 8) {
+                            // Date Header
+                            Text(formattedDate(date))
+                                .font(.headline)
+                                .padding(.horizontal)
+
+                            // Meals for the Date
+                            ForEach(dailyMeals, id: \.self) { meal in
+                                Button(action: {
+                                    coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
+                                }) {
+                                    HistoryMealCardView(meal: meal)
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    // Helper function to group meals by date
+    private func groupMealsByDate() -> [(key: Date, value: [Meal])] {
+        let calendar = Calendar.current
+        let groupedMeals = Dictionary(grouping: meals.sorted(by: { $0.timeGiven < $1.timeGiven })) { meal in
+            calendar.startOfDay(for: meal.timeGiven)
+        }
+        return groupedMeals.sorted { $0.key < $1.key }
+    }
+
+    // Helper function to format date
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
     }
 }
 
@@ -234,7 +301,7 @@ struct HistoryMealCardView: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(meal.ingredient?.image ?? "leaf")
+            Image(meal.ingredient?.image ?? "fork.knife")
                 .resizable()
                 .frame(width: 70, height: 70)
                 .background(Color(UIColor.systemGray5))

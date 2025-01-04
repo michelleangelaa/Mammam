@@ -5,6 +5,7 @@
 //  Created by Michelle Angela Aryanto on 04/12/24.
 //
 
+import PhotosUI
 import SwiftData
 import SwiftUI
 
@@ -104,28 +105,25 @@ struct MealFeedbackView: View {
 
                 // Notes Section
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(systemName: "doc.text")
-                        Text("Notes")
-                            .font(.subheadline)
-                            .fontWeight(.bold)
-                    }
-                    HStack(spacing: 16) {
-                        Image(meal.ingredient?.image ?? "leaf")
+                    if let photoData = meal.photo, let uiImage = UIImage(data: photoData) {
+                        Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 50, height: 50)
+                            .scaledToFit()
+                            .frame(maxWidth: 150, maxHeight: 150)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                        Text(meal.notes)
-                            .font(.body)
+                    } else {
+                        Text("No photo available")
+                            .foregroundColor(.secondary)
                     }
+                    Text(meal.notes)
+                        .font(.body)
                 }
                 .padding(.horizontal)
 
                 Spacer()
 
                 // Back to Home Button
-                if(fromRateMealView){
+                if fromRateMealView {
                     Button(action: {
                         coordinator.dismissSheetAndNavigateToHome()
                     }) {
@@ -138,7 +136,6 @@ struct MealFeedbackView: View {
                     }
                     .padding(.horizontal)
                 }
-                
 
                 Spacer()
             }
@@ -235,7 +232,6 @@ private func feedbackMessage(for meal: Meal) -> String {
         return "Don’t worry, mom! It’s all part of the journey. Keep trying—your patience is building their love for food."
     }
 }
-
 
 #Preview {
     let sampleIngredient = Ingredient(name: "Egg", image: "egg")

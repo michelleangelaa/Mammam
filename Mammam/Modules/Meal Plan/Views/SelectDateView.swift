@@ -16,6 +16,10 @@ struct SelectDateView: View {
     @State private var createdMealPlan: MealPlan?
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    
+//    @Query(sort: \User.firstName) private var user: [User]
+
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 40) {
@@ -114,17 +118,31 @@ struct SelectDateView: View {
     }
 
     private func createMealPlan() {
-        let newMealPlan = MealPlan(startDate: startDate, endDate: endDate)
+        // Fetch the current user's baby
+        let fetchRequest = FetchDescriptor<User>()
+        guard let currentUser = try? context.fetch(fetchRequest).first,
+              let baby = currentUser.baby else {
+            print("No user or baby found")
+            return
+        }
+        
+        let newMealPlan = MealPlan(startDate: startDate, endDate: endDate, baby: baby)
         context.insert(newMealPlan)
-
+        
+        // Add to baby's meal plans
+        if baby.mealPlans == nil {
+            baby.mealPlans = []
+        }
+        baby.mealPlans?.append(newMealPlan)
+        
         generateMeals(for: newMealPlan)
-
+        
         do {
             try context.save()
         } catch {
             print("Failed to save context: \(error)")
         }
-
+        
         createdMealPlan = newMealPlan
     }
 
@@ -224,7 +242,7 @@ struct SelectDateView: View {
         return formatter.string(from: date)
     }
 }
-
-#Preview {
-    SelectDateView()
-}
+//
+//#Preview {
+//    SelectDateView(currentUser: currentUser)
+//}

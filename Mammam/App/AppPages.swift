@@ -34,6 +34,7 @@ enum Sheet: Identifiable {
             case .logMeal(let meal): return "logMeal_\(meal.hashValue)"
             case .mealFeedback(let meal): return "mealFeedback_\(meal.hashValue)"
             case .foodMenuDetail(let foodMenu): return "foodMenu"
+            case .swapIngredient: return "swap"
         }
     }
 
@@ -43,6 +44,7 @@ enum Sheet: Identifiable {
     case logMeal(meal: Meal)
     case mealFeedback(meal: Meal)
     case foodMenuDetail(foodMenu: FoodMenu)
+    case swapIngredient(meal: Meal)
 }
 
 enum FullSceenCover: String, Identifiable {
