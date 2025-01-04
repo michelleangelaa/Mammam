@@ -13,21 +13,21 @@ class Baby {
     var babyProfileImage: String
     var babyName: String
     var babyBirthDate: Date
-    @Relationship(deleteRule:.cascade)
+    @Relationship(deleteRule: .cascade)
     var allergen: [Allergen]?
-    
+
 //    @Relationship(deleteRule:.cascade)
 //    var articles: [Article]?
-//    
+//
 //    @Relationship(deleteRule:.cascade)
 //    var motivation: [Motivation]?
-    
-    @Relationship(deleteRule:.cascade)
+
+    @Relationship(deleteRule: .cascade)
     var mealPlans: [MealPlan]?
-    
-  
-    var user : User?
-    
+
+    @Relationship(inverse: \User.baby)
+    var user: User?
+
     init(babyProfileImage: String, babyName: String, babyBirthDate: Date, allergen: [Allergen]? = nil, user: User? = nil) {
         self.babyProfileImage = babyProfileImage
         self.babyName = babyName
@@ -36,5 +36,3 @@ class Baby {
         self.user = user
     }
 }
-
-

@@ -97,23 +97,39 @@ struct RegisterFormView: View {
     // Save Baby Data
     private func saveBabyData() {
         do {
+            // Fetch current user
+            let fetchRequest = FetchDescriptor<User>()
+            let users = try context.fetch(fetchRequest)
+            guard let currentUser = users.first else {
+                print("No user found")
+                return
+            }
+            
             // Create a new Baby
-            let newBaby = Baby(babyProfileImage: "👶🏻", babyName: babyName, babyBirthDate: birthdate)
+            let newBaby = Baby(
+                babyProfileImage: "👶🏻",
+                babyName: babyName,
+                babyBirthDate: birthdate,
+                user: currentUser
+            )
+            
+            // Set the relationship both ways
+            currentUser.baby = newBaby
+            
             context.insert(newBaby)
-
-            // Update allergens for this baby
-            let fetchDescriptor = FetchDescriptor<Allergen>()
-            let allAllergens = try context.fetch(fetchDescriptor)
-
-            // Update isAllergy status for each allergen based on selection
+            
+            // Update allergens
+            let allergenFetchDescriptor = FetchDescriptor<Allergen>()
+            let allAllergens = try context.fetch(allergenFetchDescriptor)
+            
+            // Update isAllergy status for each allergen
             for allergen in allAllergens {
                 allergen.isAllergy = selectedAllergies.contains(allergen.name)
             }
-
-            // Save all changes
+            
             try context.save()
             print("Baby and allergen data saved successfully!")
-
+            
         } catch {
             print("Error saving data: \(error)")
         }
