@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import PhotosUI
 
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
@@ -28,6 +29,8 @@ struct RateMealView: View {
     @State private var consumedQty: Double = 1.0
     @State private var isAllergic: Bool = false
     @State private var notes: String = ""
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var selectedPhotoData: Data?
 
     var units = ["Tea Spoon", "Table Spoon", "Cup"]
 
@@ -43,7 +46,9 @@ struct RateMealView: View {
         _consumedQty = State(initialValue: meal.consumedQty)
         _isAllergic = State(initialValue: meal.isAllergic)
         _notes = State(initialValue: meal.notes)
+        _selectedPhotoData = State(initialValue: meal.photo)
     }
+        
 
     var body: some View {
         VStack {
@@ -103,7 +108,41 @@ struct RateMealView: View {
                     .pickerStyle(.segmented)
                 }
 
-                TextField("Notes", text: $notes)
+                VStack (alignment: .leading){
+                    TextField("Notes", text: $notes)
+                    PhotosPicker(
+                        selection: $selectedPhoto,
+                        matching: .images,
+                        photoLibrary: .shared()) {
+                            Group {
+                                if let selectedPhotoData,
+                                   let uiImage = UIImage(data: selectedPhotoData) {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                } else {
+                                    Image(systemName: "photo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .tint(.primary)
+                                }
+                            }
+                            .frame(width: 100, height: 100)
+                            .overlay(alignment: .bottomTrailing) {
+                                if selectedPhotoData != nil {
+                                    Button {
+                                        selectedPhoto = nil
+                                        selectedPhotoData = nil
+                                    } label: {
+                                        Image(systemName: "x.circle.fill")
+                                            .foregroundStyle(.rose500)
+                                    }
+                                }
+                            }
+                                
+                        }
+                        
+                }
             }
 
             // Save Button with Validation
@@ -138,6 +177,11 @@ struct RateMealView: View {
                 EmptyView()
             }
         }
+        .task(id: selectedPhoto) {
+            if let data = try? await selectedPhoto?.loadTransferable(type: Data.self) {
+                selectedPhotoData = data
+            }
+        }
     }
 
     // MARK: - Update the existing Meal
@@ -162,6 +206,7 @@ struct RateMealView: View {
         meal.consumedQty = consumedQty
         meal.isAllergic = isAllergic
         meal.notes = notes
+        meal.photo = selectedPhotoData
 
         do {
             try context.save()
