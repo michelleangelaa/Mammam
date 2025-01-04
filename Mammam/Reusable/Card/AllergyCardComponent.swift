@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct AllergyCardComponent: View {
-    @State var allergen: Allergen
+    @Environment(\.modelContext) private var modelContext
+    @Binding var allergen: Allergen
     var onToggle: (Allergen) -> Void
-
+    
     var body: some View {
         Button(action: {
-            allergen.isAllergy.toggle()
-            onToggle(allergen)
+            updateAllergenState()
         }) {
-            VStack(spacing: 2) { // Add spacing between the image and the text
+            VStack(spacing: 2) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(Color(UIColor.systemGray6))
@@ -26,10 +26,8 @@ struct AllergyCardComponent: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 60, height: 60)
-                        .clipShape(Circle())
-
                 }
-
+                
                 Text(allergen.name)
                     .font(.footnote)
                     .foregroundColor(allergen.isAllergy ? Color.white : Color.black)
@@ -38,32 +36,32 @@ struct AllergyCardComponent: View {
             .frame(width: 85, height: 105)
             .background(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .foregroundColor(allergen.isAllergy ? Color.pink : Color.gray) // Text color
-//                    .fill(Color(UIColor.systemGray5)) // Background for the entire card
+                    .foregroundColor(allergen.isAllergy ? Color.rose.rose600 : Color.gray.gray400)
             )
-//            .overlay(
-//                RoundedRectangle(cornerRadius: 20)
-//                    .foregroundColor(allergen.isAllergy ?  Color.pink : Color.gray) // Text color
-//            )
         }
-//            VStack {
-//                Image(allergen.image)
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 40, height: 40)
-//
-//                Text(allergen.name)
-//                    .font(.caption)
-//                    .fontWeight(.bold)
-//            }
-//            .padding()
-//            .frame(maxWidth: .infinity)
-//            .background(allergen.isAllergy ? Color.pink.opacity(0.2) : Color.gray.opacity(0.1))
-//            .cornerRadius(10)
-//            .overlay(
-//                RoundedRectangle(cornerRadius: 10)
-//                    .stroke(allergen.isAllergy ? Color.pink : Color.gray, lineWidth: 2)
-//            )
+    }
+    
+    private func updateAllergenState() {
+        // Toggle the allergy state
+        allergen.isAllergy.toggle()
+        
+        // Update the image based on the new state
+        let newImage = allergen.isAllergy ?
+            allergen.image.replacingOccurrences(of: "_selected", with: "") + "_selected" :
+            allergen.image.replacingOccurrences(of: "_selected", with: "")
+        
+        allergen.image = newImage
+        
+        // Save changes to the database
+        do {
+            try modelContext.save()
+            print("Successfully updated allergen state: \(allergen.name), isAllergy: \(allergen.isAllergy), image: \(allergen.image)")
+        } catch {
+            print("Failed to save allergen update: \(error)")
+        }
+        
+        // Call the onToggle callback
+        onToggle(allergen)
     }
 }
 

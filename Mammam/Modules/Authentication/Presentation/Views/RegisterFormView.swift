@@ -147,8 +147,10 @@ struct InputBabyNameView: View {
                 .font(.system(size: 80))
                 .padding(.bottom, 40)
 
-            Text("Baby's Name")
-                .font(.headline)
+            VStack(alignment: .leading) {
+                Text("Baby's Name")
+                    .font(.headline)
+            }
 
             TextField("Name", text: $babyName)
                 .padding()
@@ -168,8 +170,10 @@ struct InputBabyAgeView: View {
                 .font(.system(size: 80))
                 .padding(.bottom, 40)
 
-            Text("Baby's Birthdate")
-                .font(.headline)
+            VStack(alignment: .leading) {
+                Text("Baby's Birthdate")
+                    .font(.headline)
+            }
 
             DatePicker("", selection: $birthdate, displayedComponents: .date)
                 .datePickerStyle(.wheel)
@@ -194,10 +198,10 @@ struct InputBabyAllergiesView: View {
 
             Text("Food Restrictions")
                 .font(.headline)
-    
+
             // Allergens grid
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3), spacing: 16) {
-                ForEach(localAllergens, id: \.self) { allergen in
+                ForEach($localAllergens, id: \.self) { allergen in
                     AllergyCardComponent(allergen: allergen) { toggledAllergen in
                         if let index = localAllergens.firstIndex(where: { $0.name == toggledAllergen.name }) {
                             localAllergens[index] = toggledAllergen
