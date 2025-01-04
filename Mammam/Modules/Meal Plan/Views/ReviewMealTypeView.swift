@@ -179,10 +179,11 @@ struct ReviewMealCardView: View {
     var dayRange: String
     var onReplace: (Ingredient) -> Void
     @Environment(\.modelContext) private var context
+    @EnvironmentObject private var coordinator: Coordinator
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(meal.ingredient?.image ?? "leaf") // Placeholder for the meal image
+            Image(meal.ingredient?.image ?? "fork.knife") // Placeholder for the meal image
                 .resizable()
                 .frame(width: 70, height: 70)
                 .background(Color(UIColor.systemGray5))
@@ -230,6 +231,9 @@ struct ReviewMealCardView: View {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(UIColor.systemGray6))
         )
+        .onTapGesture {
+            coordinator.presentSwapIngredientsSheet(for: meal) // Trigger the half-sheet
+        }
     }
 }
 

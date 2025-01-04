@@ -234,7 +234,7 @@ struct HistoryMealCardView: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(meal.ingredient?.image ?? "leaf")
+            Image(meal.ingredient?.image ?? "fork.knife")
                 .resizable()
                 .frame(width: 70, height: 70)
                 .background(Color(UIColor.systemGray5))
