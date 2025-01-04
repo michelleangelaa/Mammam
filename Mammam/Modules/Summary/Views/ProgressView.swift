@@ -46,50 +46,89 @@ struct ProgressView: View {
             }
             .padding(.horizontal)
 
-            VStack {
-                Chart(filteredNutrients, id: \.name) { nutrient in
-                    SectorMark(
-                        angle: .value("Count", nutrient.nutrientCount),
-                        innerRadius: .ratio(0.618),
-                        angularInset: 1.5
-                    )
-                    .cornerRadius(5)
-                    .foregroundStyle(by: .value("Nutrient", nutrient.name))
+            if filteredMeals.isEmpty {
+                // Empty State View
+                VStack(spacing: 16) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray)
+                    Text("Nothing was logged during this period")
+                        .font(.body)
+                        .foregroundColor(.gray)
                 }
-                .chartLegend(position: .automatic).padding(.vertical)
-                .chartBackground { chartProxy in
-                    GeometryReader { geometry in
-                        if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
-                            VStack {
-                                Text("TOTAL")
-                                Text("\(totalLoggedMealsCount) Meals")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack {
+                    // Pie Chart for Nutrients
+                    Chart(filteredNutrients, id: \.name) { nutrient in
+                        SectorMark(
+                            angle: .value("Count", nutrient.nutrientCount),
+                            innerRadius: .ratio(0.618),
+                            angularInset: 1.5
+                        )
+                        .cornerRadius(5)
+                        .foregroundStyle(by: .value("Nutrient", nutrient.name))
+                    }
+                    .chartLegend(position: .automatic).padding(.vertical)
+                    .chartBackground { chartProxy in
+                        GeometryReader { geometry in
+                            if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
+                                VStack {
+                                    Text("TOTAL")
+                                    Text("\(totalLoggedMealsCount) Meals")
+                                }
+                                .position(x: frame.midX, y: frame.midY)
                             }
-                            .position(x: frame.midX, y: frame.midY)
                         }
                     }
+                    .frame(width: 324, height: 200)
+                    .padding()
                 }
-                .frame(width: 324, height: 200)
-                .padding()
-            }
 
-            ScrollView {
-                LazyVStack(alignment: .leading) {
-                    displayAllergicWatch(meals: filteredMeals, coordinator: coordinator)
-                    displayLogHistory(meals: filteredMeals, period: period, coordinator: coordinator)
+                ScrollView {
+                    LazyVStack(alignment: .leading) {
+                        displayAllergicWatch(meals: filteredMeals, coordinator: coordinator)
+                        displayLogHistory(meals: filteredMeals, period: period, coordinator: coordinator)
+                    }
                 }
             }
         }
         .padding()
     }
 
-    private var totalFilteredNutrientCount: Int {
-        return filteredNutrients.reduce(0) { $0 + $1.nutrientCount }
+    // MARK: - Computed Properties
+
+    private var percentageChange: Double {
+        let previousCount = totalLoggedMealsCount(for: -1)
+        let currentCount = totalLoggedMealsCount
+        guard previousCount > 0 else { return 0 }
+        return Double(currentCount - previousCount) / Double(previousCount) * 100
     }
-    
+
+    private var percentageChangeText: String {
+        if percentageChange > 0 {
+            return "+\(String(format: "%.1f", percentageChange))% from last \(period == 0 ? "month" : "week")"
+        } else if percentageChange < 0 {
+            return "\(String(format: "%.1f", percentageChange))% from last \(period == 0 ? "month" : "week")"
+        } else {
+            return "No change from last \(period == 0 ? "month" : "week")"
+        }
+    }
+
     private var totalLoggedMealsCount: Int {
         return filteredMeals.count
     }
 
+    private func totalLoggedMealsCount(for offset: Int) -> Int {
+        let calendar = Calendar.current
+        let date = calendar.date(byAdding: period == 0 ? .month : .weekOfYear, value: offset, to: currentDate) ?? currentDate
+        let range = period == 0 ? calendar.dateInterval(of: .month, for: date) : calendar.dateInterval(of: .weekOfYear, for: date)
+
+        return meals.filter {
+            $0.isLogged &&
+                ($0.timeGiven >= (range?.start ?? Date()) && $0.timeGiven <= (range?.end ?? Date()))
+        }.count
+    }
 
     private var filteredMeals: [Meal] {
         let calendar = Calendar.current
@@ -172,7 +211,6 @@ struct ProgressView: View {
             return "\(startMonth) - \(endMonth), Week \(weekOfYear)"
         }
     }
-
 }
 
 struct displayAllergicWatch: View {
@@ -257,7 +295,6 @@ struct displayLogHistory: View {
         return formatter.string(from: date)
     }
 }
-
 
 struct HistoryMealCardView: View {
     var meal: Meal
