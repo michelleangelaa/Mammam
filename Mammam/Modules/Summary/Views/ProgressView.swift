@@ -204,30 +204,60 @@ struct displayLogHistory: View {
     var coordinator: Coordinator
 
     var body: some View {
-        HStack {
-            Image(systemName: "menucard")
-            Text("Log History")
-            if period == 0 && meals.count > 2 * 7 * 5 {
-                Text("View all")
-                NavigationLink("View All") {
-                    LogHistoryView(meals: meals)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "menucard")
+                Text("Log History")
+                Spacer()
+                if period == 0 && meals.count > 14 * 5 {
+                    NavigationLink("View All") {
+                        LogHistoryView(meals: meals)
+                    }
                 }
             }
-        }
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                let displayedMeals = period == 0 ? Array(meals.prefix(2 * 7 * 5)) : meals // Limit to 2 weeks if monthly
-                ForEach(displayedMeals.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
-                    Button(action: {
-                        coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
-                    }) {
-                        HistoryMealCardView(meal: meal)
+            .padding(.horizontal)
+
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 16) {
+                    ForEach(groupMealsByDate(), id: \.key) { date, dailyMeals in
+                        VStack(alignment: .leading, spacing: 8) {
+                            // Date Header
+                            Text(formattedDate(date))
+                                .font(.headline)
+                                .padding(.horizontal)
+
+                            // Meals for the Date
+                            ForEach(dailyMeals, id: \.self) { meal in
+                                Button(action: {
+                                    coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
+                                }) {
+                                    HistoryMealCardView(meal: meal)
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
+    // Helper function to group meals by date
+    private func groupMealsByDate() -> [(key: Date, value: [Meal])] {
+        let calendar = Calendar.current
+        let groupedMeals = Dictionary(grouping: meals.sorted(by: { $0.timeGiven < $1.timeGiven })) { meal in
+            calendar.startOfDay(for: meal.timeGiven)
+        }
+        return groupedMeals.sorted { $0.key < $1.key }
+    }
+
+    // Helper function to format date
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
+    }
 }
+
 
 struct HistoryMealCardView: View {
     var meal: Meal
