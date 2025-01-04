@@ -27,7 +27,7 @@ struct FoodMenuCardComponent: View {
             ZStack(alignment: .topTrailing) {
                 Image(foodMenu.image)
                     .resizable()
-                    .scaledToFill()
+                    .aspectRatio(contentMode: .fill)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 
                 Button(action: { toggleBookmark() }) {
