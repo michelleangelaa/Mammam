@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 extension Ingredient {
-    static func sampleIngredients(with nutrients: [Nutrient]) -> [Ingredient] {
+    static func sampleIngredients(with nutrients: [Nutrient], context: ModelContext? = nil) -> [Ingredient] {
         let protein = nutrients.first(where: { $0.name == "Protein" })
         let fat = nutrients.first(where: { $0.name == "Fat" })
         let zinc = nutrients.first(where: { $0.name == "Zinc" })
@@ -22,12 +22,16 @@ extension Ingredient {
             image: "egg",
             nutrients: [protein, fat, iron].compactMap { $0 }
         )
-        let allergenFetch = FetchDescriptor<Allergen>()
-//        let existingAllergens = (try? context.fetch(allergenFetch)) ?? []
+        var eggAllergen: Allergen?
+        var dairyAllergen: Allergen?
 
-        // Create allergens
-        let eggAllergen = Allergen.sampleAllergens.first(where: { $0.name == "Egg" })
-        let dairyAllergen = Allergen.sampleAllergens.first(where: { $0.name == "Dairy" })
+        if let context = context {
+            let allergenFetch = FetchDescriptor<Allergen>()
+            if let existingAllergens = try? context.fetch(allergenFetch) {
+                eggAllergen = existingAllergens.first(where: { $0.name == "Egg" })
+                dairyAllergen = existingAllergens.first(where: { $0.name == "Dairy" })
+            }
+        }
 
         // Create menus with egg ingredient
         let meatEggPorrige = FoodMenu(
@@ -38,9 +42,8 @@ extension Ingredient {
             ingredients: [egg],
             allergens: [eggAllergen].compactMap { $0 }
         )
-        
-        eggAllergen?.menus?.append(meatEggPorrige)
 
+//        eggAllergen?.menus?.append(meatEggPorrige)
 
         let cheeseMacaroni = FoodMenu(
             name: "Cheese Macaroni",
@@ -50,11 +53,9 @@ extension Ingredient {
             ingredients: [egg],
             allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         )
-        
-        eggAllergen?.menus?.append(cheeseMacaroni)
-        dairyAllergen?.menus?.append(meatEggPorrige)
-
-
+//
+//        eggAllergen?.menus?.append(cheeseMacaroni)
+//        dairyAllergen?.menus?.append(meatEggPorrige)
 
         let butterChickenPorriage = FoodMenu(
             name: "Butter Chicken Porriage",
@@ -64,11 +65,11 @@ extension Ingredient {
             ingredients: [egg],
             allergens: [eggAllergen, dairyAllergen].compactMap { $0 }
         )
-        
-        eggAllergen?.menus?.append(butterChickenPorriage)
-        dairyAllergen?.menus?.append(butterChickenPorriage)
 
-
+//        eggAllergen?.menus?.append(butterChickenPorriage)
+//        dairyAllergen?.menus?.append(butterChickenPorriage)
+//        eggAllergen?.menus = [cheeseMacaroni, meatEggPorrige, butterChickenPorriage]
+//        dairyAllergen?.menus = [butterChickenPorriage, cheeseMacaroni]
 
         // Connect menus to egg ingredient
         egg.menus = [meatEggPorrige, cheeseMacaroni, butterChickenPorriage]

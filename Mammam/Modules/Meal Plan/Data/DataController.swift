@@ -9,10 +9,10 @@ class DataController {
     private init() {
         do {
             let schema = Schema([
+                Allergen.self,
                 Ingredient.self,
                 FoodMenu.self,
                 Nutrient.self,
-                Allergen.self,
                 Meal.self,
                 Motivation.self,
                 Article.self,
@@ -32,9 +32,9 @@ class DataController {
         do {
             // Check each entity type independently
 //            try initializeNutrientsIfNeeded(context: context)
-            try initializeIngredientsIfNeeded(context: context)
             try initializeAllergenIfNeeded(context: context)
-            try initializeFoodMenuIfNeeded(context: context)
+            try initializeIngredientsIfNeeded(context: context)
+//            try initializeFoodMenuIfNeeded(context: context)
             try initializeBabyIfNeeded(context: context)
             try initializeMotivationIfNeeded(context: context)
             try initializeArticleIfNeeded(context: context)
@@ -56,29 +56,37 @@ class DataController {
 //        }
 //    }
         
-    private func initializeFoodMenuIfNeeded(context: ModelContext) throws {
-        let foodMenuFetch = FetchDescriptor<FoodMenu>()
-        let existingFoodMenus = try context.fetch(foodMenuFetch)
-            
-        if existingFoodMenus.isEmpty {
-            let foodMenus = FoodMenu.sampleMenus
-            foodMenus.forEach { context.insert($0) }
-            try context.save()
-            print("FoodMenu initialized")
-        }
-    }
+//    private func initializeFoodMenuIfNeeded(context: ModelContext) throws {
+//        let foodMenuFetch = FetchDescriptor<FoodMenu>()
+//        let existingFoodMenus = try context.fetch(foodMenuFetch)
+//            
+//        if existingFoodMenus.isEmpty {
+//            let foodMenus = FoodMenu.sampleIngredient
+//            foodMenus.forEach { context.insert($0) }
+//            try context.save()
+//            print("FoodMenu initialized")
+//        }
+//    }
+    
+//    func initializeFoodMenusAndAllergens(context: ModelContext) {
+//        // Fetch or create allergens and menus
+//        let existingAllergens = Allergen.sampleAllergens
+//        let existingMenus = FoodMenu.getExistingMenus(context: context)
+//        
+//        // Link menus and allergens
+//        linkMenusAndAllergens(menus: existingMenus, allergens: existingAllergens)
+//        
+//        // Save the context
+//        try? context.save()
+//    }
     
     private func initializeIngredientsIfNeeded(context: ModelContext) throws {
         let ingredientsFetch = FetchDescriptor<Ingredient>()
         let existingIngredients = try context.fetch(ingredientsFetch)
         
         if existingIngredients.isEmpty {
-//            let nutrients = Nutrient.sampleNutrients
-            let ingredients = Ingredient.sampleIngredients
-            //(with: nutrients)
-            
+            let ingredients = Ingredient.sampleIngredients(with: Nutrient.sampleNutrients, context: context)
             ingredients.forEach { context.insert($0) }
-//            nutrients.forEach { context.insert($0) }
             try context.save()
             print("Ingredients and nutrients initialized")
         }
@@ -122,9 +130,16 @@ class DataController {
         let existingAllergens = try context.fetch(allergenFetch)
         
         if existingAllergens.isEmpty {
-            generateallergenData(context: context)
+//            generateallergenData(context: context)
+//            try context.save()
+//            print("Allergen data initialized")
+            let allergens = Allergen.sampleAllergens
+            //(with: nutrients)
+            
+            allergens.forEach { context.insert($0) }
+//            nutrients.forEach { context.insert($0) }
             try context.save()
-            print("Allergen data initialized")
+            print("allergens initialized")
         }
     }
     
