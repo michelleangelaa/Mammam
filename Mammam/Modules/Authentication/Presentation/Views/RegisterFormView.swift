@@ -25,7 +25,7 @@ struct RegisterFormView: View {
     @State private var isLastStep = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .center, spacing: 20) {
             // Progress Indicator
             indicatorbar(totalCount: totalSteps, currentIndex: currentStep)
 
@@ -38,7 +38,8 @@ struct RegisterFormView: View {
                 InputBabyAllergiesView(selectedAllergies: $selectedAllergies)
             }
 
-            // Navigation Button
+            Spacer()
+
             CustomLargeButtonComponent(
                 state: isFormValid() ? .enabled : .disabled,
                 text: "Continue",
@@ -104,7 +105,7 @@ struct RegisterFormView: View {
                 print("No user found")
                 return
             }
-            
+
             // Create a new Baby
             let newBaby = Baby(
                 babyProfileImage: "👶🏻",
@@ -112,24 +113,24 @@ struct RegisterFormView: View {
                 babyBirthDate: birthdate,
                 user: currentUser
             )
-            
+
             // Set the relationship both ways
             currentUser.baby = newBaby
-            
+
             context.insert(newBaby)
-            
+
             // Update allergens
             let allergenFetchDescriptor = FetchDescriptor<Allergen>()
             let allAllergens = try context.fetch(allergenFetchDescriptor)
-            
+
             // Update isAllergy status for each allergen
             for allergen in allAllergens {
                 allergen.isAllergy = selectedAllergies.contains(allergen.name)
             }
-            
+
             try context.save()
             print("Baby and allergen data saved successfully!")
-            
+
         } catch {
             print("Error saving data: \(error)")
         }
@@ -142,12 +143,13 @@ struct InputBabyNameView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("Baby's Name")
-                .font(.title2)
-                .fontWeight(.bold)
-
             Text("👶")
                 .font(.system(size: 80))
+
+            Spacer()
+
+            Text("Baby's Name")
+                .font(.headline)
 
             TextField("Name", text: $babyName)
                 .padding()
@@ -166,9 +168,10 @@ struct InputBabyAgeView: View {
             Text("👶")
                 .font(.system(size: 80))
 
+            Spacer()
+
             Text("Baby's Birthdate")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(.headline)
 
             DatePicker("", selection: $birthdate, displayedComponents: .date)
                 .datePickerStyle(.wheel)
@@ -187,18 +190,20 @@ struct InputBabyAllergiesView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("Food Restrictions")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top)
+            Text("😷")
+                .font(.system(size: 80))
 
+            Spacer()
+
+            Text("Food Restrictions")
+                .font(.headline)
+    
             // Allergens grid
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3), spacing: 16) {
                 ForEach(localAllergens, id: \.self) { allergen in
                     AllergyCard(allergen: allergen) { toggledAllergen in
                         if let index = localAllergens.firstIndex(where: { $0.name == toggledAllergen.name }) {
                             localAllergens[index] = toggledAllergen
-                            // Update selectedAllergies Set when an allergy is toggled
                             if toggledAllergen.isAllergy {
                                 selectedAllergies.insert(toggledAllergen.name)
                             } else {

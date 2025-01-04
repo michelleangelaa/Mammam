@@ -12,15 +12,25 @@ struct AccountSuccessView: View {
     @State private var navigateToOnBoarding = false
 
     var body: some View {
-        VStack(alignment: .center, spacing: 10) {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 100))
-            Text("Congratulations! Your account is all set up. ")
-                .font(.title)
-                .fontWeight(.bold)
-            Text("Now, let’s complete your profile for a more personalized experience. ")
-                .font(.body)
+        ZStack {
+            Image("BG_SplashScreen")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            ZStack {
+                VStack (alignment: .center){
+                    Image("Logo")
+                        .resizable()
+                        .frame(width: 200, height: 86)
+                    Text("Congratulations! Your account is all set up. ")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                    Text("Now, let’s complete your profile for a more personalized experience. ")
+                        .font(.subheadline)
+                }
+            }
         }
+        .navigationBarBackButtonHidden()
         .padding()
         .onAppear {
             // Redirect after 3 seconds
