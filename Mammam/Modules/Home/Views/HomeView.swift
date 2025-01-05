@@ -56,7 +56,9 @@ struct HomeView: View {
                 }
                 .padding()
                 .padding(.top, 65)
+                .padding(.bottom, 65)
             }
+            .scrollIndicators(.hidden)
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -92,7 +94,7 @@ struct HomeView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         HStack {
-                            Label("Start Your Meal Plan Today!", systemImage: "lightbulb.fill")
+                            Label("Start your meal plan today!", systemImage: "lightbulb.fill")
                                 .font(.subheadline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.black)
@@ -119,7 +121,7 @@ struct HomeView: View {
             // Present the Rate Meal Sheet for the specific meal
             coordinator.presentRateMealSheet(with: meal)
         }) {
-            VStack (alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Log Meal")
                     .font(.subheadline)
                     .fontWeight(.semibold)
@@ -128,8 +130,8 @@ struct HomeView: View {
                 HStack {
                     Image(meal.ingredient?.image ?? "fork.knife")
                         .resizable()
-                        .frame(width: 40, height: 40)
-                    VStack(alignment: .leading, spacing: 2) {
+                        .frame(width: 48, height: 48)
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(meal.type)
                             .font(.subheadline)
                             .fontWeight(.semibold)
@@ -147,7 +149,7 @@ struct HomeView: View {
             .padding(.vertical, 16)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(UIColor.systemGray6))
+                    .fill(Color.bluegray.bluegray50)
             )
         }
     }
@@ -156,14 +158,20 @@ struct HomeView: View {
         HStack {
             Image(systemName: "calendar")
                 .resizable()
-                .frame(width: 40, height: 40)
-            VStack(alignment: .leading) {
+                .frame(width: 36, height: 36)
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 4) {
                 Text("All Scheduled Meal Recorded Today")
                     .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
+                Text("You're doing an incredible job")
+                    .font(.footnote)
                     .foregroundColor(.black)
             }
-            .padding()
         }
+        .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(UIColor.systemGray6))
@@ -172,7 +180,7 @@ struct HomeView: View {
     
     private var storyOfTheDaySection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Today's Story")
+            Text("Today's story")
                 .font(.headline)
             Button(action: {
                 coordinator.push(page: .motivation)
@@ -209,7 +217,7 @@ struct HomeView: View {
     
     private var articleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Understand Your Child Better")
+            Text("Understand your child better")
                 .font(.headline)
             Button(action: {
                 coordinator.presentSheet(sheet: .article)
@@ -237,7 +245,7 @@ struct HomeView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 18)
-                        .fill(Color.blue.blue25)
+                        .fill(Color.purple.purple50)
                         .frame(height: 97)
                 )
             }
@@ -255,7 +263,7 @@ struct HomeView: View {
         return Group {
             if !unloggedMeals.isEmpty {
                 VStack(alignment: .leading) {
-                    Text("Today's Meal Plan")
+                    Text("Today's meal plan")
                         .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack {
