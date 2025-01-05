@@ -335,12 +335,6 @@ extension Ingredient {
             image: "i_saltedfish",
             nutrients: [protein, zinc].compactMap { $0 }
         )
-         
-        let catFish = Ingredient(
-            name: "Catfish",
-            image: "i_catfish",
-            nutrients: [protein, fat].compactMap { $0 }
-        )
         
         let carp = Ingredient(
             name: "Carp",
@@ -373,7 +367,7 @@ extension Ingredient {
 //        )
             
         let chicken = Ingredient(
-            name: "Chicken with Skin",
+            name: "Chicken",
             image: "i_chicken",
             nutrients: [protein, fat].compactMap { $0 }
         )
@@ -430,7 +424,7 @@ extension Ingredient {
             image: "i_eggplant",
             nutrients: [micro].compactMap { $0 })
         
-        let corn = Ingredient(name: "Corn", image: "i_babycorn", nutrients: [micro, carbs].compactMap { $0 })
+        let corn = Ingredient(name: "Corn", image: "i_corn", nutrients: [micro, carbs].compactMap { $0 })
         let cabbage = Ingredient(name: "Cabbage", image: "i_cabbage", nutrients: [micro].compactMap { $0 })
 //        let cassavaLeaves = Ingredient(name: "Cassava Leaves", image: "i_cassavaleaves", nutrients: [micro, iron].compactMap { $0 })
 //        let grape = Ingredient(name: "Grape", image: "i_grape", nutrients: [carbs, micro].compactMap { $0 })
@@ -869,19 +863,7 @@ extension Ingredient {
                     name: "Steam Chicken Stew",
                     image: "i_steamchickenstew",
                     isSaved: false,
-                    desc: """
-                    90 grams of rice\n
-                    60 grams of minced chicken\n
-                    30 grams of tofu, minced\n
-                    1½ tbsp grated carrot\n
-                    2 tbsp sweet soy sauce\n
-                    75 ml chicken broth\n
-                    10 ml corn oil (for sautéing)\n
-                    Salt to taste\n
-                    Seasoning:\n
-                    1 shallot\n
-                    1 clove of garlic\n
-                    """,
+                    desc: "90 grams of rice\n60 grams of minced chicken\n30 grams of tofu, minced\n1½ tbsp grated carrot\n2 tbsp sweet soy sauce\n75 ml chicken broth\n10 ml corn oil (for sautéing)\nSalt to taste\nSeasoning:\n1 shallot\n1 clove of garlic\n",
                     ingredients: [whiteRice, chicken, tofu, carrot, chickenBroth, cornOil],
                     allergens: [soyAllergen].compactMap { $0 }
                 )
@@ -890,14 +872,7 @@ extension Ingredient {
                     name: "Potato Egg Steam",
                     image: "i_potatoeggsteam",
                     isSaved: false,
-                    desc: """
-                    150 grams of boiled potatoes, mashed\n
-                    50 grams of minced chicken, boiled\n
-                    1½ tbsp grated carrot\n
-                    1 egg, beaten\n
-                    10 grams of margarine\n
-                    Salt to taste\n
-                    """,
+                    desc: "150 grams of boiled potatoes, mashed\n50 grams of minced chicken, boiled\n1½ tbsp grated carrot\n1 egg, beaten\n10 grams of margarine\nSalt to taste\n",
                     ingredients: [potato, chicken, carrot, egg],
                     allergens: [eggAllergen].compactMap { $0 }
                 )
@@ -906,20 +881,7 @@ extension Ingredient {
                     name: "Chicken Noodle Steam",
                     image: "i_chickennoodlesteam",
                     isSaved: false,
-                    desc: """
-                    150 grams of egg noodles, boiled until cooked\n
-                    75 grams of minced chicken\n
-                    1 egg, beaten\n
-                    200 ml chicken broth\n
-                    1 tsp soy sauce\n
-                    1 tsp sweet soy sauce\n
-                    30 grams of mustard greens, chopped small\n
-                    10 ml canola oil\n
-                    Celery leaves, finely chopped\n
-                    Seasoning:\n
-                    1 shallot\n
-                    1 clove of garlic\n
-                    """,
+                    desc: "150 grams of egg noodles, boiled until cooked\n75 grams of minced chicken\n1 egg, beaten\n200 ml chicken broth\n1 tsp soy sauce\n1 tsp sweet soy sauce\n30 grams of mustard greens, chopped small\n10 ml canola oil\nCelery leaves, finely chopped\nSeasoning:\n1 shallot\n1 clove of garlic\n",
                     ingredients: [eggNoodle, chicken, egg, chickenBroth, canolaOil],
                     allergens: [soyAllergen, eggAllergen].compactMap { $0 }
                 )
@@ -928,19 +890,7 @@ extension Ingredient {
                     name: "Macaroni Steam",
                     image: "i_macaronisteam",
                     isSaved: false,
-                    desc: """
-                    50 grams of macaroni (uncooked), boiled until soft\n
-                    60 grams of minced chicken\n
-                    30 grams of broccoli, finely chopped\n
-                    1 tbsp chopped onion\n
-                    50 ml cow’s milk\n
-                    10 ml canola oil (for sautéing)\n
-                    Grated cheese to taste\n
-                    Salt to taste\n
-                    Seasoning:\n
-                    1 shallot\n
-                    1 clove of garlic\n
-                    """,
+                    desc: "50 grams of macaroni (uncooked), boiled until soft\n60 grams of minced chicken\n30 grams of broccoli, finely chopped\n1 tbsp chopped onion\n50 ml cow’s milk\n10 ml canola oil (for sautéing)\nGrated cheese to taste\nSalt to taste\nSeasoning:\n1 shallot\n1 clove of garlic\n",
                     ingredients: [macaroni, chicken, broccoli, canolaOil, cheese],
                     allergens: [dairyAllergen, glutenAllergen].compactMap { $0 }
                 )
@@ -1839,58 +1789,186 @@ extension Ingredient {
 
         let peanutButterNoodle = FoodMenu(
             name: "Peanut Butter Noodle",
-            image: "i_peanutbutternoodle",
+            image: "i_peanutButterNoodle",
             isSaved: false,
             desc: "Noodles\n3 tbsp peanut butter\n1 tbsp EVO\n1/2 cup water\n2 shallots\nShredded chicken",
             ingredients: [eggNoodle, chicken, peanuts],
             allergens: [peanutAllergen].compactMap { $0 }
         )
 
+        //batch 3
+        let abonLele = FoodMenu(
+            name: "Catfish Floss",
+            image: "i_catfishfloss",
+            isSaved: false,
+            desc: "2 whole catfish, cleaned\n1 slice of tempeh\n1 lime\n4 stalks of Chinese chives\n4 cloves of garlic\n2 shallots\n1 thumb-sized piece of turmeric\n1/2 tablespoon Himalayan salt\n1/4 teaspoon sugar\n4 tablespoons extra light olive oil (ELOO)\n1/4 teaspoon homemade salmon stock powder",
+            ingredients: [catfish, tempeh],
+            allergens: [fishAllergen, soyAllergen].compactMap { $0 }
+        )
+
+        let taroEggYolkPuree = FoodMenu(
+            name: "Taro and Egg Yolk Puree",
+            image: "i_taroeggyolkpuree",
+            isSaved: false,
+            desc: "100 grams of taro, diced into small cubes\n1 egg yolk",
+            ingredients: [taro, eggYolk],
+            allergens: [eggAllergen].compactMap { $0 }
+        )
+
+        let taroCheeseRollCake = FoodMenu(
+            name: "Taro Cheese Roll Cake",
+            image: "i_tarocheeserollcake",
+            isSaved: false,
+            desc: "500 grams of purple sweet potato (taro)\n1 tablespoon butter\n1 tablespoon granulated sugar\nGrated cheese to taste\nSalt to taste",
+            ingredients: [taro, butter, cheese],
+            allergens: [dairyAllergen].compactMap { $0 }
+        )
+        
+        let potatoMeatBroccoliEggplantPorridge = FoodMenu(
+            name: "Potato Meat Broccoli Eggplant Porridge",
+            image: "i_potatomeatbroccolieggplantporridge",
+            isSaved: false,
+            desc: "2 medium-sized grated potatoes\n1 tablespoon of ground meat\n3 pieces of broccoli\n1/4 of an eggplant\nMargarine as needed\n1/2 clove of garlic\n1/2 clove of shallot\n100 ml of boiled water\n1 tablespoon of instant coconut milk",
+            ingredients: [potato, meat, broccoli, eggPlant, coconutMilk],
+            allergens: [soyAllergen].compactMap { $0 }
+        )
+        
+        let tunaEggplantTomatoPorridge = FoodMenu(
+            name: "Tuna Eggplant Tomato Porridge",
+            image: "i_tunaeggplanttomatoporridge",
+            isSaved: false,
+            desc: "50 grams of tuna\n1 large potato\n1/2 tomato (remove seeds)\n2 pieces of purple eggplant\n2 pieces of tofu\n1 tbsp of chopped onion\n110 ml plain UHT milk\nA pinch of powdered broth\n200 ml of boiled water\nEnough canola oil",
+            ingredients: [tunaFish, potato, tomato, eggPlant, tofu, canolaOil],
+            allergens: [fishAllergen, soyAllergen, dairyAllergen].compactMap { $0 }
+        )
+        
+        let mangoStickyRice = FoodMenu(
+            name: "Mango Sticky Rice",
+            image: "i_mangostickyrice",
+            isSaved: false,
+            desc: "Puree ripe mango to taste (puree means blending the mango until smooth)\nCooked white rice to taste\n70 ml instant coconut milk\nPandan leaf\nWater to taste",
+            ingredients: [coconutMilk, glutinousRice],
+            allergens: [dairyAllergen].compactMap { $0 }
+        )
+        
+        let stickyRiceBrownSugarPorridge = FoodMenu(
+            name: "Sticky Rice Brown Sugar Porridge",
+            image: "i_stickyRiceBrownSugarPorridge",
+            isSaved: false,
+            desc: "250 grams of white glutinous rice\n100 grams of grated coconut\n1 piece of palm sugar, sliced\n6 tablespoons of white sugar, adjust to desired sweetness\n1 teaspoon of salt\n½ thumb of ginger, crushed\n2 pandan leaves (or vanilla powder as a substitute if pandan is unavailable)\n½ packet of Kara coconut milk for topping",
+            ingredients: [glutinousRice, coconutMilk],
+            allergens: [treenutAllergen].compactMap { $0 }
+        )
+
+        let chickenMeatballSoup = FoodMenu(
+            name: "Chicken Meatball Soup with Anchovy",
+            image: "i_chickenmeatballsoup",
+            isSaved: false,
+            desc: "Ingredients for Meatball Mixture:\n3 pieces of chicken drumsticks\n1 tablespoon fresh Medan anchovies (white anchovies)\n1 free-range chicken egg\n1 clove of garlic\n1 shallot\n1/4 onion\nSalt to taste\n\nIngredients for Soup:\n3 broccoli florets\n2 cloves of garlic\n2 shallots\n2 tablespoons of onion",
+            ingredients: [chicken, saltedFish , egg, broccoli],
+            allergens: [fishAllergen, eggAllergen].compactMap { $0 }
+        )
+
+        let achovyandchickenPorridge = FoodMenu(
+            name: "Fish Porridge with Medan Anchovy, Chicken, and Village Egg",
+            image: "i_fishporridge",
+            isSaved: false,
+            desc: "3 tbsp Organic Rice [Carb]\n2 tbsp Medan Anchovy [ProHe]\n3 tbsp Ground Chicken [ProHe]\n1 Village Chicken Egg [ProHe]\n1 tbsp Red Beans [ProNa]\n1 pc Unsalted Butter [Fat]\nCarrot [Vegetable]\n1 clove Shallot and 1 clove Garlic [Aromatic Seasoning]\n50 ml Beef Bone Broth and a pinch of Salt [Seasoning]\n200 ml Mineral Water",
+            ingredients: [saltedFish, chicken, egg, redBeans, butter, carrot],
+            allergens: [fishAllergen, eggAllergen].compactMap { $0 }
+        )
+
+
+        let cheeseGurameRice = FoodMenu(
+            name: "Cheese Gurame Rice",
+            image: "i_nasitimguramekeju",
+            isSaved: false,
+            desc: "100 grams of rice\n60 grams of fried gurame fish, chopped\n1 1/2 tablespoons of grated carrot\n1/4 of a tomato, diced\n12.5 ml of canola oil\nSalt to taste (I skipped because I added cheese)\nChopped celery leaves (I used green onions)\n1 tablespoon of grated cheese (added by me)\n200 ml of mineral water\nGround spices: 1 shallot\n1 clove of garlic",
+            ingredients: [carp, carrot, tomato, canolaOil, cheese],
+            allergens: [fishAllergen, dairyAllergen].compactMap { $0 }
+        )
+
+        let carpMustardPorridge = FoodMenu(
+            name: "Carp Mustard Porridge",
+            image: "i_carpmustardporridge",
+            isSaved: false,
+            desc: "50 grams of Gurame Fillet\n30 grams of White Tofu\n4 tablespoons of Rice\n3 Mustard leaves\n2 stalks of Celery\n1 clove of Garlic\n1 teaspoon of Onion\nCanola oil as needed\nStock powder as needed\nOrganic soy sauce as needed\nBoiled water as needed",
+            ingredients: [carp, tofu, canolaOil],
+            allergens: [soyAllergen, fishAllergen].compactMap { $0 }
+        )
+        
+        let meatballCurry = FoodMenu(
+            name: "Meatball Curry",
+            image: "i_meatballcurry",
+            isSaved: false,
+            desc: "1 pack of Kara coconut milk\n1 inch ginger\n1 inch crushed galangal\n1 stalk crushed lemongrass\n2 kaffir lime leaves\n2 bay leaves\n1/2 tsp mushroom broth\n2 tbsp salt\n1 tsp sugar\nA pinch of fried shallots\n800 ml water (adjust to preference)\nSpice Paste\n2 cloves garlic\n5 shallots\nA pinch of coriander\nA pinch of turmeric\n3 candlenuts",
+            ingredients: [coconutMilk, candlenut, meatball],
+            allergens: [dairyAllergen].compactMap { $0 }
+        )
+        
+        let ricePorridgeWithDateSyrup = FoodMenu(
+            name: "Rice Porridge with Date Syrup",
+            image: "i_riceporridgewithdatesyrup",
+            isSaved: false,
+            desc: "3 tbsp rice flour\nSufficient water\n1 tbsp coconut milk (can be substituted with grated cheese)\n1 date\nPandan leaves",
+            ingredients: [riceFlour, coconutMilk, Dates],
+            allergens: [dairyAllergen].compactMap { $0 }
+        )
+        
+        let dateBreadPudding = FoodMenu(
+            name: "Date Bread Pudding",
+            image: "i_datebreadpudding",
+            isSaved: false,
+            desc: "1 slice of white bread without crust\n75 ml full cream UHT milk\n1 block of Belcube cheese\n2 dates\nSugar and salt to taste",
+            ingredients: [whiteBread, cheese, Dates],
+            allergens: [glutenAllergen, dairyAllergen].compactMap { $0 }
+        )
+        
         // Connect menus to egg ingredient
         chickenLiver.menus = [chickenLiverPorridge, chickenLiverPorridgeWithCoconutMilk, steamedChickenLiverPorridgeinBananaLeaf, quailEggandChickenLiverPorridge, potatoandChickenliverPorridge, chickenBreastandLiverPorridge, catfishPorridge,yellowSteamedRiceChickenLiverStew]
         whiteRice.menus = [ doriFishAndBroccoliPorridge,doriFishPorridge,spinachOkraPorridge,butterDuckPure,curryFishTeam,steamedCornVegetables,steamedRiceWithEggVermicelli,tempehRicePorridge,menadoPorridge,shrimpFriedRice,chickenLiverPorridge, chickenLiverPorridgeWithCoconutMilk, steamedChickenLiverPorridgeinBananaLeaf, steamedLongJawedMackerelPorridgeinBananaLeaf, beefandEggPorridge, shrimpTofuPorridge, shrimpGreenbeansPorridge, shrimpandCoconutMilkPorridge, catfishPorridge, tofuandCatfishPorridge, beefLiverPorridge, tialpiafishPorridge, snapperfishPorridge, tunaandCarrotSteam, tunaSteam,riceBall,steamedGuremeRice, riceWithButterFriedDuck,savoryRiceWithStirFriedFishBallsAndBroccoli, beefSotoSteam,yellowSteamedRiceChickenLiverStew,beefTempehStew,steamedChickenRice,broccoliShrimpSteamed,beefSteamed,steamedSoySauceChicken,steamedMackerelStirFry,steamedRiceChickenMushroom,steamChickenStew,riceChickenMushroom, chickenSoup,stirFriedTofuShrimp,mixedEggRice,grilledRiceWithTuna,steamedRiceWithShrimpInBananaLeaves,steamedRiceWithEggAndBeef,riceWithRendangEggAndTempeh]
-        coconutMilk.menus = [thailandCassava ,durianPudding,curryFishTeam,potatoChickenAndQuailEggPudding,chickenLiverPorridgeWithCoconutMilk, steamedChickenLiverPorridgeinBananaLeaf, shrimpTofuPorridge, shrimpandCoconutMilkPorridge,riceWithRendangEggAndTempeh, steamedFishCake ,chickenSotoPorridge, beefGadonRice,beefLiverPorridge,steamedChickenRice,savoryRiceWithStirFriedFishBallsAndBroccoli,beefLiverSambalSteamed, tunaSteam,chickenLemper ]
+        coconutMilk.menus = [ricePorridgeWithDateSyrup,meatballCurry, stickyRiceBrownSugarPorridge, mangoStickyRice,potatoMeatBroccoliEggplantPorridge,thailandCassava ,durianPudding,curryFishTeam,potatoChickenAndQuailEggPudding,chickenLiverPorridgeWithCoconutMilk, steamedChickenLiverPorridgeinBananaLeaf, shrimpTofuPorridge, shrimpandCoconutMilkPorridge,riceWithRendangEggAndTempeh, steamedFishCake ,chickenSotoPorridge, beefGadonRice,beefLiverPorridge,steamedChickenRice,savoryRiceWithStirFriedFishBallsAndBroccoli,beefLiverSambalSteamed, tunaSteam,chickenLemper ]
         cornOil.menus = [stuffedTofuWithSausage,tofuFritters,chickenLiverPorridge, mixedEggRice,steamedLongJawedMackerelPorridgeinBananaLeaf, shrimpGreenbeansPorridge, tunaandCarrotSteam,beefTempehStew,steamedChickenRice,broccoliShrimpSteamed,steamedSoySauceChicken,steamedMackerelStirFry, tunaSteam, potatoBeefSteam ,steamChickenStew,riceChickenMushroom,mackerelBalls,chickenLemper,cheesePotatoBalls ,braisedDuckRice,friedNoodlesQuailEggs,grilledRiceWithTuna]
         coconutOil.menus = [peanutButterJam,steamedRiceWithFishEggsVegetables,chickenLiverPorridgeWithCoconutMilk, mackerelPorridge, tofuandCatfishPorridge, beefPorridge,yellowSteamedRiceChickenLiverStew,broccoliShrimpSteamed,chickenSatay,riceWithFriedChickenGalangal]
-        canolaOil.menus = [chickenBreastandLiverPorridge, tialpiafishPorridge,steamedGuremeRice,chickenNoodleSteam,macaroniSteam,steamedRiceWithEggAndBeef]
+        canolaOil.menus = [ carpMustardPorridge,cheeseGurameRice,tunaEggplantTomatoPorridge,chickenBreastandLiverPorridge, tialpiafishPorridge,steamedGuremeRice,chickenNoodleSteam,macaroniSteam,steamedRiceWithEggAndBeef]
         soybeanOil.menus = [shrimpMeatballs,snapperfishPorridge,steamedChickenRice,beefLiverSambalSteamed,riceBall,stirFriedTofuShrimp,steamedRiceWithShrimpInBananaLeaves]
         sesameOil.menus = [friedRice,steamedRiceWithStirFriedFish,redRicePorridge,beefandEggPorridge,beefSteamed,steamedMackerelStirFry,braisedDuckRice, steamedRiceChickenMushroom, riceWithButterFriedDuck,stirFriedTofuShrimp,steamedRiceWithEggAndBeef]
         spinach.menus = [spinachOkraPorridge,steamedCornVegetables,spinachCheeseMilkPorridge,combinationVegetablePorridge,greenRicePorridge,menadoPorridge,chickenLiverPorridge, beefPorridge, beefLiverPorridge,grilledRiceWithTuna,sweetPotatoAndSpinachPure]
-        carrot.menus = [combinationVegetablePorridge,tempehRicePorridge,redRicePorridge,potatoChickenAndQuailEggPudding,redBeanSoupPorridge,chickenSotoPorridge, beefCroquettes,tofuFritters,chickenLiverPorridgeWithCoconutMilk, steamedChickenLiverPorridgeinBananaLeaf, potatoandChickenliverPorridge, chickenButterPorridge, chickenCurryPorridge, shrimpandCoconutMilkPorridge, chickenandShrimpDumplings, tialpiafishPorridge, tunaandCarrotSteam,yellowSteamedRiceChickenLiverStew,beefSteamed,steamedSoySauceChicken,steamedRiceChickenMushroom,riceBall,steamedGuremeRice,steamChickenStew,potatoEggSteam,bitterballen,chickenKatsuRice,savoryRiceWithStirFriedFishBallsAndBroccoli,riceChickenMushroom, chickenSoup,stirFriedTofuShrimp,mixedEggRice,friedNoodlesQuailEggs,steamedRiceWithEggAndBeef]
-        tomato.menus = [ smokedMeatPotatoFrittata,fishNuggetBun,steamedRiceWithFishEggsVegetables, soybeanPumpkinPorridge,steamedChickenLiverPorridgeinBananaLeaf, steamedLongJawedMackerelPorridgeinBananaLeaf, shrimpTofuPorridge, catfishPorridge, tofuandCatfishPorridge, snapperfishPorridge, beefSotoSteam,yellowSteamedRiceChickenLiverStew,beefTempehStew,beefLiverSambalSteamed,steamedGuremeRice,beefStirFryRice, riceWithButterFriedDuck, chickenSoup]
+        carrot.menus = [cheeseGurameRice,achovyandchickenPorridge,combinationVegetablePorridge,tempehRicePorridge,redRicePorridge,potatoChickenAndQuailEggPudding,redBeanSoupPorridge,chickenSotoPorridge, beefCroquettes,tofuFritters,chickenLiverPorridgeWithCoconutMilk, steamedChickenLiverPorridgeinBananaLeaf, potatoandChickenliverPorridge, chickenButterPorridge, chickenCurryPorridge, shrimpandCoconutMilkPorridge, chickenandShrimpDumplings, tialpiafishPorridge, tunaandCarrotSteam,yellowSteamedRiceChickenLiverStew,beefSteamed,steamedSoySauceChicken,steamedRiceChickenMushroom,riceBall,steamedGuremeRice,steamChickenStew,potatoEggSteam,bitterballen,chickenKatsuRice,savoryRiceWithStirFriedFishBallsAndBroccoli,riceChickenMushroom, chickenSoup,stirFriedTofuShrimp,mixedEggRice,friedNoodlesQuailEggs,steamedRiceWithEggAndBeef]
+        tomato.menus = [  cheeseGurameRice,tunaEggplantTomatoPorridge,smokedMeatPotatoFrittata,fishNuggetBun,steamedRiceWithFishEggsVegetables, soybeanPumpkinPorridge,steamedChickenLiverPorridgeinBananaLeaf, steamedLongJawedMackerelPorridgeinBananaLeaf, shrimpTofuPorridge, catfishPorridge, tofuandCatfishPorridge, snapperfishPorridge, beefSotoSteam,yellowSteamedRiceChickenLiverStew,beefTempehStew,beefLiverSambalSteamed,steamedGuremeRice,beefStirFryRice, riceWithButterFriedDuck, chickenSoup]
         greenBeans.menus = [chickenKatsuRice,tempehRicePorridge,redRiceTunaPorridge,quailEggandChickenLiverPorridge, shrimpGreenbeansPorridge, mackerelPorridge,redBeanSoupPorridge]
-        broccoli.menus = [ doriFishAndBroccoliPorridge,doriFishPorridge,greenRicePorridge, chickenBreastandLiverPorridge, beefandEggPorridge, tofuandCatfishPorridge,broccoliShrimpSteamed,savoryRiceWithStirFriedFishBallsAndBroccoli,steamedMackerelStirFry,steamedMackerelStirFry, potatoBeefSteam,macaroniSteam,riceChickenMushroom]
-        potato.menus = [  doriFishAndBroccoliPorridge,smokedMeatPotatoFrittata,potatoChickenAndQuailEggPudding,beefCroquettes,potatoandChickenliverPorridge,doriPotatoCheese,beefLiverSambalSteamed, potatoBeefSteam,potatoEggSteam,cheesePotatoBalls ]
-        chicken.menus = [peanutButterNoodle, mincedChickenCauliflowerTeam,redRiceChickenPorridge,greenRicePorridge, potatoChickenAndQuailEggPudding,redBeanSoupPorridge,chickenBreastandLiverPorridge,chickenLemper ,chickenKatsuRice, chickenandShrimpDumplings,beefTempehStew,steamedChickenRice,steamedSoySauceChicken,steamedRiceChickenMushroom,riceBall,steamChickenStew,potatoEggSteam,chickenNoodleSteam,macaroniSteam,stirFriedNoodlesStreetStyle,riceChickenMushroom, chickenSoup,mixedEggRice,chickenSatay,riceWithFriedChickenGalangal,chickenSotoPorridge]
-        tofu.menus = [eggTofuOkraSoup,steamedRiceVermicelliTofuTempeh,soyMilkPorridge,potatoChickenAndQuailEggPudding,chickenSotoPorridge,tofuFritters,steamedRiceWithShrimpInBananaLeaves,chickenBreastandLiverPorridge, shrimpTofuPorridge,stirFriedTofuShrimp, tofuandCatfishPorridge,riceBall,steamChickenStew,stuffedTofuWithSausage]
+        broccoli.menus = [chickenMeatballSoup, potatoMeatBroccoliEggplantPorridge, doriFishAndBroccoliPorridge,doriFishPorridge,greenRicePorridge, chickenBreastandLiverPorridge, beefandEggPorridge, tofuandCatfishPorridge,broccoliShrimpSteamed,savoryRiceWithStirFriedFishBallsAndBroccoli,steamedMackerelStirFry,steamedMackerelStirFry, potatoBeefSteam,macaroniSteam,riceChickenMushroom]
+        potato.menus = [    tunaEggplantTomatoPorridge,potatoMeatBroccoliEggplantPorridge,doriFishAndBroccoliPorridge,smokedMeatPotatoFrittata,potatoChickenAndQuailEggPudding,beefCroquettes,potatoandChickenliverPorridge,doriPotatoCheese,beefLiverSambalSteamed, potatoBeefSteam,potatoEggSteam,cheesePotatoBalls ]
+        chicken.menus = [achovyandchickenPorridge,chickenMeatballSoup,peanutButterNoodle, mincedChickenCauliflowerTeam,redRiceChickenPorridge,greenRicePorridge, potatoChickenAndQuailEggPudding,redBeanSoupPorridge,chickenBreastandLiverPorridge,chickenLemper ,chickenKatsuRice, chickenandShrimpDumplings,beefTempehStew,steamedChickenRice,steamedSoySauceChicken,steamedRiceChickenMushroom,riceBall,steamChickenStew,potatoEggSteam,chickenNoodleSteam,macaroniSteam,stirFriedNoodlesStreetStyle,riceChickenMushroom, chickenSoup,mixedEggRice,chickenSatay,riceWithFriedChickenGalangal,chickenSotoPorridge]
+        tofu.menus = [ carpMustardPorridge,tunaEggplantTomatoPorridge,eggTofuOkraSoup,steamedRiceVermicelliTofuTempeh,soyMilkPorridge,potatoChickenAndQuailEggPudding,chickenSotoPorridge,tofuFritters,steamedRiceWithShrimpInBananaLeaves,chickenBreastandLiverPorridge, shrimpTofuPorridge,stirFriedTofuShrimp, tofuandCatfishPorridge,riceBall,steamChickenStew,stuffedTofuWithSausage]
         shrimp.menus = [steamedRiceWithShrimpInBananaLeaves,shrimpTofuPorridge, shrimpGreenbeansPorridge, shrimpandCoconutMilkPorridge, chickenandShrimpDumplings,broccoliShrimpSteamed,shrimpFriedRice,stirFriedTofuShrimp,friedNoodlesQuailEggs,shrimpMeatballs]
         mincedBeef.menus = [friedOkra,tempehRicePorridge,redBeanRicePorridge,tofuFritters,beefandEggPorridge, beefGadonRice, beefPorridge, cheeseMacaroni, beefSotoSteam,beefTempehStew,beefSteamed, potatoBeefSteam,bitterballen,beefStirFryRice,steamedRiceWithEggAndBeef,beefCroquettes,tempeRoll]
-        tempeh.menus = [steamedRiceVermicelliTofuTempeh,soyMilkPorridge,tempehRicePorridge,menadoPorridge,snapperfishPorridge,yellowSteamedRiceChickenLiverStew,beefTempehStew,riceWithRendangEggAndTempeh]
-        catfish.menus = [catfishPorridge, tofuandCatfishPorridge]
-        egg.menus = [friedOkra, smokedMeatPotatoFrittata,fishNuggetBun,steamedRiceWithEggVermicelli,macaroniMilkPorridge ,redBeanSoupPorridge,tofuFritters,steamedRiceWithShrimpInBananaLeaves,chickenButterPorridge, beefandEggPorridge, tofuandCatfishPorridge, cheeseBreadSteam, cheeseMacaroni,steamedRiceWithEggAndBeef,riceWithRendangEggAndTempeh, beefSotoSteam,doriPotatoCheese,riceBall,potatoEggSteam,chickenNoodleSteam,mackerelBalls,bitterballen,cheesePotatoBalls,chickenKatsuRice,beefGadonRice,stirFriedNoodlesStreetStyle,shrimpFriedRice,stirFriedTofuShrimp,mixedEggRice,shrimpMeatballs,beefCroquettes,stuffedTofuWithSausage,tempeRoll]
-        butter.menus = [ doriFishAndBroccoliPorridge,chickenButterPorridge, butterDuckPure,beefandEggPorridge, cheeseBreadSteam, riceWithButterFriedDuck, chickenSoup,chickenSatay,beefCroquettes]
-        cheese.menus = [ thailandCassava ,smokedMeatPotatoFrittata,steamedCassavaMixedWithCheese,macaroniMilkPorridge,milkOatCheesePorridge,spinachCheeseMilkPorridge,tempehRicePorridge,cheeseBreadSteam, cheeseMacaroni, doriPotatoCheese,macaroniSteam,mackerelBalls,bitterballen,cheesePotatoBalls]
-        whiteBread.menus = [cheeseBreadSteam,mackerelBalls,shrimpMeatballs]
+        tempeh.menus = [abonLele,steamedRiceVermicelliTofuTempeh,soyMilkPorridge,tempehRicePorridge,menadoPorridge,snapperfishPorridge,yellowSteamedRiceChickenLiverStew,beefTempehStew,riceWithRendangEggAndTempeh]
+        catfish.menus = [catfishPorridge, tofuandCatfishPorridge,abonLele]
+        egg.menus = [achovyandchickenPorridge,chickenMeatballSoup,friedOkra, smokedMeatPotatoFrittata,fishNuggetBun,steamedRiceWithEggVermicelli,macaroniMilkPorridge ,redBeanSoupPorridge,tofuFritters,steamedRiceWithShrimpInBananaLeaves,chickenButterPorridge, beefandEggPorridge, tofuandCatfishPorridge, cheeseBreadSteam, cheeseMacaroni,steamedRiceWithEggAndBeef,riceWithRendangEggAndTempeh, beefSotoSteam,doriPotatoCheese,riceBall,potatoEggSteam,chickenNoodleSteam,mackerelBalls,bitterballen,cheesePotatoBalls,chickenKatsuRice,beefGadonRice,stirFriedNoodlesStreetStyle,shrimpFriedRice,stirFriedTofuShrimp,mixedEggRice,shrimpMeatballs,beefCroquettes,stuffedTofuWithSausage,tempeRoll]
+        butter.menus = [ achovyandchickenPorridge, taroCheeseRollCake ,doriFishAndBroccoliPorridge,chickenButterPorridge, butterDuckPure,beefandEggPorridge, cheeseBreadSteam, riceWithButterFriedDuck, chickenSoup,chickenSatay,beefCroquettes]
+        cheese.menus = [ dateBreadPudding , cheeseGurameRice, taroCheeseRollCake ,thailandCassava ,smokedMeatPotatoFrittata,steamedCassavaMixedWithCheese,macaroniMilkPorridge,milkOatCheesePorridge,spinachCheeseMilkPorridge,tempehRicePorridge,cheeseBreadSteam, cheeseMacaroni, doriPotatoCheese,macaroniSteam,mackerelBalls,bitterballen,cheesePotatoBalls]
+        whiteBread.menus = [ dateBreadPudding ,cheeseBreadSteam,mackerelBalls,shrimpMeatballs]
         
         jellyPowder.menus = [durianPudding,melonPudding,vanillaMilkPudding,chocolateMilkPudding,fruitJelly]
         chickenBroth.menus = [ steamedRiceWithStirFriedFish,steamedRiceWithFishEggsVegetables,mincedChickenCauliflowerTeam,steamedCornVegetables,steamedRiceWithEggVermicelli,redBeanSoupPorridge,chickenBreastandLiverPorridge, mackerelPorridge,steamedChickenRice,broccoliShrimpSteamed,beefSteamed,steamedSoySauceChicken,steamedMackerelStirFry,steamedRiceChickenMushroom,steamChickenStew,chickenNoodleSteam]
-        candlenut.menus = [chickenCurryPorridge, beefGadonRice,shrimpTofuPorridge, beefSotoSteam,beefLiverSambalSteamed, tunaSteam,chickenLemper,stirFriedNoodlesStreetStyle,riceWithRendangEggAndTempeh,chickenSatay]
+        candlenut.menus = [meatballCurry,chickenCurryPorridge, beefGadonRice,shrimpTofuPorridge, beefSotoSteam,beefLiverSambalSteamed, tunaSteam,chickenLemper,stirFriedNoodlesStreetStyle,riceWithRendangEggAndTempeh,chickenSatay]
         flour.menus = [bitterballen,cheesePotatoBalls,shrimpMeatballs,beefCroquettes,tempeRoll,fishNuggetBun]
         eggNoodle.menus = [peanutButterNoodle,chickenNoodleSteam,stirFriedNoodlesStreetStyle,friedNoodlesQuailEggs]
-        tunaFish.menus = [redRiceTunaPorridge,tunaandCarrotSteam, tunaSteam,grilledRiceWithTuna]
+        tunaFish.menus = [ tunaEggplantTomatoPorridge, redRiceTunaPorridge,tunaandCarrotSteam, tunaSteam,grilledRiceWithTuna]
         blackJellyMushroom.menus = [steamedRiceChickenMushroom,riceChickenMushroom,stirFriedTofuShrimp]
         
         //udah
         fishBroth.menus = [redRicePorridge,snapperfishPorridge,greenRicePorridge]
         pear.menus=[pearPure,orangeAndPearPure,mixedFruitMilkPorridge]
         orange.menus = [fruitIce ,mixedFruitMilkPorridge,redBeanSoupPorridge,orangeandAvocadoPure,datesAndBananaPure,papayaAndWatermelonPure,orangeAndPearPure,strawberryAndBananaPure ]
-        riceFlour.menus = [spinachCheeseMilkPorridge,combinationVegetablePorridge,milkMarrowPorridge, sweetAppleMilkPorridge]
+        riceFlour.menus = [ricePorridgeWithDateSyrup,spinachCheeseMilkPorridge,combinationVegetablePorridge,milkMarrowPorridge, sweetAppleMilkPorridge]
         snapperFish.menus = [combinationVegetablePorridge,snapperfishPorridge,snapperPumpkinPorridge,redRicePorridge]
         apple.menus = [oatPorridgeWithFruit,appleandBananaPure, sweetAppleMilkPorridge,fruitIce ]
         banana.menus = [steamedCassavaMixedWithCheese,mixedFruitMilkPorridge,oatPorridgeWithFruit,appleandBananaPure,datesAndBananaPure,strawberryAndBananaPure ]
         oatFlour.menus = [mackerelBalls,oatMilkPorridge,milkOatCheesePorridge]
         mungBeans.menus = [cornMungBeansPorridge,sweetPotatoMungBeansPorridge,greenBeanBiscuitMilkPorridge]
-        redBeans.menus = [redRicePorridge,redBeanRicePorridge,redBeanSoupPorridge]
+        redBeans.menus = [achovyandchickenPorridge,redRicePorridge,redBeanRicePorridge,redBeanSoupPorridge]
         ubi.menus = [sweetPotatoAndSpinachPure,sweetPotatoMungBeansPorridge,sweetCornAndSweetPotatoPorridge,bananaSweetPotatoBallsYoghurtSauce]
         corn.menus = [menadoPorridge,sweetCornAndSweetPotatoPorridge,steamedCornVegetables,caisimBabyCornTauco ]
         waterGourd.menus = [redRiceChickenPorridge,chickenSotoPorridge,combinationVegetablePorridge]
@@ -1905,55 +1983,33 @@ extension Ingredient {
         longJawedMackerel.menus = [steamedLongJawedMackerelPorridgeinBananaLeaf,steamedRiceWithFishEggsVegetables,yellowPumpkinFishMeatballs ]
         cabbage.menus = [ smokedMeatPotatoFrittata,vegetablePure, mincedChickenCauliflowerTeam]
         fishBalls.menus = [savoryRiceWithStirFriedFishBallsAndBroccoli,friedRice,caisimBabyCornTauco ]
-        meat.menus = [  beefCroquettes,beefSotoSteam, beefTempehStew ]
+        meat.menus = [  potatoMeatBroccoliEggplantPorridge, beefCroquettes,beefSotoSteam, beefTempehStew ]
         ricePorridge.menus = [chickenSotoPorridge,redBeanSoupPorridge,potatoandChickenliverPorridge]
         papaya.menus = [mixedFruitMilkPorridge,oatPorridgeWithFruit,papayaAndWatermelonPure,cornMungBeansPorridge]
         pumpkin.menus = [spinachCheeseMilkPorridge,snapperPumpkinPorridge, soybeanPumpkinPorridge,menadoPorridge,yellowPumpkinFishMeatballs ]
         ricePorridge.menus = [chickenSotoPorridge,redBeanSoupPorridge,greenRicePorridge]
-        
-        //belum2
-        avocado.menus = [orangeandAvocadoPure,avocadoPure, melonAvocadoPure] //v
-        strawberry.menus = [strawberryAndBananaPure, yogurtBananaStrawberryCake,strawberryPure ] //v
-        beefLiver.menus = [beefLiverPorridge,beefLiverSambalSteamed, beefLiverPure] //v
-        duck.menus = [braisedDuckRice, riceWithButterFriedDuck,butterDuckPure]//v
-        
-        
-        bihun.menus = [steamedRiceWithEggVermicelli,steamedRiceVermicelliTofuTempeh] //v
-        eggYolk.menus = [vanillaMilkPudding,melonPudding,durianPudding] //v
-        watermelon.menus=[fruitJelly,papayaAndWatermelonPure,fruitIce ]//v
-        
-        okra.menus = [friedOkra,eggTofuOkraSoup,spinachOkraPorridge]//v
-        cassava.menus = [cassavaPorridge,steamedCassavaMixedWithCheese,thailandCassava ]//v
-        cucumber.menus = [vegetablePure,fishNuggetBun,cucumberPure]//v
-        
-        dori.menus = [doriPotatoCheese,doriFishPorridge, doriFishAndBroccoliPorridge] //v
-        okra.menus = [friedOkra,eggTofuOkraSoup] //v
-        peanuts.menus = [chickenSatay,peanutButterJam,peanutButterNoodle] //v
-        
-        
-        eggPlant.menus = [boborTerung]
-        glutinousRice.menus = [chickenLemper ]
-        saltedFish.menus = [menadoPorridge]
-        carp.menus = [steamedGuremeRice]
-        meatball.menus = [friedRice]
-        Dates.menus=[datesAndBananaPure]
-        taro.menus = [taroPure]
-      
+        avocado.menus = [orangeandAvocadoPure,avocadoPure, melonAvocadoPure]
+        strawberry.menus = [strawberryAndBananaPure, yogurtBananaStrawberryCake,strawberryPure ]
+        beefLiver.menus = [beefLiverPorridge,beefLiverSambalSteamed, beefLiverPure]
+        duck.menus = [braisedDuckRice, riceWithButterFriedDuck,butterDuckPure]
+        bihun.menus = [steamedRiceWithEggVermicelli,steamedRiceVermicelliTofuTempeh]
+        eggYolk.menus = [vanillaMilkPudding,melonPudding,durianPudding,taroEggYolkPuree]
+        watermelon.menus=[fruitJelly,papayaAndWatermelonPure,fruitIce ]
+        okra.menus = [friedOkra,eggTofuOkraSoup,spinachOkraPorridge]
+        cassava.menus = [cassavaPorridge,steamedCassavaMixedWithCheese,thailandCassava ]
+        cucumber.menus = [vegetablePure,fishNuggetBun,cucumberPure]
+        dori.menus = [doriPotatoCheese,doriFishPorridge, doriFishAndBroccoliPorridge]
+        peanuts.menus = [chickenSatay,peanutButterJam,peanutButterNoodle]
+        taro.menus = [taroPure,taroEggYolkPuree, taroCheeseRollCake ]
+        eggPlant.menus = [ tunaEggplantTomatoPorridge,boborTerung, potatoMeatBroccoliEggplantPorridge]
+        glutinousRice.menus = [chickenLemper, mangoStickyRice,stickyRiceBrownSugarPorridge ]
+        taro.menus = [taroPure,taroEggYolkPuree, taroCheeseRollCake ]
+        saltedFish.menus = [menadoPorridge,chickenMeatballSoup,achovyandchickenPorridge]
+        carp.menus = [carpMustardPorridge,steamedGuremeRice,cheeseGurameRice]
+        meatball.menus = [friedRice,chickenMeatballSoup,meatballCurry]
+        Dates.menus=[ dateBreadPudding ,ricePorridgeWithDateSyrup,datesAndBananaPure]
+   
 
-        //        lamb.menus = []
-        //        clams.menus = []
-        //        squid.menus = []
-        //        duckEgg.menus = []
-        //        cassavaLeaves.menus = []
-        //        grape.menus=[]
-        //        langsat.menus=[]
-        //        wateryRoseApples.menus=[]
-        //        snakeFruit.menus=[]
-        //        mangosteen.menus=[]
-        //        soursop.menus = []
-        //        lychee.menus = []
-        //        ambarella.menus = []
-                
 
         
         
@@ -1961,7 +2017,7 @@ extension Ingredient {
 
 //        return [chickenLiver, lamb, duck,  beefLiver,mincedBeef, tofu,shrimp,catfish,longJawedMackerel,quail,egg, tilapiaFish,snapperFish,chickenBroth, fishBroth, yogurt, whiteBread, macaroni, candlenut, cheese, tunaFish, dori, fishBalls, peas, tempeh, mungBeans,soyBeans,redBeans,peanuts, potato, eggNoodle, oatFlour, glutinousRice, jellyPowder, bihun, ricePorridge, macaroni, whiteRice, whiteBread, cassava, taro, riceFlour, flour, ubi, coconutOil, coconutMilk, cornOil,canolaOil, soybeanOil, sesameOil, butter, candlenut, squid, meat, saltedFish, catfish, carp,tilapiaFish, clams, meatball, eggYolk, duckEgg, chicken, okra, cucumber, avocado, blackJellyMushroom, blackJellyMushroom,waterGourd, eggPlant, corn, cabbage, cassavaLeaves, grape,langsat, wateryRoseApples, Dates,pear,watermelon,snakeFruit,mangosteen,soursop,lychee, ambarella, broccoli, carrot, tomato, greenBeans, mackarel, orange, banana, apple, spinach,pumpkin,strawberry,papaya ]
         
-        return [chickenLiver, duck,  beefLiver,mincedBeef, tofu,shrimp,catfish,longJawedMackerel,quail,egg, tilapiaFish,snapperFish,chickenBroth, fishBroth, yogurt, whiteBread, macaroni, candlenut, cheese, tunaFish, dori, fishBalls, peas, tempeh, mungBeans,soyBeans,redBeans,peanuts, potato, eggNoodle, oatFlour, glutinousRice, jellyPowder, bihun, ricePorridge, macaroni, whiteRice, whiteBread, cassava, taro, riceFlour, flour, ubi, coconutOil, coconutMilk, cornOil,canolaOil, soybeanOil, sesameOil,butter, candlenut, meat, saltedFish, catfish, carp,tilapiaFish, meatball, eggYolk, chicken, okra, cucumber, avocado, blackJellyMushroom, blackJellyMushroom,waterGourd, eggPlant, corn, cabbage,  Dates,pear,watermelon,broccoli, carrot, tomato, greenBeans, mackarel, orange, banana, apple, spinach,pumpkin,strawberry,papaya ]
+        return [chickenLiver, duck,  beefLiver,mincedBeef, tofu,shrimp,catfish,longJawedMackerel,quail,egg, tilapiaFish,snapperFish,chickenBroth, fishBroth, yogurt, whiteBread, macaroni, candlenut, cheese, tunaFish, dori, fishBalls, peas, tempeh, mungBeans,soyBeans,redBeans,peanuts, potato, eggNoodle, oatFlour, glutinousRice, jellyPowder, bihun, ricePorridge, macaroni, whiteRice, whiteBread, cassava, taro, riceFlour, flour, ubi, coconutOil, coconutMilk, cornOil,canolaOil, soybeanOil, sesameOil,butter, candlenut, meat, saltedFish, carp,tilapiaFish, meatball, eggYolk, chicken, okra, cucumber, avocado, blackJellyMushroom, blackJellyMushroom,waterGourd, eggPlant, corn, cabbage,  Dates,pear,watermelon,broccoli, carrot, tomato, greenBeans, mackarel, orange, banana, apple, spinach,pumpkin,strawberry,papaya ]
     }
 
     // Add this new method to fetch existing ingredients

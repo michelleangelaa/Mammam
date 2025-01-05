@@ -13,6 +13,7 @@ struct HomeView: View {
     @Environment(\.modelContext) private var context
     @Query private var menus: [FoodMenu]
     @Query private var baby: [Baby]
+    @Query private var ingredient: [Ingredient]
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
@@ -43,7 +44,7 @@ struct HomeView: View {
                 if let todayPlan = todayMealPlan {
                     mealPlanSection(for: todayPlan)
                 }
-                
+    
                 // Menu
                 menuSection
                 
@@ -307,6 +308,7 @@ struct HomeView: View {
         let mealDate = Calendar.current.startOfDay(for: meal.timeGiven)
         return today == mealDate
     }
+    
 }
 
 #Preview {
