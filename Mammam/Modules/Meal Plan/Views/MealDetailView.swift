@@ -16,28 +16,25 @@ struct MealDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                // Ingredient Header
                 Text(ingredient.name)
-                    .font(.title)
-                    .fontWeight(.semibold)
+                    .font(.title2)
+                    .fontWeight(.bold)
                 
-                // Ingredient Image
                 if let ingredientImage = ingredient.image {
                     Image(ingredientImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 120, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .frame(width: 150, height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                 } else {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.gray)
                         .frame(width: 120, height: 120)
                 }
                 
-                // Nutrients Section
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Nutrients:")
-                        .font(.headline)
+                    Text("Nutrients")
+                        .font(.body)
                     
                     if let nutrients = ingredient.nutrients {
                         ForEach(nutrients, id: \.self) { nutrient in
@@ -48,6 +45,28 @@ struct MealDetailView: View {
                         Text("No nutrients available.")
                             .foregroundColor(.secondary)
                     }
+                    
+                    if let nutrients = ingredient.nutrients, !nutrients.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Nutrients")
+                                .font(.body)
+                            HStack {
+                                ForEach(nutrients, id: \.self) { nutrient in
+                                    Text("\(nutrient.name)")
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 4)
+                                        .font(.body)
+                                        .foregroundStyle(Color.red)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(Color.rose.rose100)
+                                                .stroke(Color.red)
+                                        )
+                                }
+                            }
+                        }
+                    }
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
