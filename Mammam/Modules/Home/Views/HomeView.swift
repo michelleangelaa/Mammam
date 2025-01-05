@@ -88,13 +88,24 @@ struct HomeView: View {
         Button(action: {
             coordinator.push(page: .createMealPlan)
         }) {
-            HStack {
-                Label("Start Your Meal Plan Today!", systemImage: "lightbulb.fill")
-                    .font(.headline)
-                    .foregroundColor(.black)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
+            VStack {
+                HStack {
+                    VStack (alignment: .leading){
+                        HStack {
+                            Label("Start Your Meal Plan Today!", systemImage: "lightbulb.fill")
+                                .font(.subheadline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.black)
+                            Spacer()
+                        }
+                        Text("Introduce a variety of new foods with ease")
+                            .font(.footnote)
+                            .foregroundColor(.black)
+
+                    }
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                }
             }
             .padding()
             .background(
