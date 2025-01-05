@@ -92,7 +92,7 @@ struct HomeView: View {
         }) {
             VStack {
                 HStack {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Label("Start your meal plan today!", systemImage: "lightbulb.fill")
                                 .font(.subheadline)
@@ -162,7 +162,7 @@ struct HomeView: View {
             Spacer()
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("All Scheduled Meal Recorded Today")
+                Text("All scheduled meal recorded today")
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.black)

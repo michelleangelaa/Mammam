@@ -22,35 +22,45 @@ struct MealPlannerView: View {
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
 
     var body: some View {
-        if plans.isEmpty {
-            emptyStateView
-        } else {
-            mealPlansScrollView
+        ZStack {
+            Image("BG_Home")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            if plans.isEmpty {
+                emptyStateView
+            } else {
+                mealPlansScrollView
+            }
         }
     }
 
     private var emptyStateView: some View {
-        VStack(alignment: .leading) {
-            Text("Meal Planner")
-                .font(.title2)
-                .fontWeight(.bold)
-            Label("No meal planner yet", systemImage: "doc.richtext.fill")
-                .font(.headline)
-                .padding()
-            Text("No meal plans available. Create a new meal plan!")
-                .foregroundColor(.gray)
-
-            HStack {
+        VStack {
+            VStack (alignment: .leading) {
+                Text("Meal Planner")
+                    .font(.title2)
+                    .fontWeight(.bold)
                 Button(action: {
-                    coordinator.push(page: .createMealPlan) // Correct method for navigation
+                    coordinator.push(page: .createMealPlan)
                 }) {
-                    HStack {
-                        Label("Create your plan", systemImage: "lightbulb.fill")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
+                    VStack {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Label("Start your meal plan today!", systemImage: "lightbulb.fill")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                }
+                                Text("Introduce a variety of new foods with ease")
+                                    .font(.footnote)
+                                    .foregroundColor(.black)
+                            }
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
+                        }
                     }
                     .padding()
                     .background(
@@ -58,10 +68,24 @@ struct MealPlannerView: View {
                             .fill(Color(UIColor.systemGray6))
                     )
                 }
+                
             }
-            .padding(.horizontal)
+          
+            Spacer()
+            VStack(alignment: .center, spacing: 12) {
+                Image(systemName: "list.clipboard")
+                    .font(.system(size: 50))
+                Text("No meal plans available.\nCreate a new meal plan!")
+                    .font(.body)
+            }
+            .foregroundColor(.gray500)
+
+
+            Spacer()
         }
         .padding(.horizontal)
+        .padding(.top, 80)
+        .padding(.bottom, 70)
     }
 
     private func mealTypeOrder(_ type: String) -> Int {
@@ -83,15 +107,25 @@ struct MealPlannerView: View {
                 .padding(.horizontal)
             HStack {
                 Button(action: {
-                    coordinator.push(page: .createMealPlan) // Correct method for navigation
+                    coordinator.push(page: .createMealPlan)
                 }) {
-                    HStack {
-                        Label("Create your plan", systemImage: "lightbulb.fill")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
+                    VStack {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Label("Create your plan!", systemImage: "lightbulb.fill")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                }
+                                Text("Introduce a variety of new foods with ease")
+                                    .font(.footnote)
+                                    .foregroundColor(.black)
+                            }
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
+                        }
                     }
                     .padding()
                     .background(
@@ -111,41 +145,43 @@ struct MealPlannerView: View {
 
                     ForEach(sortedDates, id: \.self) { date in
                         if let mealsForDate = groupedMeals[date] {
-                            // Filter for unlogged meals
                             let unloggedMeals = mealsForDate.filter { !$0.isLogged }
 
-                            // Only display the section if there are unlogged meals
-                            if !unloggedMeals.isEmpty {
-                                Section(header: Text(formattedDate(date))
-                                    .font(.headline)
-                                    .padding(.horizontal)
-                                ) {
-                                    ScrollView(.horizontal, showsIndicators: false) {
-                                        LazyHStack(spacing: 16) {
-                                            ForEach(
-                                                unloggedMeals
-                                                    .sorted {
-                                                        MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
+                            VStack(alignment: .leading, spacing: 8) {
+                                if !unloggedMeals.isEmpty {
+                                    Section(header: Text(formattedDate(date))
+                                        .font(.callout)
+                                        .fontWeight(.semibold)
+                                    ) {
+                                        ScrollView(.horizontal, showsIndicators: false) {
+                                            LazyHStack(spacing: 16) {
+                                                ForEach(
+                                                    unloggedMeals
+                                                        .sorted {
+                                                            MealTypeOrderUtility.mealTypeOrder($0.type) < MealTypeOrderUtility.mealTypeOrder($1.type)
+                                                        }
+                                                ) { meal in
+                                                    Button(action: {
+                                                        coordinator.presentMealDetailSheet(with: meal)
+                                                    }) {
+                                                        MealCardComponent(meal: meal)
                                                     }
-                                            ) { meal in
-                                                Button(action: {
-                                                    coordinator.presentMealDetailSheet (with: meal)
-                                                }) {
-                                                    MealCardComponent(meal: meal)
                                                 }
                                             }
                                         }
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 8)
                                     }
                                 }
                             }
+                            .padding(.leading)
+                            .padding(.bottom, 12)
                         }
                     }
                 }
             }
+            .scrollIndicators(.hidden)
         }
-        .padding(.top)
+        .padding(.top, 80)
+        .padding(.bottom, 70)
     }
 
     func datesBetween(start: Date, end: Date) -> [Date] {
