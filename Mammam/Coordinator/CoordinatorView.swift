@@ -25,7 +25,7 @@ struct CoordinatorView: View {
                         coordinator.buildCover(cover: item)
                     }
             } else {
-                coordinator.build(page: .main)
+                coordinator.build(page: .splashScreen)
                     .navigationDestination(for: AppPages.self) { page in
                         coordinator.build(page: page)
                     }

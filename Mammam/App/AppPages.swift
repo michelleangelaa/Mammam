@@ -49,5 +49,6 @@ enum FullSceenCover: String, Identifiable {
     var id: String {
         self.rawValue
     }
+
     case loadingView
 }
