@@ -90,7 +90,7 @@ struct HomeView: View {
         }) {
             VStack {
                 HStack {
-                    VStack (alignment: .leading){
+                    VStack(alignment: .leading) {
                         HStack {
                             Label("Start Your Meal Plan Today!", systemImage: "lightbulb.fill")
                                 .font(.subheadline)
@@ -101,7 +101,6 @@ struct HomeView: View {
                         Text("Introduce a variety of new foods with ease")
                             .font(.footnote)
                             .foregroundColor(.black)
-
                     }
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
@@ -205,36 +204,33 @@ struct HomeView: View {
             Button(action: {
                 coordinator.presentSheet(sheet: .article)
             }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(Color(.systemGray5))
-                        .frame(height: 97)
-
-                    HStack(alignment: .top, spacing: 20) {
-                        VStack(alignment: .leading) {
-                            Image("motivationimage1")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 65, height: 65, alignment: .topLeading)
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                        }
+                HStack(alignment: .top, spacing: 20) {
+                    Image("motivationimage1")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 65, height: 65, alignment: .topLeading)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                         
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack(spacing: 5) {
-                                Image(systemName: "book.pages")
-                                Text("Article")
-                                    .font(.system(size: 12))
-                            }
-                              
-                            Text("Introduce new food with food chaining")
-                                .font(.system(size: 16))
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 5) {
+                            Image(systemName: "book.pages")
+                            Text("Article")
+                                .font(.system(size: 12))
                         }
+                              
+                        Text("Introduce new food with food chaining")
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                    Spacer()
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.blue.blue25)
+                        .frame(height: 97)
+                )
+                
             }
         }
     }
