@@ -37,17 +37,17 @@ struct HomeView: View {
                     } else {
                         noMealPlanView
                     }
+                    
+                    // Meal Plan
+                    if let todayPlan = todayMealPlan {
+                        mealPlanSection(for: todayPlan)
+                    }
                         
                     // Story of the Day
                     storyOfTheDaySection
                         
                     // Article
                     articleSection
-                        
-                    // Meal Plan
-                    if let todayPlan = todayMealPlan {
-                        mealPlanSection(for: todayPlan)
-                    }
                         
                     // Menu
                     menuSection
@@ -119,24 +119,34 @@ struct HomeView: View {
             // Present the Rate Meal Sheet for the specific meal
             coordinator.presentRateMealSheet(with: meal)
         }) {
-            HStack {
-                Image(systemName: "fork.knife.circle")
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                VStack(alignment: .leading) {
-                    Text("Log Meal")
-                        .font(.headline)
-                    Text(meal.type)
-                        .font(.subheadline)
+            VStack (alignment: .leading, spacing: 12) {
+                Text("Log Meal")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
+                
+                HStack {
+                    Image(meal.ingredient?.image ?? "fork.knife")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(meal.type)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.black)
+                        Text(meal.ingredient?.name ?? "Meal Ingredient")
+                            .font(.caption2)
+                            .foregroundColor(.black)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
                 }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
             }
-            .padding()
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
             .background(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 16)
                     .fill(Color(UIColor.systemGray6))
             )
         }
@@ -230,7 +240,6 @@ struct HomeView: View {
                         .fill(Color.blue.blue25)
                         .frame(height: 97)
                 )
-                
             }
         }
     }
