@@ -179,10 +179,11 @@ struct ReviewMealCardView: View {
     var dayRange: String
     var onReplace: (Ingredient) -> Void
     @Environment(\.modelContext) private var context
+    @EnvironmentObject private var coordinator: Coordinator
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(meal.ingredient?.image ?? "leaf") // Placeholder for the meal image
+            Image(meal.ingredient?.image ?? "fork.knife") // Placeholder for the meal image
                 .resizable()
                 .frame(width: 70, height: 70)
                 .background(Color(UIColor.systemGray5))
@@ -191,19 +192,16 @@ struct ReviewMealCardView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(dayRange)
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white)
                     .padding(4)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(UIColor.systemGray6))
+                            .fill(Color.rose.rose600)
                     )
                 Text(meal.ingredient?.name ?? "Unknown")
-                    .font(.headline)
-                Text("\(meal.ingredient?.menus?.count ?? 0) menu(s)")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-
-                Text(meal.type)
+                    .font(.headline).fontWeight(.semibold)
+                Text("\(meal.ingredient?.menus?.count ?? 0) menu variant(s)")
+                    .font(.footnote)
             }
             Spacer()
 
@@ -230,6 +228,9 @@ struct ReviewMealCardView: View {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(UIColor.systemGray6))
         )
+        .onTapGesture {
+            coordinator.presentSwapIngredientsSheet(for: meal) // Trigger the half-sheet
+        }
     }
 }
 

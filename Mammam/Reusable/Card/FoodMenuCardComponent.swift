@@ -12,6 +12,7 @@ struct FoodMenuCardComponent: View {
     @Environment(\.modelContext) private var context
     @ObservedObject var foodMenu: FoodMenu
     @EnvironmentObject private var coordinator: Coordinator
+    @State private var showingUnsaveAlert = false
 
 //
 //    @Binding var foodMenu: FoodMenu
@@ -21,7 +22,7 @@ struct FoodMenuCardComponent: View {
 //        self._foodMenu = foodMenu
 //        self._isBookmarked = State(initialValue: foodMenu.wrappedValue.isSaved)
 //    }
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             ZStack(alignment: .topTrailing) {
@@ -29,8 +30,14 @@ struct FoodMenuCardComponent: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
-                
-                Button(action: { toggleBookmark() }) {
+
+                Button(action: {
+                    if foodMenu.isSaved {
+                        showingUnsaveAlert = true
+                    } else {
+                        toggleBookmark()
+                    }
+                }) {
                     Image(systemName: foodMenu.isSaved ? "bookmark.fill" : "bookmark")
                         .font(.title3)
                         .padding(8)
@@ -39,13 +46,13 @@ struct FoodMenuCardComponent: View {
                         .padding(8)
                 }
             }
-            
+
             Text(foodMenu.name)
                 .font(.caption2)
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.primary)
                 .lineLimit(2)
-            
+
             Spacer()
         }
         .onChange(of: foodMenu.isSaved) { _ in
@@ -57,15 +64,23 @@ struct FoodMenuCardComponent: View {
                 .fill(Color(UIColor.systemGray6))
         )
         .padding(.horizontal, 8)
+        .alert("Unsave Menu", isPresented: $showingUnsaveAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Unsave", role: .destructive) {
+                toggleBookmark()
+            }
+        } message: {
+            Text("Are you sure you want to unsave the menu?")
+        }
     }
-    
+
 //    private func toggleBookmark() {
 //        isBookmarked.toggle()
 //        foodMenu.isSaved = isBookmarked
 //        try? context.save()
 //        print("\(foodMenu.name) bookmark status: \(isBookmarked)")
 //    }
-    
+
     private func toggleBookmark() {
         foodMenu.isSaved.toggle()
         try? context.save()

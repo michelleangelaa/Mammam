@@ -5,8 +5,9 @@
 //  Created by Michelle Angela Aryanto on 16/10/24.
 //
 
-import SwiftUI
+import PhotosUI
 import SwiftData
+import SwiftUI
 
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
@@ -28,6 +29,8 @@ struct RateMealView: View {
     @State private var consumedQty: Double = 1.0
     @State private var isAllergic: Bool = false
     @State private var notes: String = ""
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var selectedPhotoData: Data?
 
     var units = ["Tea Spoon", "Table Spoon", "Cup"]
 
@@ -43,18 +46,21 @@ struct RateMealView: View {
         _consumedQty = State(initialValue: meal.consumedQty)
         _isAllergic = State(initialValue: meal.isAllergic)
         _notes = State(initialValue: meal.notes)
+        _selectedPhotoData = State(initialValue: meal.photo)
     }
 
     var body: some View {
         VStack {
-            Text("Review Meal")
+            Text("Review meal")
                 .font(.title2).fontWeight(.bold)
+                .padding(.top, 4)
 
             Form {
-                TextField("Ingredient Name", text: $ingredient)
-                TextField("Type", text: $type)
-                DatePicker("Time Given", selection: $timeGiven, displayedComponents: .hourAndMinute)
-                DatePicker("Time Ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
+                DatePicker("Time given", selection: $timeGiven, displayedComponents: .hourAndMinute)
+                    .onChange(of: timeGiven) { _ in
+                        validateTimes()
+                    }
+                DatePicker("Time ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
                     .onChange(of: timeEnded) { _ in
                         validateTimes()
                     }
@@ -95,15 +101,60 @@ struct RateMealView: View {
                 }
 
                 HStack {
-                    Text("Allergic Reaction")
-                    Picker("Allergic Reaction", selection: $isAllergic) {
+                    Text("Allergic reaction")
+                    Picker("Allergic reaction", selection: $isAllergic) {
                         Text("Yes").tag(true)
                         Text("No").tag(false)
                     }
                     .pickerStyle(.segmented)
                 }
 
-                TextField("Notes", text: $notes)
+                VStack(alignment: .leading) {
+                    TextField("Notes", text: $notes)
+                    PhotosPicker(
+                        selection: $selectedPhoto,
+                        matching: .images,
+                        photoLibrary: .shared()
+                    ) {
+                        Group {
+                            if let selectedPhotoData,
+                               let uiImage = UIImage(data: selectedPhotoData)
+                            {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100, height: 100) // Adjust size as needed
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            } else {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.rose.rose50)
+                                    .frame(width: 100, height: 100) // Adjust size as needed
+                                    .overlay(
+                                        Image(systemName: "camera.fill")
+                                            .font(.system(size: 24))
+                                            .foregroundColor(Color.rose.rose700)
+                                    )
+                            }
+                        }
+                        .frame(width: 100, height: 100)
+                        .overlay(alignment: .bottomTrailing) {
+                            if selectedPhotoData != nil {
+                                Button {
+                                    selectedPhoto = nil
+                                    selectedPhotoData = nil
+                                } label: {
+                                    Image(systemName: "x.circle.fill")
+                                        .foregroundStyle(.rose500)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .alert("Invalid Time", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(alertMessage)
             }
 
             // Save Button with Validation
@@ -138,6 +189,20 @@ struct RateMealView: View {
                 EmptyView()
             }
         }
+        .task(id: selectedPhoto) {
+            if let data = try? await selectedPhoto?.loadTransferable(type: Data.self) {
+                selectedPhotoData = data
+            }
+        }
+        .padding()
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close") {
+                    coordinator.dismissSheet()
+                }
+            }
+        }
     }
 
     // MARK: - Update the existing Meal
@@ -162,6 +227,7 @@ struct RateMealView: View {
         meal.consumedQty = consumedQty
         meal.isAllergic = isAllergic
         meal.notes = notes
+        meal.photo = selectedPhotoData
 
         do {
             try context.save()
@@ -175,11 +241,11 @@ struct RateMealView: View {
 
     private func validateInputs() -> Bool {
         if timeEnded < timeGiven {
-            alertMessage = "Time Ended must be later than or equal to Time Given."
+            alertMessage = "Time ended must be later than or equal to time given."
             return false
         }
         if consumedQty > servingQty {
-            alertMessage = "Consumed quantity cannot exceed the serving size."
+            alertMessage = "Consumed quantity cannot be more than the serving size (\(servingQty))."
             return false
         }
         return true
@@ -188,7 +254,7 @@ struct RateMealView: View {
     private func validateTimes() {
         if timeEnded < timeGiven {
             DispatchQueue.main.async {
-                alertMessage = "Time Ended must be later than or equal to Time Given."
+                alertMessage = "Time ended must be later than or equal to time given."
                 showAlert = true
             }
         }
@@ -197,13 +263,12 @@ struct RateMealView: View {
     private func validateQuantities() {
         if consumedQty > servingQty {
             DispatchQueue.main.async {
-                alertMessage = "Consumed quantity cannot exceed the serving size."
+                alertMessage = "Consumed quantity cannot be more than the serving size (\(servingQty)" + " " + "\(servingUnit))."
                 showAlert = true
             }
         }
     }
 }
-
 
 // #Preview {
 //    RateMealView(meal: <#Meal#>)

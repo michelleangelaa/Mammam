@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import PhotosUI
 
 @Model
 class Meal: ObservableObject {
@@ -23,7 +24,10 @@ class Meal: ObservableObject {
     var isAllergic: Bool
     var isLogged: Bool
     var notes: String
-
+    
+    @Attribute(.externalStorage)
+    var photo: Data?
+    
     init(ingredient: Ingredient? = nil, mealPlan: MealPlan? = nil, type: String, timeGiven: Date, timeEnded: Date, servingUnit: String, servingQty: Double, consumedQty: Double, isAllergic: Bool, isLogged: Bool, notes: String) {
         self.mealPlan = mealPlan
         self.ingredient = ingredient

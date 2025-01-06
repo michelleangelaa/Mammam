@@ -16,48 +16,56 @@ struct MealDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                // Ingredient Header
                 Text(ingredient.name)
-                    .font(.title)
-                    .fontWeight(.semibold)
+                    .font(.title2)
+                    .fontWeight(.bold)
                 
-                // Ingredient Image
                 if let ingredientImage = ingredient.image {
                     Image(ingredientImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 120, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .frame(width: 150, height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                 } else {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.gray)
                         .frame(width: 120, height: 120)
                 }
                 
-                // Nutrients Section
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Nutrients:")
-                        .font(.headline)
                     
-                    if let nutrients = ingredient.nutrients {
-                        ForEach(nutrients, id: \.self) { nutrient in
-                            Text(nutrient.name)
-                                .foregroundColor(.secondary)
+                    if let nutrients = ingredient.nutrients, !nutrients.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Nutrients")
+                                .font(.body)
+                                .fontWeight(.bold)
+                            HStack {
+                                ForEach(nutrients, id: \.self) { nutrient in
+                                    Text("\(nutrient.name)")
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 4)
+                                        .foregroundStyle(Color.black)
+                                        .font(.body)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(Color.bluegray.bluegray100)
+                                                .stroke(Color.bluegray.bluegray400)
+                                        )
+                                }
+                            }
                         }
-                    } else {
-                        Text("No nutrients available.")
-                            .foregroundColor(.secondary)
                     }
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
+                Spacer()
                 // Available Meals Section
                 VStack(alignment: .leading, spacing: 12) {
-                    
-                    
                     if let menus = ingredient.menus, !menus.isEmpty {
-                        Text("Available Meals")
-                            .font(.headline)
+                        Text("Variate with these menu")
+                            .font(.body)
+                            .fontWeight(.bold)
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack {
                                 ForEach(menus) { food in
@@ -75,8 +83,9 @@ struct MealDetailView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
+            
+                Spacer(minLength: 40)
+
                 Button(action: {
                     coordinator.presentRateMealSheet(with: meal)
                 }) {
@@ -89,6 +98,14 @@ struct MealDetailView: View {
                 }
             }
             .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") {
+                        coordinator.dismissSheet()
+                    }
+                }
+            }
         }
     }
 }

@@ -18,41 +18,50 @@ struct HomeView: View {
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Heading
-                headerSection
-                
-                // Conditional Sections
-                if let todayPlan = todayMealPlan {
-                    if let unloggedMeal = nextUnloggedMeal(from: todayPlan) {
-                        currentMealTypeView(meal: unloggedMeal)
+        ZStack {
+            Image("BG_Home")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Heading
+                    headerSection
+                        
+                    // Conditional Sections
+                    if let todayPlan = todayMealPlan {
+                        if let unloggedMeal = nextUnloggedMeal(from: todayPlan) {
+                            currentMealTypeView(meal: unloggedMeal)
+                        } else {
+                            allMealsLoggedView
+                        }
                     } else {
-                        allMealsLoggedView
+                        noMealPlanView
                     }
-                } else {
-                    noMealPlanView
+                    
+                    // Meal Plan
+                    if let todayPlan = todayMealPlan {
+                        mealPlanSection(for: todayPlan)
+                    }
+                        
+                    // Story of the Day
+                    storyOfTheDaySection
+                        
+                    // Article
+                    articleSection
+                        
+                    // Menu
+                    menuSection
+                        
+                    Spacer()
                 }
-                
-                // Story of the Day
-                storyOfTheDaySection
-                
-                // Article
-                articleSection
-                
-                // Meal Plan
-                if let todayPlan = todayMealPlan {
-                    mealPlanSection(for: todayPlan)
-                }
-    
-                // Menu
-                menuSection
-                
-                Spacer()
+                .padding()
+                .padding(.top, 65)
+                .padding(.bottom, 65)
             }
-            .padding()
-            .navigationBarBackButtonHidden(true)
+            .scrollIndicators(.hidden)
         }
+        .navigationBarBackButtonHidden(true)
     }
     
     // MARK: - Subviews
@@ -60,7 +69,7 @@ struct HomeView: View {
     private var headerSection: some View {
         HStack {
             Circle()
-                .fill(Color.pink.opacity(0.2))
+                .fill(Color.rose.rose25)
                 .frame(width: 36, height: 36)
                 .overlay(
                     Text(baby.first?.babyProfileImage ?? "􀉪")
@@ -74,6 +83,22 @@ struct HomeView: View {
                 coordinator.push(page: .savedMenu)
             }) {
                 Image(systemName: "bookmark.fill")
+                    .overlay(
+                        Group {
+                            if menus.filter({ $0.isSaved }).count > 0 {
+                                ZStack {
+                                    Circle()
+                                        .fill(.white)
+                                        .frame(width: 16, height: 16)
+                                    Text("\(menus.filter { $0.isSaved }.count)")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.rose.rose600)
+                                }
+                                .offset(x: 8, y: -8)
+                            }
+                        }
+                    )
             }
         }
     }
@@ -82,13 +107,23 @@ struct HomeView: View {
         Button(action: {
             coordinator.push(page: .createMealPlan)
         }) {
-            HStack {
-                Label("Start Your Meal Plan Today!", systemImage: "lightbulb.fill")
-                    .font(.headline)
-                    .foregroundColor(.black)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
+            VStack {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Label("Start your meal plan today!", systemImage: "lightbulb.fill")
+                                .font(.subheadline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.black)
+                            Spacer()
+                        }
+                        Text("Introduce a variety of new foods with ease")
+                            .font(.footnote)
+                            .foregroundColor(.black)
+                    }
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                }
             }
             .padding()
             .background(
@@ -103,25 +138,35 @@ struct HomeView: View {
             // Present the Rate Meal Sheet for the specific meal
             coordinator.presentRateMealSheet(with: meal)
         }) {
-            HStack {
-                Image(systemName: "fork.knife.circle")
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                VStack(alignment: .leading) {
-                    Text("Log Meal")
-                        .font(.headline)
-                    Text(meal.type)
-                        .font(.subheadline)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Log Meal")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
+                
+                HStack {
+                    Image(meal.ingredient?.image ?? "fork.knife")
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(meal.type)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.black)
+                        Text(meal.ingredient?.name ?? "Meal Ingredient")
+                            .font(.caption2)
+                            .foregroundColor(.black)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
                 }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
             }
-            .padding()
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
             .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(UIColor.systemGray6))
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.bluegray.bluegray50)
             )
         }
     }
@@ -130,14 +175,20 @@ struct HomeView: View {
         HStack {
             Image(systemName: "calendar")
                 .resizable()
-                .frame(width: 40, height: 40)
-            VStack(alignment: .leading) {
-                Text("All Scheduled Meal Recorded Today")
+                .frame(width: 36, height: 36)
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("All scheduled meal recorded today")
                     .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
+                Text("You're doing an incredible job")
+                    .font(.footnote)
                     .foregroundColor(.black)
             }
-            .padding()
         }
+        .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(UIColor.systemGray6))
@@ -146,7 +197,7 @@ struct HomeView: View {
     
     private var storyOfTheDaySection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Today's Story")
+            Text("Today's story")
                 .font(.headline)
             Button(action: {
                 coordinator.push(page: .motivation)
@@ -183,41 +234,37 @@ struct HomeView: View {
     
     private var articleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Understand Your Child Better")
+            Text("Understand your child better")
                 .font(.headline)
             Button(action: {
                 coordinator.presentSheet(sheet: .article)
             }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(Color(.systemGray5))
-                        .frame(height: 97)
-
-                    HStack(alignment: .top, spacing: 20) {
-                        VStack(alignment: .leading) {
-                            Image("motivationimage1")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 65, height: 65, alignment: .topLeading)
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                        }
+                HStack(alignment: .top, spacing: 20) {
+                    Image("motivationimage1")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 65, height: 65, alignment: .topLeading)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                         
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack(spacing: 5) {
-                                Image(systemName: "book.pages")
-                                Text("Article")
-                                    .font(.system(size: 12))
-                            }
-                              
-                            Text("Introduce new food with food chaining")
-                                .font(.system(size: 16))
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 5) {
+                            Image(systemName: "book.pages")
+                            Text("Article")
+                                .font(.system(size: 12))
                         }
+                              
+                        Text("Introduce new food with food chaining")
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                    Spacer()
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.purple.purple50)
+                        .frame(height: 97)
+                )
             }
         }
     }
@@ -233,7 +280,7 @@ struct HomeView: View {
         return Group {
             if !unloggedMeals.isEmpty {
                 VStack(alignment: .leading) {
-                    Text("Today's Meal Plan")
+                    Text("Today's meal plan")
                         .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack {
