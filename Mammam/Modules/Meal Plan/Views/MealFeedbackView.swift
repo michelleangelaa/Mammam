@@ -54,7 +54,7 @@ struct MealFeedbackView: View {
                                 Image(systemName: "clock.fill")
                                     .foregroundColor(.black)
                                 Text("Total meal time")
-                                    .font(.subheadline)
+                                    .font(.callout)
                             }
                             Text("\(meal.durationInMinutes) minutes")
                                 .font(.callout)
@@ -64,7 +64,7 @@ struct MealFeedbackView: View {
                                 .font(.footnote)
                                 .foregroundColor(.gray)
                         }
-                        VStack {
+                        VStack(alignment: .leading) {
                             HStack {
                                 Image(systemName: "fork.knife")
                                     .foregroundColor(.black)
@@ -75,20 +75,20 @@ struct MealFeedbackView: View {
                                         .font(.subheadline)
                                 }
                             }
-                            VStack {
-                                LazyVGrid(
-                                    columns: Array(repeating: GridItem(.fixed(20), spacing: 4), count: 13),
-                                    spacing: 8
-                                ) {
-                                    ForEach(0 ..< Int(meal.servingQty), id: \.self) { index in
-                                        Image(
-                                            index < Int(meal.consumedQty)
-                                                ? filledIconForServingUnit(meal.servingUnit)
-                                                : emptyIconForServingUnit(meal.servingUnit)
-                                        )
-                                    }
+//                            VStack {
+                            LazyVGrid(
+                                columns: Array(repeating: GridItem(.fixed(20), spacing: 4), count: 15),
+                                spacing: 8
+                            ) {
+                                ForEach(0 ..< Int(meal.servingQty), id: \.self) { index in
+                                    Image(
+                                        index < Int(meal.consumedQty)
+                                            ? filledIconForServingUnit(meal.servingUnit)
+                                            : emptyIconForServingUnit(meal.servingUnit)
+                                    )
                                 }
                             }
+//                            }
                         }
                     }
                     .padding(.horizontal)
@@ -96,9 +96,10 @@ struct MealFeedbackView: View {
 
                 // Allergy Feedback
                 HStack(alignment: .top) {
-                    Image(systemName: "star.fill")
-                    Text(meal.isAllergic ? "Eve has a reaction to \(meal.ingredient?.name ?? "this ingredient"). Let’s explore safer options next time." : "No allergic reactions today — great job introducing new tastes!")
+                    Image(systemName: meal.isAllergic ? "exclamationmark.triangle.fill" : "star.fill")
+                    Text(meal.isAllergic ? "There is a reaction to \(meal.ingredient?.name ?? "this ingredient"). Let’s explore safer options next time." : "No allergic reactions today — great job introducing new tastes!")
                         .font(.subheadline)
+                        .multilineTextAlignment(.center)
 
                     Spacer()
                 }
@@ -113,51 +114,61 @@ struct MealFeedbackView: View {
                     HStack {
                         Image(systemName: "list.clipboard.fill")
                             .foregroundColor(.black)
-                        Text("No photo available")
+                        Text("Notes")
                             .font(.subheadline)
                     }
-                    HStack {
+                    HStack(spacing: 16) {
                         if let photoData = meal.photo, let uiImage = UIImage(data: photoData) {
                             Image(uiImage: uiImage)
                                 .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: 200, maxHeight: 200)
+                                .scaledToFill()
+                                .frame(width: 64, height: 64) // Match the example image dimensions
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                         } else {
-                            Text("No photo available")
-                                .foregroundColor(.secondary)
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(UIColor.systemGray5))
+                                .frame(width: 64, height: 64)
+                                .overlay(
+                                    Text("No Image")
+                                        .foregroundColor(.secondary)
+                                        .font(.caption)
+                                )
                         }
+
                         Text(meal.notes)
                             .font(.body)
+                            .foregroundColor(.black)
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+
+                        Spacer()
+                        Spacer()
+                        Spacer()
                     }
-                    .overlay(
-                        Image(systemName: "camera.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(Color.rose.rose700)
-                    )
-                    
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(12)
                 }
                 .padding(.horizontal)
 
-                Spacer()
-                Spacer()
 
-                // Back to Home Button
-                if fromRateMealView {
-                    Button(action: {
-                        coordinator.dismissSheetAndNavigateToHome()
-                    }) {
-                        Text("Back to Home")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.rose.rose500)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                VStack {
+                    // Back to Home Button
+                    if fromRateMealView {
+                        Button(action: {
+                            coordinator.dismissSheetAndNavigateToHome()
+                        }) {
+                            Text("Back to Home")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.rose.rose500)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 20)
                     }
-                    .padding(.horizontal)
                 }
-
-                Spacer()
             }
             .scrollIndicators(.hidden)
         }

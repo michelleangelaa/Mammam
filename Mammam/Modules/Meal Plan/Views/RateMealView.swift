@@ -134,7 +134,6 @@ struct RateMealView: View {
                                     )
                             }
                         }
-
                         .frame(width: 100, height: 100)
                         .overlay(alignment: .bottomTrailing) {
                             if selectedPhotoData != nil {
