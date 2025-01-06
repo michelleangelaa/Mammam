@@ -5,9 +5,9 @@
 //  Created by Michelle Angela Aryanto on 16/10/24.
 //
 
-import SwiftUI
-import SwiftData
 import PhotosUI
+import SwiftData
+import SwiftUI
 
 struct RateMealView: View {
     @EnvironmentObject private var coordinator: Coordinator
@@ -48,18 +48,18 @@ struct RateMealView: View {
         _notes = State(initialValue: meal.notes)
         _selectedPhotoData = State(initialValue: meal.photo)
     }
-        
 
     var body: some View {
         VStack {
-            Text("Review Meal")
+            Text("Review meal")
                 .font(.title2).fontWeight(.bold)
+                .padding(.top, 4)
 
             Form {
-                TextField("Ingredient Name", text: $ingredient)
-                TextField("Type", text: $type)
-                DatePicker("Time Given", selection: $timeGiven, displayedComponents: .hourAndMinute)
-                DatePicker("Time Ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
+//                TextField("Ingredient Name", text: $ingredient)
+//                TextField("Type", text: $type)
+                DatePicker("Time given", selection: $timeGiven, displayedComponents: .hourAndMinute)
+                DatePicker("Time ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
                     .onChange(of: timeEnded) { _ in
                         validateTimes()
                     }
@@ -100,48 +100,54 @@ struct RateMealView: View {
                 }
 
                 HStack {
-                    Text("Allergic Reaction")
-                    Picker("Allergic Reaction", selection: $isAllergic) {
+                    Text("Allergic reaction")
+                    Picker("Allergic reaction", selection: $isAllergic) {
                         Text("Yes").tag(true)
                         Text("No").tag(false)
                     }
                     .pickerStyle(.segmented)
                 }
 
-                VStack (alignment: .leading){
+                VStack(alignment: .leading) {
                     TextField("Notes", text: $notes)
                     PhotosPicker(
                         selection: $selectedPhoto,
                         matching: .images,
-                        photoLibrary: .shared()) {
-                            Group {
-                                if let selectedPhotoData,
-                                   let uiImage = UIImage(data: selectedPhotoData) {
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .scaledToFit()
-                                } else {
-                                    Image(systemName: "photo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .tint(.primary)
-                                }
+                        photoLibrary: .shared()
+                    ) {
+                        Group {
+                            if let selectedPhotoData,
+                               let uiImage = UIImage(data: selectedPhotoData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100, height: 100) // Adjust size as needed
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            } else {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.rose.rose50)
+                                    .frame(width: 100, height: 100) // Adjust size as needed
+                                    .overlay(
+                                        Image(systemName: "camera.fill")
+                                            .font(.system(size: 24))
+                                            .foregroundColor(Color.rose.rose700)
+                                    )
                             }
-                            .frame(width: 100, height: 100)
-                            .overlay(alignment: .bottomTrailing) {
-                                if selectedPhotoData != nil {
-                                    Button {
-                                        selectedPhoto = nil
-                                        selectedPhotoData = nil
-                                    } label: {
-                                        Image(systemName: "x.circle.fill")
-                                            .foregroundStyle(.rose500)
-                                    }
-                                }
-                            }
-                                
                         }
-                        
+
+                        .frame(width: 100, height: 100)
+                        .overlay(alignment: .bottomTrailing) {
+                            if selectedPhotoData != nil {
+                                Button {
+                                    selectedPhoto = nil
+                                    selectedPhotoData = nil
+                                } label: {
+                                    Image(systemName: "x.circle.fill")
+                                        .foregroundStyle(.rose500)
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -180,6 +186,15 @@ struct RateMealView: View {
         .task(id: selectedPhoto) {
             if let data = try? await selectedPhoto?.loadTransferable(type: Data.self) {
                 selectedPhotoData = data
+            }
+        }
+        .padding()
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close") {
+                    coordinator.dismissSheet()
+                }
             }
         }
     }
@@ -248,7 +263,6 @@ struct RateMealView: View {
         }
     }
 }
-
 
 // #Preview {
 //    RateMealView(meal: <#Meal#>)

@@ -49,6 +49,9 @@ struct BlueColor {
 struct BlueGrayColor {
     let bluegray25 = Color("bluegray25")
     let bluegray50 = Color("bluegray50")
+    let bluegray100 = Color("bluegray100")
+    let bluegray400 = Color("bluegray400")
+
 }
 
 struct PurpleColor {

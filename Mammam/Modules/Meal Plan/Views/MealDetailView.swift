@@ -33,34 +33,23 @@ struct MealDetailView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Nutrients")
-                        .font(.body)
-                    
-                    if let nutrients = ingredient.nutrients {
-                        ForEach(nutrients, id: \.self) { nutrient in
-                            Text(nutrient.name)
-                                .foregroundColor(.secondary)
-                        }
-                    } else {
-                        Text("No nutrients available.")
-                            .foregroundColor(.secondary)
-                    }
                     
                     if let nutrients = ingredient.nutrients, !nutrients.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Nutrients")
                                 .font(.body)
+                                .fontWeight(.bold)
                             HStack {
                                 ForEach(nutrients, id: \.self) { nutrient in
                                     Text("\(nutrient.name)")
                                         .padding(.horizontal, 12)
                                         .padding(.vertical, 4)
+                                        .foregroundStyle(Color.black)
                                         .font(.body)
-                                        .foregroundStyle(Color.red)
                                         .background(
                                             RoundedRectangle(cornerRadius: 8)
-                                                .fill(Color.rose.rose100)
-                                                .stroke(Color.red)
+                                                .fill(Color.bluegray.bluegray100)
+                                                .stroke(Color.bluegray.bluegray400)
                                         )
                                 }
                             }
@@ -70,13 +59,13 @@ struct MealDetailView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
+                Spacer()
                 // Available Meals Section
                 VStack(alignment: .leading, spacing: 12) {
-                    
-                    
                     if let menus = ingredient.menus, !menus.isEmpty {
-                        Text("Available Meals")
-                            .font(.headline)
+                        Text("Variate with these menu")
+                            .font(.body)
+                            .fontWeight(.bold)
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack {
                                 ForEach(menus) { food in
@@ -92,10 +81,13 @@ struct MealDetailView: View {
                         Text("No meals available")
                             .foregroundColor(.secondary)
                     }
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
+                Spacer()
+
                 Button(action: {
                     coordinator.presentRateMealSheet(with: meal)
                 }) {
@@ -108,6 +100,14 @@ struct MealDetailView: View {
                 }
             }
             .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") {
+                        coordinator.dismissSheet()
+                    }
+                }
+            }
         }
     }
 }
