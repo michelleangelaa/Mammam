@@ -21,18 +21,18 @@ struct MotivationView: View {
 
     
     //predefined sets of quotes and advice page
-    private let quotes = [
-            "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!."
-        ]
-    private let quotesWriter = ["World Health Organization"]
-    private let adviceTexts = ["Give baby more time and offer the meal again later","You still can offer her to eat maximum until 30 minute2"]
-
+//    private let quotes = [
+//            "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!."
+//        ]
+//    private let quotesWriter = ["World Health Organization"]
+//    private let adviceTexts = ["Give baby more time and offer the meal again later","You still can offer her to eat maximum until 30 minute2"]
+//
 
     // Predefined sets of images
-    private let images = ["motivationimage1", "motivationimage2"]
-    private let images_false = ["motivationimage3_false"]
-    private let images_true = ["motivationimage3_true"]
-    private let adviceImages = ["i_motivation_advice1","i_motivation_advice2"]
+//    private let images = ["motivationimage1", "motivationimage2"]
+//    private let images_false = ["motivationimage3_false"]
+//    private let images_true = ["motivationimage3_true"]
+//    private let adviceImages = ["i_motivation_advice1","i_motivation_advice2"]
 
 
 var body: some View {
