@@ -192,19 +192,16 @@ struct ReviewMealCardView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(dayRange)
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white)
                     .padding(4)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(UIColor.systemGray6))
+                            .fill(Color.rose.rose600)
                     )
                 Text(meal.ingredient?.name ?? "Unknown")
-                    .font(.headline)
-                Text("\(meal.ingredient?.menus?.count ?? 0) menu(s)")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-
-                Text(meal.type)
+                    .font(.headline).fontWeight(.semibold)
+                Text("\(meal.ingredient?.menus?.count ?? 0) menu variant(s)")
+                    .font(.footnote)
             }
             Spacer()
 

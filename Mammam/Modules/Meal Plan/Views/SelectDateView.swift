@@ -29,7 +29,7 @@ struct SelectDateView: View {
                 Text("Select Date")
                     .font(.title3)
                     .fontWeight(.bold)
-                Text("Create your weekly meal plan for Eve 🤩")
+                Text("Create your weekly meal plan!🤩")
                     .font(.footnote)
             }
             .padding(.horizontal)
