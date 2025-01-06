@@ -101,6 +101,13 @@ struct SelectDateView: View {
     }
 
     private func validateDates() -> Bool {
+        // Check if the start date is later than the end date
+        if startDate > endDate {
+            alertMessage = "The start date cannot be later than the end date. Please adjust the dates."
+            return false
+        }
+
+        // Check for overlapping dates with existing meal plans
         let fetchDescriptor = FetchDescriptor<MealPlan>()
         let existingMealPlans = (try? context.fetch(fetchDescriptor)) ?? []
 
@@ -112,6 +119,7 @@ struct SelectDateView: View {
         }
         return true
     }
+
 
     private func datesOverlap(start1: Date, end1: Date, start2: Date, end2: Date) -> Bool {
         return !(end1 < start2 || start1 > end2)
