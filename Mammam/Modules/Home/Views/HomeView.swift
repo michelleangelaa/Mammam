@@ -68,7 +68,7 @@ struct HomeView: View {
     private var headerSection: some View {
         HStack {
             Circle()
-                .fill(Color.pink.opacity(0.2))
+                .fill(Color.rose.rose25)
                 .frame(width: 36, height: 36)
                 .overlay(
                     Text(baby.first?.babyProfileImage ?? "􀉪")

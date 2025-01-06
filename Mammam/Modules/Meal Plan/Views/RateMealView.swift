@@ -238,7 +238,7 @@ struct RateMealView: View {
             return false
         }
         if consumedQty > servingQty {
-            alertMessage = "Consumed quantity cannot exceed the serving size."
+            alertMessage = "Consumed quantity cannot exceed the serving size (\(servingQty))."
             return false
         }
         return true
@@ -256,7 +256,7 @@ struct RateMealView: View {
     private func validateQuantities() {
         if consumedQty > servingQty {
             DispatchQueue.main.async {
-                alertMessage = "Consumed quantity cannot exceed the serving size."
+                alertMessage = "Consumed quantity cannot exceed the serving size (\(servingQty)" + " " + "\(servingUnit))."
                 showAlert = true
             }
         }

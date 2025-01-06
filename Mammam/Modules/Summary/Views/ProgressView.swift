@@ -76,7 +76,7 @@ struct ProgressView: View {
                                 if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
                                     VStack {
                                         Text("TOTAL")
-                                        Text("\(totalLoggedMealsCount) Meals")
+                                        Text("\(totalLoggedMealsCount) Logs")
                                     }
                                     .position(x: frame.midX, y: frame.midY)
                                 }
