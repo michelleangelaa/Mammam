@@ -13,11 +13,20 @@ struct GenerateMealLoadingView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 10) {
-                Image(systemName: "book.and.wrench.fill")
-                    .font(.system(size: 40))
-                Text("Generating Meal")
-                    .font(.title3)
+            ZStack {
+                Image("BG_SplashScreen")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                ZStack {
+                    VStack {
+                        Image("Logo")
+                            .resizable()
+                            .frame(width: 200, height: 86)
+                            .padding(.bottom, 32)
+                        Text("Generating meal...")
+                    }
+                }
             }
 //            .onAppear {
 //                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

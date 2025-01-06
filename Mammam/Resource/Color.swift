@@ -10,12 +10,14 @@ import SwiftUI
 extension Color {
     static let theme = ColorTheme()
     static let blue = BlueColor()
+    static let bluegray = BlueGrayColor()
     static let brand = BrandColor()
     static let error = ErrorColor()
     static let gray = GrayColor()
     static let orange = OrangeColor()
     static let pink = PinkColor()
     static let rose = RoseColor()
+    static let purple = PurpleColor()
     static let success = SuccessColor()
     static let warning = WarningColor()
     
@@ -42,6 +44,18 @@ struct BlueColor {
     let blue700 = Color("blue700")
     let blue800 = Color("blue800")
     let blue900 = Color("blue900")
+}
+
+struct BlueGrayColor {
+    let bluegray25 = Color("bluegray25")
+    let bluegray50 = Color("bluegray50")
+    let bluegray100 = Color("bluegray100")
+    let bluegray400 = Color("bluegray400")
+
+}
+
+struct PurpleColor {
+    let purple50 = Color("purple50")
 }
 
 struct BrandColor {

@@ -16,7 +16,7 @@ struct MealCardComponent: View {
                 Image(ingredient.image ?? "fork.knife")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 70, height: 70)
+                    .frame(width: 88, height: 88)
                     .cornerRadius(8)
             } else {
                 Color.gray
@@ -24,22 +24,30 @@ struct MealCardComponent: View {
                     .cornerRadius(8)
             }
 
-            Text(meal.type)
-                .font(.subheadline)
-                .bold()
+            VStack (alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(meal.type)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.black)
+                    Spacer()
+                    Image(systemName: "pencil")
+                        .font(.footnote)
+                        .foregroundColor(.black)
+                }
 
-            Text(formattedDate(meal.timeGiven))
-                .font(.caption)
-
-            Text(meal.ingredient?.name ?? "No ingredient")
-                .font(.footnote)
-                .foregroundColor(.gray)
+                Text(meal.ingredient?.name ?? "No ingredient")
+                    .font(.caption2)
+                    .foregroundColor(.black)
+            }
+            .padding(.horizontal)
+            
         }
-        .frame(width: 120)
-        .padding()
+        .frame(width: 148, height: 156)
+        .padding(.vertical, 8)
         .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(meal.isLogged ? Color(UIColor.systemGreen) : Color(UIColor.systemGray6))
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.bluegray.bluegray50)
         )
     }
 }

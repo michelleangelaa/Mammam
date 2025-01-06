@@ -21,79 +21,85 @@ struct MealFeedbackView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 40) {
-                HStack {
-                    Text(meal.type)
-                        .font(.title2)
-                        .fontWeight(.bold)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 40) {
                     Spacer()
-                    Text(formattedDate(meal.timeGiven))
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .padding(.horizontal)
-
-                // Well Done Section
-                VStack(spacing: 8) {
-                    Text("Well done! 🎉")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                    Text(feedbackMessage(for: meal))
-                        .font(.subheadline)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.gray)
-                }
-                .padding(.horizontal)
-
-                // Total Meal Time
-                HStack {
-                    Image(systemName: "clock")
-                        .foregroundColor(.black)
-                    VStack(alignment: .leading) {
-                        Text("Total Meal Time")
-                            .font(.subheadline)
+                    HStack {
+                        Text(meal.type)
+                            .font(.title2)
                             .fontWeight(.bold)
-                        Text("\(meal.durationInMinutes) minutes")
-                            .font(.title3)
-                        Text("\(meal.timeRange)")
-                            .font(.caption)
+                        Spacer()
+                        Text(formattedDate(meal.timeGiven))
+                            .font(.subheadline)
                             .foregroundColor(.gray)
                     }
-                    Spacer()
-                }
-                .padding(.horizontal)
+                    .padding(.horizontal)
 
-                // Total Meal Consumption
-                HStack {
-                    Image(systemName: "fork.knife")
-                        .foregroundColor(.black)
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("Total Meal Consumption")
-                                .font(.callout)
-                            Text("\(meal.totalConsumption)")
-                                .font(.subheadline)
-                        }
-                        HStack(spacing: 4) {
-                            ForEach(0 ..< Int(meal.servingQty), id: \.self) { index in
-                                Image(
-                                    systemName: index < Int(meal.consumedQty)
-                                        ? filledIconForServingUnit(meal.servingUnit)
-                                        : emptyIconForServingUnit(meal.servingUnit)
-                                )
-                                .foregroundColor(index < Int(meal.consumedQty) ? .black : .gray)
+                    // Well Done Section
+                    VStack(spacing: 8) {
+                        Text("Well done! 🎉")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        Text(feedbackMessage(for: meal))
+                            .font(.subheadline)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal)
+
+                    // Total Meal Time
+                    VStack(alignment: .leading, spacing: 24) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "clock.fill")
+                                    .foregroundColor(.black)
+                                Text("Total meal time")
+                                    .font(.callout)
                             }
+                            Text("\(meal.durationInMinutes) minutes")
+                                .font(.callout)
+                                .fontWeight(.bold)
+
+                            Text("\(meal.timeRange)")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "fork.knife")
+                                    .foregroundColor(.black)
+                                HStack {
+                                    Text("Total Meal Consumption")
+                                        .font(.callout)
+                                    Text("\(meal.totalConsumption)")
+                                        .font(.subheadline)
+                                }
+                            }
+//                            VStack {
+                            LazyVGrid(
+                                columns: Array(repeating: GridItem(.fixed(20), spacing: 4), count: 15),
+                                spacing: 8
+                            ) {
+                                ForEach(0 ..< Int(meal.servingQty), id: \.self) { index in
+                                    Image(
+                                        index < Int(meal.consumedQty)
+                                            ? filledIconForServingUnit(meal.servingUnit)
+                                            : emptyIconForServingUnit(meal.servingUnit)
+                                    )
+                                }
+                            }
+//                            }
                         }
                     }
-                    Spacer()
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
 
                 // Allergy Feedback
                 HStack(alignment: .top) {
-                    Image(systemName: "star.fill")
-                    Text(meal.isAllergic ? "Eve has a reaction to \(meal.ingredient?.name ?? "this ingredient"). Let’s explore safer options next time." : "No allergic reactions today — great job introducing new tastes!")
+                    Image(systemName: meal.isAllergic ? "exclamationmark.triangle.fill" : "star.fill")
+                    Text(meal.isAllergic ? "There is a reaction to \(meal.ingredient?.name ?? "this ingredient"). Let’s explore safer options next time." : "No allergic reactions today — great job introducing new tastes!")
                         .font(.subheadline)
+                        .multilineTextAlignment(.center)
 
                     Spacer()
                 }
@@ -105,81 +111,98 @@ struct MealFeedbackView: View {
 
                 // Notes Section
                 VStack(alignment: .leading, spacing: 8) {
-                    if let photoData = meal.photo, let uiImage = UIImage(data: photoData) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 150, maxHeight: 150)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    } else {
-                        Text("No photo available")
-                            .foregroundColor(.secondary)
+                    HStack {
+                        Image(systemName: "list.clipboard.fill")
+                            .foregroundColor(.black)
+                        Text("Notes")
+                            .font(.subheadline)
                     }
-                    Text(meal.notes)
-                        .font(.body)
+                    HStack(spacing: 16) {
+                        if let photoData = meal.photo, let uiImage = UIImage(data: photoData) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 64, height: 64) // Match the example image dimensions
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+
+                        Text(meal.notes)
+                            .font(.body)
+                            .foregroundColor(.black)
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(12)
                 }
                 .padding(.horizontal)
 
-                Spacer()
 
-                // Back to Home Button
-                if fromRateMealView {
-                    Button(action: {
-                        coordinator.dismissSheetAndNavigateToHome()
-                    }) {
-                        Text("Back to Home")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.rose.rose500)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                VStack {
+                    // Back to Home Button
+                    if fromRateMealView {
+                        Button(action: {
+                            coordinator.dismissSheetAndNavigateToHome()
+                        }) {
+                            Text("Back to Home")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.rose.rose500)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 20)
                     }
-                    .padding(.horizontal)
                 }
-
-                Spacer()
             }
-            .navigationBarBackButtonHidden(fromRateMealView)
+            .scrollIndicators(.hidden)
         }
+        .navigationBarBackButtonHidden(fromRateMealView)
     }
 }
 
 private func iconForServingUnit(_ unit: String) -> String {
     switch unit.lowercased() {
     case "cup":
-        return "cup.and.saucer"
+        return "i_logmealform_notfilledcup2"
     case "tsp":
-        return "fork.knife.circle"
+        return "i_logmealform_notfilledspoon"
     case "tbsp":
-        return "fork.knife"
+        return "i_logmealform_notfilledspoon"
     default:
-        return "fork.knife.circle"
+        return "i_logmealform_notfilledspoon"
     }
 }
 
 private func filledIconForServingUnit(_ unit: String) -> String {
     switch unit.lowercased() {
     case "cup":
-        return "cup.and.saucer.fill"
+        return "i_logmealform_cup2"
     case "tsp":
-        return "fork.knife.circle.fill"
+        return "i_logmealform_spoon"
     case "tbsp":
-        return "fork.knife.circle.fill"
+        return "i_logmealform_spoon"
     default:
-        return "fork.knife.circle.fill"
+        return "i_logmealform_spoon"
     }
 }
 
 private func emptyIconForServingUnit(_ unit: String) -> String {
     switch unit.lowercased() {
     case "cup":
-        return "cup.and.saucer"
+        return "i_logmealform_notfilledcup2"
     case "tsp":
-        return "fork.knife.circle"
+        return "i_logmealform_notfilledspoon"
     case "tbsp":
-        return "fork.knife.circle"
+        return "i_logmealform_notfilledspoon"
     default:
-        return "fork.knife.circle"
+        return "i_logmealform_notfilledspoon"
     }
 }
 
