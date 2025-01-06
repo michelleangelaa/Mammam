@@ -41,6 +41,7 @@ struct MainView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+      
     }
 
     enum Tab: Hashable {
@@ -53,6 +54,6 @@ struct MainView: View {
 
 #Preview {
     MainView()
-        .environmentObject(Coordinator())
+//        .environmentObject(Coordinator())
 
 }
