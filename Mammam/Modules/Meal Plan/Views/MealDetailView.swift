@@ -81,12 +81,10 @@ struct MealDetailView: View {
                         Text("No meals available")
                             .foregroundColor(.secondary)
                     }
-                    Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
-                Spacer()
+            
+                Spacer(minLength: 40)
 
                 Button(action: {
                     coordinator.presentRateMealSheet(with: meal)

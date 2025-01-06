@@ -124,15 +124,6 @@ struct MealFeedbackView: View {
                                 .scaledToFill()
                                 .frame(width: 64, height: 64) // Match the example image dimensions
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                        } else {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color(UIColor.systemGray5))
-                                .frame(width: 64, height: 64)
-                                .overlay(
-                                    Text("No Image")
-                                        .foregroundColor(.secondary)
-                                        .font(.caption)
-                                )
                         }
 
                         Text(meal.notes)

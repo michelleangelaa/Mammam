@@ -56,9 +56,10 @@ struct RateMealView: View {
                 .padding(.top, 4)
 
             Form {
-//                TextField("Ingredient Name", text: $ingredient)
-//                TextField("Type", text: $type)
                 DatePicker("Time given", selection: $timeGiven, displayedComponents: .hourAndMinute)
+                    .onChange(of: timeGiven) { _ in
+                        validateTimes()
+                    }
                 DatePicker("Time ended", selection: $timeEnded, displayedComponents: .hourAndMinute)
                     .onChange(of: timeEnded) { _ in
                         validateTimes()
@@ -117,7 +118,8 @@ struct RateMealView: View {
                     ) {
                         Group {
                             if let selectedPhotoData,
-                               let uiImage = UIImage(data: selectedPhotoData) {
+                               let uiImage = UIImage(data: selectedPhotoData)
+                            {
                                 Image(uiImage: uiImage)
                                     .resizable()
                                     .scaledToFit()
@@ -148,6 +150,11 @@ struct RateMealView: View {
                         }
                     }
                 }
+            }
+            .alert("Invalid Time", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(alertMessage)
             }
 
             // Save Button with Validation
@@ -234,7 +241,7 @@ struct RateMealView: View {
 
     private func validateInputs() -> Bool {
         if timeEnded < timeGiven {
-            alertMessage = "Time Ended must be later than or equal to Time Given."
+            alertMessage = "Time ended must be later than or equal to time given."
             return false
         }
         if consumedQty > servingQty {
@@ -247,7 +254,7 @@ struct RateMealView: View {
     private func validateTimes() {
         if timeEnded < timeGiven {
             DispatchQueue.main.async {
-                alertMessage = "Time Ended must be later than or equal to Time Given."
+                alertMessage = "Time ended must be later than or equal to time given."
                 showAlert = true
             }
         }
