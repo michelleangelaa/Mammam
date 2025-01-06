@@ -82,6 +82,22 @@ struct HomeView: View {
                 coordinator.push(page: .savedMenu)
             }) {
                 Image(systemName: "bookmark.fill")
+                    .overlay(
+                        Group {
+                            if menus.filter({ $0.isSaved }).count > 0 {
+                                ZStack {
+                                    Circle()
+                                        .fill(.white)
+                                        .frame(width: 16, height: 16)
+                                    Text("\(menus.filter { $0.isSaved }.count)")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.rose.rose600)
+                                }
+                                .offset(x: 8, y: -8)
+                            }
+                        }
+                    )
             }
         }
     }
