@@ -18,82 +18,84 @@ struct ProgressView: View {
     @State private var currentDate = Date() // Tracks the current date for week/month navigation
 
     var body: some View {
-        VStack {
+        ScrollView {
             VStack(alignment: .leading) {
-                Text(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
-                    .font(.title2)
-                    .fontWeight(.bold)
-            }
-
-            Picker("Period", selection: $period) {
-                Text("Monthly").tag(0)
-                Text("Weekly").tag(1)
-            }
-            .pickerStyle(.segmented)
-            .padding()
-
-            HStack {
-                Button(action: { navigateDate(-1) }) {
-                    Image(systemName: "chevron.left")
+                VStack(alignment: .leading) {
+                    Text(period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
+                        .font(.title2)
+                        .fontWeight(.bold)
                 }
-                Spacer()
-                Text(displayPeriodTitle)
-                    .font(.headline)
-                Spacer()
-                Button(action: { navigateDate(1) }) {
-                    Image(systemName: "chevron.right")
-                }
-            }
-            .padding(.horizontal)
 
-            if filteredMeals.isEmpty {
-                // Empty State View
-                VStack(spacing: 16) {
-                    Image(systemName: "doc.text.magnifyingglass")
-                        .font(.largeTitle)
-                        .foregroundColor(.gray)
-                    Text("Nothing was logged during this period")
-                        .font(.body)
-                        .foregroundColor(.gray)
+                Picker("Period", selection: $period) {
+                    Text("Monthly").tag(0)
+                    Text("Weekly").tag(1)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                VStack {
-                    // Pie Chart for Nutrients
-                    Chart(filteredNutrients, id: \.name) { nutrient in
-                        SectorMark(
-                            angle: .value("Count", nutrient.nutrientCount),
-                            innerRadius: .ratio(0.618),
-                            angularInset: 1.5
-                        )
-                        .cornerRadius(5)
-                        .foregroundStyle(by: .value("Nutrient", nutrient.name))
+                .pickerStyle(.segmented)
+                .padding()
+
+                HStack {
+                    Button(action: { navigateDate(-1) }) {
+                        Image(systemName: "chevron.left")
                     }
-                    .chartLegend(position: .automatic).padding(.vertical)
-                    .chartBackground { chartProxy in
-                        GeometryReader { geometry in
-                            if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
-                                VStack {
-                                    Text("TOTAL")
-                                    Text("\(totalLoggedMealsCount) Meals")
+                    Spacer()
+                    Text(displayPeriodTitle)
+                        .font(.headline)
+                    Spacer()
+                    Button(action: { navigateDate(1) }) {
+                        Image(systemName: "chevron.right")
+                    }
+                }
+                .padding(.horizontal)
+
+                if filteredMeals.isEmpty {
+                    // Empty State View
+                    VStack(spacing: 16) {
+                        Image(systemName: "doc.text.magnifyingglass")
+                            .font(.largeTitle)
+                            .foregroundColor(.gray)
+                        Text("Nothing was logged during this period")
+                            .font(.body)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    VStack {
+                        // Pie Chart for Nutrients
+                        Chart(filteredNutrients, id: \.name) { nutrient in
+                            SectorMark(
+                                angle: .value("Count", nutrient.nutrientCount),
+                                innerRadius: .ratio(0.618),
+                                angularInset: 1.5
+                            )
+                            .cornerRadius(5)
+                            .foregroundStyle(by: .value("Nutrient", nutrient.name))
+                        }
+                        .chartLegend(position: .automatic).padding(.vertical)
+                        .chartBackground { chartProxy in
+                            GeometryReader { geometry in
+                                if let frame = chartProxy.plotFrame.map({ geometry[$0] }) {
+                                    VStack {
+                                        Text("TOTAL")
+                                        Text("\(totalLoggedMealsCount) Meals")
+                                    }
+                                    .position(x: frame.midX, y: frame.midY)
                                 }
-                                .position(x: frame.midX, y: frame.midY)
                             }
                         }
+                        .frame(width: 324, height: 200)
+                        .padding()
                     }
-                    .frame(width: 324, height: 200)
-                    .padding()
-                }
 
-                ScrollView {
+                    //                ScrollView {
                     LazyVStack(alignment: .leading) {
                         displayAllergicWatch(meals: filteredMeals, coordinator: coordinator)
                         displayLogHistory(meals: filteredMeals, period: period, coordinator: coordinator)
                     }
+                    //                }
                 }
             }
+            .padding()
         }
-        .padding()
     }
 
     // MARK: - Computed Properties
@@ -221,17 +223,20 @@ struct displayAllergicWatch: View {
         HStack {
             Image(systemName: "exclamationmark.triangle.fill")
             Text("Allergic Watch")
+                .font(.body)
         }
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                ForEach(meals.filter { $0.isAllergic }.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
-                    Button(action: {
-                        coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
-                    }) {
-                        HistoryMealCardView(meal: meal)
-                    }
+        .foregroundStyle(Color.red)
+
+//        ScrollView {
+        LazyVStack(spacing: 16) {
+            ForEach(meals.filter { $0.isAllergic }.sorted(by: { $0.timeGiven < $1.timeGiven }), id: \.self) { meal in
+                Button(action: {
+                    coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
+                }) {
+                    HistoryMealCardView(meal: meal)
                 }
             }
+//            }
         }
     }
 }
@@ -246,14 +251,15 @@ struct displayLogHistory: View {
             HStack {
                 Image(systemName: "menucard")
                 Text("Log History")
+                    .font(.body)
                 Spacer()
-                if period == 0 && meals.count > 14 * 5 {
+                if period == 0 && meals.count > 2 * 5 {
                     NavigationLink("View All") {
                         LogHistoryView(meals: meals)
                     }
                 }
             }
-            .padding(.horizontal)
+            .padding(.top, 20)
 
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 16) {
@@ -308,18 +314,30 @@ struct HistoryMealCardView: View {
                 .cornerRadius(8)
 
             VStack(alignment: .leading, spacing: 4) {
+                
+                Text(meal.type)
+                    .font(.footnote)
+                    .foregroundStyle(Color.gray.gray700)
+                
                 Text(meal.ingredient?.name ?? "Unknown")
-                    .font(.headline)
+                    .font(.body)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.black)
+                    .padding(.bottom, 6)
 
                 HStack {
-                    Text(meal.type)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                    Image(systemName: "clock.fill")
+                    Text("\(meal.durationInMinutes) min")
                     Text("・")
-                    Text("\(meal.durationInMinutes) minutes")
-                    Text("・")
-                    Text("\(meal.consumedQty)/\(meal.servingQty) " + meal.servingUnit)
+                    Image(
+                        filledIconForServingUnit(meal.servingUnit)
+                    )
+                    .resizable()
+                    .frame(width: 12, height: 12)
+                    Text("\(String(format: "%.1f", meal.consumedQty))/\(String(format: "%.1f", meal.servingQty))")
                 }
+                .font(.caption2)
+                .foregroundStyle(Color.black)
             }
             Spacer()
         }
@@ -351,6 +369,20 @@ extension Calendar {
         return self.date(byAdding: .day, value: 6, to: startOfWeek)!
     }
 }
+
+private func filledIconForServingUnit(_ unit: String) -> String {
+    switch unit.lowercased() {
+    case "cup":
+        return "i_logmealform_cup2"
+    case "tsp":
+        return "i_logmealform_spoon"
+    case "tbsp":
+        return "i_logmealform_spoon"
+    default:
+        return "i_logmealform_spoon"
+    }
+}
+
 
 #Preview {
     ProgressView()
