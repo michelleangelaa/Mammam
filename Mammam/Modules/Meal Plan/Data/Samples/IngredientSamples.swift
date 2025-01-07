@@ -1789,7 +1789,7 @@ extension Ingredient {
 
         let peanutButterNoodle = FoodMenu(
             name: "Peanut Butter Noodle",
-            image: "i_peanutButterNoodle",
+            image: "i_peanutbutternoodle",
             isSaved: false,
             desc: "Noodles\n3 tbsp peanut butter\n1 tbsp EVO\n1/2 cup water\n2 shallots\nShredded chicken",
             ingredients: [eggNoodle, chicken, peanuts],

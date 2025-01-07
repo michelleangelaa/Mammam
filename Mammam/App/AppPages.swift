@@ -10,7 +10,7 @@ import Foundation
 enum AppPages: Hashable {
     case main
     case logMeal
-    case motivation
+    case motivation(motivation: Motivation)
     case mealPlan
     case createMealPlan
     case savedMenu
@@ -37,7 +37,7 @@ enum Sheet: Identifiable {
         }
     }
 
-    case article
+    case article(article: Article)
     case mealDetail(meal: Meal)
     case logMeal(meal: Meal)
     case mealFeedback(meal: Meal)

@@ -12,7 +12,10 @@ struct HomeView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @Environment(\.modelContext) private var context
     @Query private var menus: [FoodMenu]
+    @Query private var motivation: [Motivation]
     @Query private var baby: [Baby]
+    @Query private var article: [Article]
+
     @Query private var ingredient: [Ingredient]
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
     private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
@@ -139,7 +142,7 @@ struct HomeView: View {
             coordinator.presentRateMealSheet(with: meal)
         }) {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Log Meal")
+                Text("Log meal")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(.black)
@@ -195,79 +198,183 @@ struct HomeView: View {
         )
     }
     
+//    private var storyOfTheDaySection: some View {
+//        VStack(alignment: .leading, spacing: 12) {
+//            Text("Today's Story")
+//                .font(.headline)
+//            Button(action: {
+//                if let currentMotivation = motivation.first {
+//                    coordinator.push(page: .motivation(motivation: currentMotivation))
+//                }
+//
+//            }) {
+//                ZStack {
+//                    //show preview motivation based on which motivation
+//                    Image("motivationimage1")
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fill)
+//                        .frame(width: 364, height: 129, alignment: .topLeading)
+//                        .clipShape(RoundedRectangle(cornerRadius: 18))
+//                    VStack(alignment: .leading) {
+//                        Text("#ResponsiveFeeding")
+//                            .font(.system(size: 13))
+//                            .foregroundColor(Color.theme.secondaryTextColor)
+//                            .padding(.top, 40)
+//                        HStack {
+//                            Text("Story Of The Day")
+//                                .font(.system(size: 22, weight: .bold))
+//                                .padding(.top, 10)
+//                                .foregroundColor(Color.theme.secondaryTextColor)
+//
+//                            Spacer()
+//
+//                            Image(systemName: "chevron.right")
+//                                .foregroundColor(.black)
+//                        }
+//                    }
+//                    .padding(.horizontal, 24)
+//                    .padding(.vertical, 16)
+//                }
+//            }
+//        }
+//    }
+    
     private var storyOfTheDaySection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Today's story")
                 .font(.headline)
-            Button(action: {
-                coordinator.push(page: .motivation)
-            }) {
-                ZStack {
-                    Image("motivationimage1")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 364, height: 129, alignment: .topLeading)
-                        .clipShape(RoundedRectangle(cornerRadius: 18))
-                    VStack(alignment: .leading) {
-                        Text("#ResponsiveFeeding")
-                            .font(.system(size: 13))
-                            .foregroundColor(Color.theme.secondaryTextColor)
-                            .padding(.top, 40)
-                        HStack {
-                            Text("Story Of The Day")
-                                .font(.system(size: 22, weight: .bold))
-                                .padding(.top, 10)
+            
+            if let todayMotivation = getTodayMotivation() {
+                Button(action: {
+                    coordinator.push(page: .motivation(motivation: todayMotivation))
+                }) {
+                    ZStack {
+                        Image(todayMotivation.previewMotivation)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 364, height: 129, alignment: .topLeading)
+                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                        
+                        VStack(alignment: .leading) {
+                            Text("#ResponsiveFeeding")
+                                .font(.system(size: 13))
                                 .foregroundColor(Color.theme.secondaryTextColor)
-                                                      
-                            Spacer()
-                                                      
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.black)
+                                .padding(.top, 40)
+                            
+                            HStack {
+                                Text("Story Of The Day")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .padding(.top, 10)
+                                    .foregroundColor(Color.theme.secondaryTextColor)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.black)
+                            }
                         }
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 16)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 16)
                 }
+            } else {
+                // Fallback view when no motivation is available
+                Text("No story available today")
+                    .foregroundColor(.gray)
+                    .padding()
             }
         }
+    }
+
+    // Add this helper function to get today's motivation
+    private func getTodayMotivation() -> Motivation? {
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        // Get the total number of motivations
+        let totalMotivations = motivation.count
+        guard totalMotivations > 0 else { return nil }
+        
+        // Calculate days since a reference date (e.g., Jan 1, 2024)
+        let referenceDate = Calendar.current.date(from: DateComponents(year: 2024, month: 1, day: 1))!
+        let daysSinceReference = Calendar.current.dateComponents([.day], from: referenceDate, to: today).day ?? 0
+        
+        // Use modulo to cycle through motivations
+        let motivationIndex = daysSinceReference % totalMotivations
+        
+        // Return the motivation for today
+        return motivation[motivationIndex]
     }
     
     private var articleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Understand your child better")
                 .font(.headline)
-            Button(action: {
-                coordinator.presentSheet(sheet: .article)
-            }) {
-                HStack(alignment: .top, spacing: 20) {
-                    Image("motivationimage1")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 65, height: 65, alignment: .topLeading)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                .foregroundStyle(Color.black)
+            if let todayArticle = getTodayArticle() {
+                Button(action: {
+                    coordinator.presentDetailArticleSheet(with: todayArticle)
+                }) {
+                    HStack(alignment: .top, spacing: 20) {
+                        Image(todayArticle.articleImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 65, height: 65, alignment: .topLeading)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 5) {
-                            Image(systemName: "book.pages")
-                            Text("Article")
-                                .font(.system(size: 12))
-                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 5) {
+                                Image(systemName: "book.pages")
+                                Text("Article")
+                                    .font(.system(size: 12))
+                            }
                               
-                        Text("Introduce new food with food chaining")
-                            .font(.callout)
-                            .multilineTextAlignment(.leading)
+                            Text(todayArticle.articleTitle)
+                                .font(.callout)
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 18)
+                            .fill(Color.purple.purple50)
+                            .frame(height: 97)
+                    )
                 }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(Color.purple.purple50)
-                        .frame(height: 97)
-                )
+            } else {
+                // Fallback view when no article is available
+                Text("No article available today")
+                    .foregroundColor(.gray)
+                    .padding()
             }
         }
     }
+
+    // Add this helper function to get today's article
+    private func getTodayArticle() -> Article? {
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        // Get the total number of articles
+        let totalArticles = article.count
+        guard totalArticles > 0 else { return nil }
+        
+        // Calculate days since a reference date (e.g., Jan 1, 2024)
+        let referenceDate = Calendar.current.date(from: DateComponents(year: 2024, month: 1, day: 1))!
+        let daysSinceReference = Calendar.current.dateComponents([.day], from: referenceDate, to: today).day ?? 0
+        
+        // Use modulo to cycle through articles
+        let articleIndex = daysSinceReference % totalArticles
+        
+        // Return the article for today
+        return article[articleIndex]
+    }
+
+    // Add this Array extension for safe indexing
+//    extension Array {
+//        subscript(safe index: Int) -> Element? {
+//            return indices.contains(index) ? self[index] : nil
+//        }
+//    }
     
     private func mealPlanSection(for plan: MealPlan) -> some View {
         // Filter today's unlogged meals
@@ -300,12 +407,13 @@ struct HomeView: View {
     }
 
     private var menuSection: some View {
+        
         VStack(alignment: .leading) {
             Text("Fresh-eye menu")
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    ForEach(menus) { food in
+                    ForEach(menus.prefix(10), id: \.self) { food in
                         FoodMenuCardComponent(foodMenu: food)
                             .frame(width: 150)
                             .onTapGesture {
@@ -355,7 +463,6 @@ struct HomeView: View {
         let mealDate = Calendar.current.startOfDay(for: meal.timeGiven)
         return today == mealDate
     }
-    
 }
 
 #Preview {

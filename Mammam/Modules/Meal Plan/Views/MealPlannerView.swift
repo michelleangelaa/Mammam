@@ -41,6 +41,9 @@ struct MealPlannerView: View {
                 Text("Meal Planner")
                     .font(.title2)
                     .fontWeight(.bold)
+                Text("Prepare meal ingredient variations")
+                    .font(.callout)
+
                 Button(action: {
                     coordinator.push(page: .createMealPlan)
                 }) {
