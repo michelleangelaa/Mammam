@@ -206,7 +206,7 @@ struct HomeView: View {
 //                if let currentMotivation = motivation.first {
 //                    coordinator.push(page: .motivation(motivation: currentMotivation))
 //                }
-//     
+//
 //            }) {
 //                ZStack {
 //                    //show preview motivation based on which motivation
@@ -225,9 +225,9 @@ struct HomeView: View {
 //                                .font(.system(size: 22, weight: .bold))
 //                                .padding(.top, 10)
 //                                .foregroundColor(Color.theme.secondaryTextColor)
-//                                                      
+//
 //                            Spacer()
-//                                                      
+//
 //                            Image(systemName: "chevron.right")
 //                                .foregroundColor(.black)
 //                        }
@@ -308,37 +308,37 @@ struct HomeView: View {
     private var articleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Understand your child better")
-                .font(.headline)            
+                .font(.headline)
             if let todayArticle = getTodayArticle() {
                 Button(action: {
                     coordinator.presentDetailArticleSheet(with: todayArticle)
                 }) {
                     HStack(alignment: .top, spacing: 20) {
-                    Image("motivationimage1")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 65, height: 65, alignment: .topLeading)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        Image("motivationimage1")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 65, height: 65, alignment: .topLeading)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 5) {
-                            Image(systemName: "book.pages")
-                            Text("Article")
-                                .font(.system(size: 12))
-                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 5) {
+                                Image(systemName: "book.pages")
+                                Text("Article")
+                                    .font(.system(size: 12))
+                            }
                               
-                        Text("Introduce new food with food chaining")
-                            .font(.callout)
-                            .multilineTextAlignment(.leading)
+                            Text("Introduce new food with food chaining")
+                                .font(.callout)
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
                     }
-                    Spacer()
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(Color.purple.purple50)
-                        .frame(height: 97)
-                )
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 18)
+                            .fill(Color.purple.purple50)
+                            .frame(height: 97)
+                    )
                 }
             } else {
                 // Fallback view when no article is available
@@ -406,12 +406,13 @@ struct HomeView: View {
     }
 
     private var menuSection: some View {
+        
         VStack(alignment: .leading) {
             Text("Fresh-eye menu")
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    ForEach(menus) { food in
+                    ForEach(menus.prefix(10), id: \.self) { food in
                         FoodMenuCardComponent(foodMenu: food)
                             .frame(width: 150)
                             .onTapGesture {
@@ -461,7 +462,6 @@ struct HomeView: View {
         let mealDate = Calendar.current.startOfDay(for: meal.timeGiven)
         return today == mealDate
     }
-    
 }
 
 #Preview {

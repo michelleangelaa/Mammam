@@ -50,7 +50,8 @@ struct FoodMenuDetailView: View {
                         }
                     }
                 }
-                    
+                Text("Ingredients")
+
                 Text(foodMenu.desc)
                     .font(.body)
                     .foregroundColor(.secondary)
