@@ -124,7 +124,6 @@ struct MotivationView: View {
                                             .lineLimit(nil) // Allow unlimited lines
                                             .fixedSize(horizontal: false, vertical: true)
                                             .frame(maxWidth: 311, alignment: .leading) // Ensure proper alignment
-
                                     }
                                 }
                             }
@@ -134,7 +133,6 @@ struct MotivationView: View {
                                 Color.theme.backgroundColor // Background for VStack
                             )
                             .cornerRadius(20)
-
                         }
                         .padding(.horizontal)
                         .padding(.bottom)
@@ -161,11 +159,19 @@ struct MotivationView: View {
                                 .frame(width: 393, height: 852, alignment: .topLeading)
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                         } else {
-                            Image(motivation.imageStory1)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 393, height: 852, alignment: .topLeading)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                            if currentIndicatorBar == 0 {
+                                Image(motivation.imageStory1)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 393, height: 852, alignment: .topLeading)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            } else {
+                                Image(motivation.imageStory2)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 393, height: 852, alignment: .topLeading)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            }
                         }
                     }
                 }

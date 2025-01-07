@@ -50,7 +50,7 @@ struct FoodMenuCardComponent: View {
 
             Text(foodMenu.name)
                 .font(.caption2)
-                .multilineTextAlignment(.leading)
+                .multilineTextAlignment(.center)
                 .foregroundColor(.primary)
                 .lineLimit(2)
 
