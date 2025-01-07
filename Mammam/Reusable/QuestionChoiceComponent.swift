@@ -50,14 +50,14 @@ struct QuestionChoiceComponent: View {
     }
 }
 
-#Preview {
-    QuestionChoiceComponent(
-            buttonText1: "Get Mad",
-            buttonText2: "Encourage the Kid",
-            actions: [
-                { print("Get Mad tapped") },
-                { print("Encourage the Kid tapped") }
-            ]
-    )
-}
+//#Preview {
+//    QuestionChoiceComponent(
+//            buttonText1: "Get Mad",
+//            buttonText2: "Encourage the Kid",
+//            actions: [
+//                { print("Get Mad tapped") },
+//                { print("Encourage the Kid tapped") }
+//            ]
+//    )
+//}
 
