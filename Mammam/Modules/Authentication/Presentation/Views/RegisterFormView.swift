@@ -207,8 +207,10 @@ struct InputBabyAllergiesView: View {
                             localAllergens[index] = toggledAllergen
                             if toggledAllergen.isAllergy {
                                 selectedAllergies.insert(toggledAllergen.name)
+                                selectedAllergies.insert(toggledAllergen.image)
                             } else {
                                 selectedAllergies.remove(toggledAllergen.name)
+                                selectedAllergies.insert(toggledAllergen.image)
                             }
                         }
                     }

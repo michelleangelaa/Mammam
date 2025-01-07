@@ -37,7 +37,6 @@ enum Sheet: Identifiable {
         }
     }
 
-    case forgotPassword
     case article(article: Article)
     case mealDetail(meal: Meal)
     case logMeal(meal: Meal)

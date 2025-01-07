@@ -30,6 +30,7 @@ struct FoodMenuCardComponent: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(width: 140, height: 140)
 
                 Button(action: {
                     if foodMenu.isSaved {
@@ -58,7 +59,7 @@ struct FoodMenuCardComponent: View {
         .onChange(of: foodMenu.isSaved) { _ in
             try? context.save()
         }
-        .padding(.vertical, 8)
+        .padding(.bottom, 8)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(UIColor.systemGray6))

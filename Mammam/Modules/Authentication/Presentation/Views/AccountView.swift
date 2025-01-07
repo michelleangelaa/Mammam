@@ -71,7 +71,7 @@ struct AccountView: View {
                     .scaledToFit()
             }
             
-            VStack(spacing: 8) {
+            VStack(alignment: .center, spacing: 8) {
                 Text("Welcome to Mammam")
                     .font(.title)
                     .fontWeight(.bold)
@@ -80,6 +80,14 @@ struct AccountView: View {
                 Text("Cherish Every Bite")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .padding(.bottom, 20)
+                
+                Text("Say no more to picky eating by introducing a variety of ingredients")
+                    .font(.callout)
+                    .foregroundColor(.primary)
+                    .padding()
+                    .multilineTextAlignment(.center) // Ensure the text aligns to the center for multiline
+                    .frame(maxWidth: .infinity, alignment: .center) // Center-align within the VStack
             }
             .padding(.top, 40)
             

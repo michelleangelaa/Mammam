@@ -96,6 +96,7 @@ struct ProgressView: View {
             }
             .padding()
         }
+        .scrollIndicators(.hidden)
     }
 
     // MARK: - Computed Properties

@@ -15,23 +15,26 @@ struct SavedMenuView: View {
         menu.isSaved == true
     }) private var savedMenus: [FoodMenu]
 
-    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)]
 
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(alignment: .leading, spacing: 16) { // Add spacing between sections
                 Text("Saved Menu")
                     .font(.title3)
                     .fontWeight(.bold)
+                    .padding(.horizontal) // Add padding for the header
 
-                LazyVGrid(columns: columns, spacing: 16) {
+                LazyVGrid(columns: columns, spacing: 24) { // Spacing between rows
                     ForEach(savedMenus) { menu in
                         FoodMenuCardComponent(foodMenu: menu)
+                            .padding(8) // Add padding around each card
                             .onTapGesture {
                                 coordinator.presentSheet(sheet: .foodMenuDetail(foodMenu: menu))
                             }
                     }
                 }
+                .padding(.horizontal) // Add padding around the grid
             }
         }
     }
@@ -40,9 +43,3 @@ struct SavedMenuView: View {
 #Preview {
     SavedMenuView().modelContainer(for: FoodMenu.self)
 }
-
-// #Preview {
-//    let previewContext = try! ModelContainer(for: FoodMenu.self)
-//    return SavedMenuView()
-//        .environment(\.modelContext, previewContext)
-// }

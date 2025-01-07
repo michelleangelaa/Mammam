@@ -68,7 +68,6 @@ class Coordinator: ObservableObject {
     @ViewBuilder
     func buildSheet(sheet: Sheet) -> some View {
         switch sheet {
-        case .forgotPassword: MealPlanView()
         case .article (let article):
             NavigationStack {
                 ArticleView(article: article)
