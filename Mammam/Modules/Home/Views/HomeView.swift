@@ -142,7 +142,7 @@ struct HomeView: View {
             coordinator.presentRateMealSheet(with: meal)
         }) {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Log Meal")
+                Text("Log meal")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(.black)
@@ -309,12 +309,13 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Understand your child better")
                 .font(.headline)
+                .foregroundStyle(Color.black)
             if let todayArticle = getTodayArticle() {
                 Button(action: {
                     coordinator.presentDetailArticleSheet(with: todayArticle)
                 }) {
                     HStack(alignment: .top, spacing: 20) {
-                        Image("motivationimage1")
+                        Image(todayArticle.articleImage)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 65, height: 65, alignment: .topLeading)
@@ -327,7 +328,7 @@ struct HomeView: View {
                                     .font(.system(size: 12))
                             }
                               
-                            Text("Introduce new food with food chaining")
+                            Text(todayArticle.articleTitle)
                                 .font(.callout)
                                 .multilineTextAlignment(.leading)
                         }

@@ -274,7 +274,7 @@ class DataController {
             imageTrue: "motivation3image3_true",
             imageFalse: "motivation3image3_false",
             buttonText1: "Turn on her/his favourite movie",
-            buttonText2: "offer them a choice to involve in the meal",
+            buttonText2: "Offer them a choice to involve in the meal",
             quotes: "Social interactions between caregiver and child (such as speaking to the child, singing, and encouraging him/her) also stimulate connections in the child’s brain and promote cognitive development!",
             quotesSource: "World Health Organization",
             adviceImage: ["advice1_motivation3", "advice2_motivation3", "advice3_motivation3"],
