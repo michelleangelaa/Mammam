@@ -331,6 +331,8 @@ struct HomeView: View {
                             Text(todayArticle.articleTitle)
                                 .font(.callout)
                                 .multilineTextAlignment(.leading)
+                                .lineLimit(2)
+
                         }
                         Spacer()
                     }
@@ -348,6 +350,7 @@ struct HomeView: View {
                     .padding()
             }
         }
+        .foregroundStyle(Color.black)
     }
 
     // Add this helper function to get today's article
