@@ -283,8 +283,17 @@ class DataController {
         
         )
         
-        [motivation1, motivation2, motivation3].forEach { context.insert($0) }
-        print("generated all motivation")
+//        [motivation1, motivation2, motivation3].forEach { context.insert($0) }
+//        print("Inserted motivation with buttons: \(motivation.buttonText1), \(motivation.buttonText2)")
+//
+//        print("generated all motivation")
+        [motivation1,motivation2,motivation3].forEach { motivation in
+            context.insert(motivation)
+            print("Inserted motivation with buttons: \(motivation.buttonText1), \(motivation.buttonText2)")
+        }
+        try? context.save()
+        
+        
     }
     
     private func generateallergenData(context: ModelContext) {

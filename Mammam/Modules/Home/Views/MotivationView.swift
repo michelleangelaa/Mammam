@@ -21,7 +21,13 @@ struct MotivationView: View {
     @State private var resultImage : [String] = []
     @State private var activeImages = ""
     
-
+   
+    
+    init(motivation: Motivation) {
+        self.motivation = motivation
+        print("MotivationView initialized with buttons: \(motivation.buttonText1), \(motivation.buttonText2)")
+    }
+    
 var body: some View {
             ZStack {
                 
@@ -299,7 +305,6 @@ var body: some View {
     }
 }
           
-
 
 extension Motivation {
     static var sampleMotivation: Motivation {
