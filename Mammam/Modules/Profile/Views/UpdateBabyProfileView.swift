@@ -54,7 +54,7 @@ struct UpdateBabyProfileView: View {
                                 .padding()
                                 .background(
                                     Circle()
-                                        .fill(selectedEmoji == emoji ? Color.pink.opacity(0.2) : Color.clear)
+                                        .fill(selectedEmoji == emoji ? Color.rose.rose25 : Color.clear)
                                 )
                                 .onTapGesture {
                                     selectedEmoji = emoji
@@ -78,10 +78,12 @@ struct UpdateBabyProfileView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Baby’s Birthdate")
                         .font(.headline)
+
                     HStack {
                         DatePicker("", selection: $date, displayedComponents: .date)
                             .datePickerStyle(.compact)
-                        Spacer()
+                            .labelsHidden() // Hides the default label for the DatePicker
+                        Spacer() // Ensures the DatePicker stays on the leading side
                     }
                     .padding()
                     .background(Color(UIColor.systemGray6))
@@ -98,6 +100,7 @@ struct UpdateBabyProfileView: View {
                 }
                 .padding()
 
+
                 // Update Button
                 CustomLargeButtonComponent(
                     state: .enabled,
@@ -106,7 +109,7 @@ struct UpdateBabyProfileView: View {
                 )
                 .padding(.horizontal)
             }
-            .padding()
+            .padding(.horizontal)
 //            .toolbar {
 //                ToolbarItem(placement: .navigationBarTrailing) {
 //                    Button("Done") {
@@ -114,7 +117,6 @@ struct UpdateBabyProfileView: View {
 //                    }
 //                }
 //            }
-            .padding()
             .alert(isPresented: $showAlert) {
                 Alert(
                     title: Text("Invalid Input"),

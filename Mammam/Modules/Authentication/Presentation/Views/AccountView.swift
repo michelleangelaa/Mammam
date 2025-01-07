@@ -1,67 +1,113 @@
-///  AccountView.swift
-////  Mammam
-////
-////  Created by Michelle Angela Aryanto on 21/10/24.
+//  AccountView.swift
+//  Mammam
 //
+//  Created by Michelle Angela Aryanto on 21/10/24.
+//
+
 import AuthenticationServices
 import SwiftData
 import SwiftUI
 
 struct AccountView: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.modelContext) private var modelContext // Access SwiftData model context
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var coordinator: Coordinator
-    @State private var isFirstTimeSignIn: Bool = false // Track first-time sign-in
-//    @State private var isLoggedIn: Bool = false // Track login state
+    @State private var isFirstTimeSignIn: Bool = false
     @State private var isLoggedInState: Bool = false
-
-//    var user : User
-    @Query private var users: [User] // Query all users
-    @State private var currentUser: User? // Track current user
-
+    
+    @Query private var users: [User]
+    @State private var currentUser: User?
+    
     private var isSignIn: Bool {
         currentUser?.userId.isEmpty == false
     }
-
+    
     var body: some View {
-        VStack {
+        // Only show login content if not logged in
+        Group {
             if !isLoggedInState {
-                SignInWithAppleButton(.continue, onRequest: { request in
-                    request.requestedScopes = [.fullName, .email]
-                }, onCompletion: { result in
-                    handleAppleSignIn(result: result)
-                })
-                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
-                .frame(height: 50)
-                .padding(.horizontal)
-
-            } else {
-                if isFirstTimeSignIn {
-                    coordinator.build(page: .successSignUp)
-                } else {
-                    coordinator.build(page: .main)
+                loginContent
+            }
+        }
+        .edgesIgnoringSafeArea(.top)
+        .onChange(of: isLoggedInState) { _, newValue in
+            if newValue {
+                // Handle navigation based on sign-in status
+                DispatchQueue.main.async {
+                    if isFirstTimeSignIn {
+                        coordinator.push(page: .successSignUp)
+                    } else {
+                        coordinator.push(page: .main)
+                    }
                 }
             }
         }
         .navigationBarBackButtonHidden()
     }
-
+    
+    private var loginContent: some View {
+        VStack {
+            // Top Section with Background and Logo
+            ZStack {
+                // Gradient Background
+                LinearGradient(
+                    stops: [
+                        Gradient.Stop(color: Color(red: 0.89, green: 0.08, blue: 0.31), location: 0.11),
+                        Gradient.Stop(color: Color(red: 0.92, green: 0.49, blue: 0.27), location: 0.91),
+                    ],
+                    startPoint: UnitPoint(x: 0.11, y: 0.95),
+                    endPoint: UnitPoint(x: 0.94, y: 0.19)
+                )
+                .frame(width: 450, height: 450)
+                .clipShape(
+                    RoundedRectangle(cornerRadius: 900, style: .continuous)
+                )
+                .edgesIgnoringSafeArea(.top)
+                .padding(.top, -100)
+                
+                Image("Logo_White")
+                    .resizable()
+                    .frame(width: 272, height: 116)
+                    .scaledToFit()
+            }
+            
+            VStack(spacing: 8) {
+                Text("Welcome to Mammam")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                
+                Text("Cherish Every Bite")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.top, 40)
+            
+            Spacer()
+            
+            SignInWithAppleButton(.continue, onRequest: { request in
+                request.requestedScopes = [.fullName, .email]
+            }, onCompletion: { result in
+                handleAppleSignIn(result: result)
+            })
+            .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+            .frame(height: 50)
+            .padding(.horizontal)
+            .padding(.bottom, 50)
+        }
+    }
     
     private func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
         switch result {
         case .success(let auth):
-//            isLoggedIn = true // Save logged-in state
-            isLoggedInState = true // Update local state
             guard let appleCredential = auth.credential as? ASAuthorizationAppleIDCredential else { return }
-
+            
             let userId = appleCredential.user
-
-            // Retrieve or fallback to saved data in UserDefaults
             let email = appleCredential.email ?? UserDefaults.standard.string(forKey: "\(userId)_email") ?? "Unavailable"
             let firstName = appleCredential.fullName?.givenName ?? UserDefaults.standard.string(forKey: "\(userId)_firstName") ?? "Unavailable"
             let lastName = appleCredential.fullName?.familyName ?? UserDefaults.standard.string(forKey: "\(userId)_lastName") ?? "Unavailable"
-
-            // Save to UserDefaults for future sign-ins
+            
+            // Save to UserDefaults
             if appleCredential.email != nil {
                 UserDefaults.standard.setValue(email, forKey: "\(userId)_email")
             }
@@ -71,12 +117,8 @@ struct AccountView: View {
             if appleCredential.fullName?.familyName != nil {
                 UserDefaults.standard.setValue(lastName, forKey: "\(userId)_lastName")
             }
-
-            // Check if the user already exists in the database
+            
             if let existingUser = fetchUser(by: userId) {
-                print("User already exists:", existingUser)
-
-                // Update existing user with new data if available
                 if email != "Unavailable" {
                     existingUser.email = email
                 }
@@ -86,28 +128,25 @@ struct AccountView: View {
                 if lastName != "Unavailable" {
                     existingUser.lastName = lastName
                 }
+                currentUser = existingUser
                 saveContext()
-                isFirstTimeSignIn = false // Existing user
-
+                isFirstTimeSignIn = false
             } else {
-                // Create and save a new user
                 let newUser = User(userId: userId, email: email, firstName: firstName, lastName: lastName)
                 modelContext.insert(newUser)
                 currentUser = newUser
-
                 saveContext()
-                print("User saved successfully:", newUser)
-
-                isFirstTimeSignIn = true // New user
+                isFirstTimeSignIn = true
             }
-
-//            isLoggedInState = true // User is now logged in
+            
+            // Set logged in state after all processing is complete
+            isLoggedInState = true
             
         case .failure(let error):
             print("Sign-in failed with error:", error.localizedDescription)
         }
     }
-
+    
     private func fetchUser(by userId: String) -> User? {
         let fetchRequest = FetchDescriptor<User>(
             predicate: #Predicate { user in
@@ -121,7 +160,7 @@ struct AccountView: View {
             return nil
         }
     }
-
+    
     private func saveContext() {
         do {
             try modelContext.save()
@@ -130,18 +169,3 @@ struct AccountView: View {
         }
     }
 }
-
-extension User {
-    static var sampleUser: User {
-        User(
-            userId: "1",
-            email: "eve@gmail.com",
-            firstName: "eve",
-            lastName: "san"
-        )
-    }
-}
-
-// #Preview {
-//    AccountView(user: User.sampleUser)
-// }
