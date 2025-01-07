@@ -6,37 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MotivationView: View {
     @EnvironmentObject private var coordinator: Coordinator
+
+    var motivation: Motivation
     
     @State private var currentImageIndex = 0 // Tracks the current image index
     @State private var currentIndicatorBar = 0
-    @State private var activeImages: [String] = ["motivationimage1", "motivationimage2"] // Initial images array
+
     @State private var navigateToHome = false
     @State private var closetohome = false
+    @State private var resultImage : [String] = []
+    @State private var activeImages = ""
     
-    //user data
-//    let currentUser = User(id: "1", fullname: "Eve", email: "eve@example.com", username: "eve123", profileImageUrl: nil)
-
-    
-    //predefined sets of quotes and advice page
-//    private let quotes = [
-//            "It's okay if your child rejects food today, keep offering it in different forms. Consistency is key!."
-//        ]
-//    private let quotesWriter = ["World Health Organization"]
-//    private let adviceTexts = ["Give baby more time and offer the meal again later","You still can offer her to eat maximum until 30 minute2"]
-//
-
-    // Predefined sets of images
-//    private let images = ["motivationimage1", "motivationimage2"]
-//    private let images_false = ["motivationimage3_false"]
-//    private let images_true = ["motivationimage3_true"]
-//    private let adviceImages = ["i_motivation_advice1","i_motivation_advice2"]
-
 
 var body: some View {
-//    NavigationStack {
             ZStack {
                 
                 VStack {
@@ -46,7 +32,7 @@ var body: some View {
                         .padding(.top, 120)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // Conditional views
+                    // Conditional views between page result,quotes and page story
                     if currentIndicatorBar == 4 {
                         ZStack {
                             Color.rose50
@@ -56,14 +42,14 @@ var body: some View {
                                 .padding()
 
                             VStack(alignment: .leading, spacing: 19) {
-                                Text("\"\(quotes[0])\"")
+                                Text("\"\(motivation.quotes)\"")
                                     .font(.system(size: 22))
                                     .foregroundColor(Color.rose600)
 
                                 HStack(spacing: 14) {
                                     Image("i_motivation_quotation")
                                     VStack(alignment: .leading) {
-                                        Text("\(quotesWriter[0])")
+                                        Text("\(motivation.quotesSource)")
                                             .font(.system(size: 15, weight: .semibold))
                                         Text("Today's Motivation")
                                             .font(.system(size: 13))
@@ -89,7 +75,7 @@ var body: some View {
                             
                             VStack{
                                 VStack(alignment: .leading) {
-                                    if activeImages == images_false {
+                                    if resultImage == [motivation.imageFalse] {
                                         Image("i_motivation_crackheart")
 //                                        Text("\(currentUser.fullname) sad to hear that 😥")
                                         Text("eve sad to hear that 😥")
@@ -122,13 +108,13 @@ var body: some View {
                                         Spacer()
                                     }
                                     
-                                    ForEach(0..<adviceImages.count, id: \.self) { index in
+                                    ForEach(0..<motivation.adviceImage.count, id: \.self) { index in
                                             HStack {
                     
-                                                Image(adviceImages[index])
+                                                Image(motivation.adviceImage[index])
                                                     .resizable()
                                                     .frame(width: 50, height: 50) // Example size
-                                                Text(adviceTexts[index])
+                                                Text(motivation.adviceText[index])
                                                     .font(.system(size: 13))
                                                     .fontWeight(.semibold)
                                             }.padding(.vertical,2)
@@ -154,11 +140,25 @@ var body: some View {
                                 .cornerRadius(20)
                                 .padding()
 
-                            Image(activeImages[currentImageIndex])
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 393, height: 852, alignment: .topLeading)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                            if  activeImages == motivation.imageFalse {
+                                Image(motivation.imageFalse)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 393, height: 852, alignment: .topLeading)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            }else if activeImages == motivation.imageTrue{
+                                Image(motivation.imageTrue)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 393, height: 852, alignment: .topLeading)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            }else{
+                                Image(motivation.imageStory1)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 393, height: 852, alignment: .topLeading)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            }
                         }
                     }
                 }
@@ -273,35 +273,57 @@ var body: some View {
 
                     // Display second image with the QuestionChoiceComponent
                     ZStack {
+                        
                         QuestionChoiceComponent(
-                            buttonText1: "Get Mad",
-                            buttonText2: "Encourage the Kid",
-                            actions: [
-                                {   // User chooses "Get Mad"
-                                    activeImages = images_false
-                                    currentImageIndex = 0
-                                    currentIndicatorBar += 1
-                                },
-                                {
-                                    activeImages = images_true
-                                    currentImageIndex = 0
-                                    currentIndicatorBar += 1
-                                }
-                            ]
-                        ).padding(.top, 600) // Position QuestionChoiceComponent
+                            buttonText1: motivation.buttonText1,  // Make sure these values are not empty
+                                buttonText2: motivation.buttonText2,
+                                   actions: [
+                                       {   // User chooses first option
+                                           activeImages = motivation.imageFalse
+                                           currentImageIndex = 0
+                                           currentIndicatorBar += 1
+                                           resultImage = [motivation.imageFalse]  // Store the result
+                                       },
+                                       {   // User chooses second option
+                                           activeImages = motivation.imageTrue
+                                           currentImageIndex = 0
+                                           currentIndicatorBar += 1
+                                           resultImage = [motivation.imageTrue]  // Store the result
+                                       }
+                                   ]                        ).padding(.top, 600) // Position QuestionChoiceComponent
                     }
                 }
             }        .navigationBarBackButtonHidden(true) // Hide the back button
-
-//        }
 
 
     }
 }
           
- 
 
-#Preview {
-    MotivationView()
+
+extension Motivation {
+    static var sampleMotivation: Motivation {
+        Motivation(
+            previewMotivation: "home_motivation2",
+            imageStory1: "motivation2image1",
+            imageStory2: "motivation2image2",
+            imageTrue: "motivation2image3_true",
+            imageFalse: "motivation2image3_false",
+            buttonText1: "Hide the carrot under rice",
+            buttonText2: "Prepare a different carrot-based dish",
+            quotes: "Non-responsive feeding behaviors, such as imposing too many rules, offering rewards, or forcing a child to eat, can lead to overeating and hinder their ability to control portion sizes.",
+            quotesSource: "Nutri and Beyond Consultant",
+            adviceImage: ["advice1_motivation2", "advice2_motivation2", "advice3_motivation2"],
+            adviceText: ["Don’t assume your child doesn’t like something after only trying it once.","Introduce it 15-20 times with different preparations.","Maintain your child’s trust by being honest about the food you’re serving."]
+            
+        )
+        
+    }
 }
+
+//#Preview {
+//    MotivationView(motivation: Motivation.sampleMotivation)
+//}
+//
+
 
