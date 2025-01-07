@@ -364,6 +364,7 @@ struct HomeView: View {
         
         // Use modulo to cycle through articles
         let articleIndex = daysSinceReference % totalArticles
+     
         
         // Return the article for today
         return article[articleIndex]
