@@ -16,12 +16,6 @@ class Baby {
     @Relationship(deleteRule: .cascade)
     var allergen: [Allergen]?
 
-//    @Relationship(deleteRule:.cascade)
-//    var articles: [Article]?
-//
-//    @Relationship(deleteRule:.cascade)
-//    var motivation: [Motivation]?
-
     @Relationship(deleteRule: .cascade)
     var mealPlans: [MealPlan]?
 

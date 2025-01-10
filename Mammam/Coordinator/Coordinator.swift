@@ -11,7 +11,7 @@ class Coordinator: ObservableObject {
     @Published var path: NavigationPath = .init()
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullSceenCover?
-    @Published var selectedTab: MainView.Tab? // Add this to track selected tab
+    @Published var selectedTab: MainView.Tab?
 
     func push(page: AppPages) {
         path.append(page)
