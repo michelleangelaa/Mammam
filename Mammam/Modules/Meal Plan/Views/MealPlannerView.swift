@@ -5,13 +5,6 @@
 //  Created by Michelle Angela Aryanto on 04/12/24.
 //
 
-//
-//  MealPlannerView.swift
-//  Mammam
-//
-//  Created by Michelle Angela Aryanto on 04/12/24.
-//
-
 import SwiftData
 import SwiftUI
 

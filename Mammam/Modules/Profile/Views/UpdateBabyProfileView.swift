@@ -153,7 +153,7 @@ struct UpdateBabyProfileView: View {
         do {
             try context.save()
             print("Baby profile updated successfully.")
-            coordinator.pop() // Use coordinator to navigate back
+            dismiss() // Use coordinator to navigate back
         } catch {
             alertMessage = "Failed to save: \(error.localizedDescription)"
             showAlert = true
