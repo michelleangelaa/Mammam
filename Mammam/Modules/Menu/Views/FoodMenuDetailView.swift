@@ -8,26 +8,30 @@
 import SwiftUI
 
 struct FoodMenuDetailView: View {
+    @Environment(\.modelContext) private var context 
+    @StateObject private var viewModel: FoodMenuDetailViewModel
     @EnvironmentObject private var coordinator: Coordinator
-    @Environment(\.modelContext) private var context
 
-    var foodMenu: FoodMenu
-    
+
+    init(foodMenu: FoodMenu) {
+        _viewModel = StateObject(wrappedValue: FoodMenuDetailViewModel(foodMenu: foodMenu))
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Image(foodMenu.image)
+                Image(viewModel.foodMenu.image)
                     .resizable()
                     .scaledToFill()
                     .frame(height: 200)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
-                    
-                Text(foodMenu.name)
+
+                Text(viewModel.foodMenu.name)
                     .font(.title2)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.leading)
-                    
-                if let allergens = foodMenu.allergens, !allergens.isEmpty {
+
+                if let allergens = viewModel.foodMenu.allergens, !allergens.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
@@ -50,12 +54,13 @@ struct FoodMenuDetailView: View {
                         }
                     }
                 }
+
                 Text("Ingredients")
 
-                Text(foodMenu.desc)
+                Text(viewModel.foodMenu.desc)
                     .font(.body)
                     .foregroundColor(.secondary)
-                    
+
                 Spacer()
             }
             .padding()
@@ -68,28 +73,14 @@ struct FoodMenuDetailView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { toggleBookmark() }) {
-                        Image(systemName: foodMenu.isSaved ? "bookmark.fill" : "bookmark")
+                    Button(action: { viewModel.toggleBookmark(context: context) }) {
+                        Image(systemName: viewModel.foodMenu.isSaved ? "bookmark.fill" : "bookmark")
                             .font(.subheadline)
                             .padding(8)
                             .padding(8)
                     }
                 }
             }
-            .onChange(of: foodMenu.isSaved) { _ in
-                try? context.save()
-            }
         }
     }
-    private func toggleBookmark() {
-        foodMenu.isSaved.toggle()
-        try? context.save()
-        print("\(foodMenu.name) bookmark status: \(foodMenu.isSaved)")
-    }
 }
-
-
-
-// #Preview {
-//    FoodMenuDetailView()
-// }
