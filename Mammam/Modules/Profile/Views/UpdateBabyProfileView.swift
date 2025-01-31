@@ -9,24 +9,14 @@ import SwiftUI
 struct UpdateBabyProfileView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
 
-    @State var baby: Baby
-    @State private var selectedEmoji: String = ""
-    @State private var isDateValid: Bool = true
-    @State private var name: String
-    @State private var date: Date
-
-    @State private var showAlert: Bool = false
-    @State private var alertMessage: String = ""
+    @StateObject private var viewModel: UpdateBabyProfileViewModel
 
     private let emojis = ["👶", "👦", "👧", "🧒", "👩‍🦱", "👨‍🦱", "👩‍🦰", "👨‍🦰"]
 
     init(baby: Baby) {
-        self._baby = State(initialValue: baby)
-        self._selectedEmoji = State(initialValue: baby.babyProfileImage)
-        self._name = State(initialValue: baby.babyName)
-        self._date = State(initialValue: baby.babyBirthDate)
+        _viewModel = StateObject(wrappedValue: UpdateBabyProfileViewModel(baby: baby)) // ✅ No need to pass context
     }
 
     var body: some View {
@@ -41,7 +31,7 @@ struct UpdateBabyProfileView: View {
                     .fill(Color.pink.opacity(0.2))
                     .frame(width: 100, height: 100)
                     .overlay(
-                        Text(selectedEmoji.isEmpty ? baby.babyProfileImage : selectedEmoji)
+                        Text(viewModel.selectedEmoji.isEmpty ? viewModel.baby.babyProfileImage : viewModel.selectedEmoji)
                             .font(.system(size: 50))
                     )
 
@@ -54,10 +44,10 @@ struct UpdateBabyProfileView: View {
                                 .padding()
                                 .background(
                                     Circle()
-                                        .fill(selectedEmoji == emoji ? Color.rose.rose25 : Color.clear)
+                                        .fill(viewModel.selectedEmoji == emoji ? Color.rose.rose25 : Color.clear)
                                 )
                                 .onTapGesture {
-                                    selectedEmoji = emoji
+                                    viewModel.selectedEmoji = emoji
                                 }
                         }
                     }
@@ -67,7 +57,7 @@ struct UpdateBabyProfileView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Baby’s Name")
                         .font(.headline)
-                    TextField("Enter baby's name", text: $name)
+                    TextField("Enter baby's name", text: $viewModel.name)
                         .padding()
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(10)
@@ -80,19 +70,19 @@ struct UpdateBabyProfileView: View {
                         .font(.headline)
 
                     HStack {
-                        DatePicker("", selection: $date, displayedComponents: .date)
+                        DatePicker("", selection: $viewModel.date, displayedComponents: .date)
                             .datePickerStyle(.compact)
-                            .labelsHidden() // Hides the default label for the DatePicker
-                        Spacer() // Ensures the DatePicker stays on the leading side
+                            .labelsHidden()
+                        Spacer()
                     }
                     .padding()
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(10)
-                    .onChange(of: date) { newDate in
-                        isDateValid = isDateValidFunction(newDate)
+                    .onChange(of: viewModel.date) { newDate in
+                        viewModel.isDateValid = viewModel.isDateValidFunction(newDate)
                     }
 
-                    if !isDateValid {
+                    if !viewModel.isDateValid {
                         Text("Please select a valid date (not in the future).")
                             .foregroundColor(.red)
                             .font(.footnote)
@@ -100,27 +90,24 @@ struct UpdateBabyProfileView: View {
                 }
                 .padding()
 
-
                 // Update Button
                 CustomLargeButtonComponent(
                     state: .enabled,
                     text: "Update Your Baby's Data",
-                    action: updateBabyProfile
+                    action: {
+                        viewModel.updateBabyProfile()
+                        if !viewModel.showAlert {
+                            coordinator.pop()
+                        }
+                    }
                 )
                 .padding(.horizontal)
             }
             .padding(.horizontal)
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button("Done") {
-//                        dismiss()
-//                    }
-//                }
-//            }
-            .alert(isPresented: $showAlert) {
+            .alert(isPresented: $viewModel.showAlert) {
                 Alert(
                     title: Text("Invalid Input"),
-                    message: Text(alertMessage),
+                    message: Text(viewModel.alertMessage),
                     dismissButton: .default(Text("OK"))
                 )
             }
@@ -137,62 +124,4 @@ struct UpdateBabyProfileView: View {
             }
         }
     }
-
-    // MARK: - Update Function
-
-    private func updateBabyProfile() {
-        guard validateInputs() else {
-            showAlert = true
-            return
-        }
-
-        baby.babyProfileImage = selectedEmoji.isEmpty ? baby.babyProfileImage : selectedEmoji
-        baby.babyName = name
-        baby.babyBirthDate = date
-
-        do {
-            try context.save()
-            print("Baby profile updated successfully.")
-            dismiss() // Use coordinator to navigate back
-        } catch {
-            alertMessage = "Failed to save: \(error.localizedDescription)"
-            showAlert = true
-            print("Failed to save: \(error.localizedDescription)")
-        }
-    }
-
-    // MARK: - Validation
-
-    private func validateInputs() -> Bool {
-        if !isDateValidFunction(date) {
-            alertMessage = "Please select a valid date (not in the future)."
-            return false
-        }
-        if name.isEmpty {
-            alertMessage = "Please enter baby's name."
-            return false
-        }
-        return true
-    }
-
-    private func isDateValidFunction(_ date: Date) -> Bool {
-        return date <= Date()
-    }
 }
-
-// MARK: - Sample Data for Preview
-
-// extension Baby {
-//    static var sampleBaby: Baby {
-//        Baby(
-//            babyProfileImage: "👶",
-//            babyName: "Eve",
-//            babyBirthDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
-//        )
-//    }
-// }
-//
-//// MARK: - Preview
-// #Preview {
-//    UpdateBabyProfileView(baby: Baby.sampleBaby)
-// }
