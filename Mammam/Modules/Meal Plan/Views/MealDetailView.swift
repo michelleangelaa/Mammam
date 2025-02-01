@@ -9,19 +9,23 @@ import SwiftUI
 
 struct MealDetailView: View {
     @EnvironmentObject private var coordinator: Coordinator
+    @StateObject private var viewModel: MealDetailViewModel
 
-    @ObservedObject var meal: Meal
-    var ingredient: Ingredient
-    
+    init(meal: Meal, ingredient: Ingredient) {
+        _viewModel = StateObject(wrappedValue: MealDetailViewModel(meal: meal, ingredient: ingredient))
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                Text(ingredient.name)
+                // Ingredient Name
+                Text(viewModel.ingredientName)
                     .font(.title2)
                     .fontWeight(.bold)
-                
-                if let ingredientImage = ingredient.image {
-                    Image(ingredientImage)
+
+                // Ingredient Image
+                if let image = viewModel.ingredientImage {
+                    Image(image)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 150, height: 150)
@@ -31,16 +35,16 @@ struct MealDetailView: View {
                         .fill(Color.gray)
                         .frame(width: 120, height: 120)
                 }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    if let nutrients = ingredient.nutrients, !nutrients.isEmpty {
+
+                // Nutrients Section
+                VStack(alignment: .leading, spacing: 12) {
+                    if viewModel.hasNutrients() {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Nutrients")
                                 .font(.body)
                                 .fontWeight(.bold)
                             HStack {
-                                ForEach(nutrients, id: \.self) { nutrient in
+                                ForEach(viewModel.nutrients, id: \.self) { nutrient in
                                     Text("\(nutrient.name)")
                                         .padding(.horizontal, 12)
                                         .padding(.vertical, 4)
@@ -55,24 +59,24 @@ struct MealDetailView: View {
                             }
                         }
                     }
-                    
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 Spacer()
+
                 // Available Meals Section
                 VStack(alignment: .leading, spacing: 12) {
-                    if let menus = ingredient.menus, !menus.isEmpty {
+                    if viewModel.hasMenus() {
                         Text("Variate with these menu")
                             .font(.body)
                             .fontWeight(.bold)
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack {
-                                ForEach(menus) { food in
+                                ForEach(viewModel.menus) { food in
                                     FoodMenuCardComponent(foodMenu: food)
                                         .frame(width: 150)
                                         .onTapGesture {
-                                            coordinator.presentSheet(sheet: .foodMenuDetail(foodMenu: food))
+                                            viewModel.showFoodMenuDetail(for: food, coordinator: coordinator)
                                         }
                                 }
                             }
@@ -82,12 +86,12 @@ struct MealDetailView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
+
                 Spacer(minLength: 40)
 
+                // Review Meal Button
                 Button(action: {
-                    coordinator.presentRateMealSheet(with: meal)
+                    viewModel.reviewMeal(coordinator: coordinator)
                 }) {
                     Text("Review Meal")
                         .frame(maxWidth: .infinity)
@@ -102,18 +106,10 @@ struct MealDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") {
-                        coordinator.dismissSheet()
+                        viewModel.closeView(coordinator: coordinator)
                     }
                 }
             }
         }
     }
 }
-
-// #Preview {
-//    NavigationStack {
-//        if let eggIngredient = myIngredients.first(where: { $0.name == "Egg" }) {
-//            MealDetailView(meal: Meal, ingredient: eggIngredient)
-//        }
-//    }
-// }
