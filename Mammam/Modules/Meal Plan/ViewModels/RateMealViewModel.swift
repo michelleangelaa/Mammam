@@ -15,7 +15,15 @@ class RateMealViewModel: ObservableObject {
     @Published var timeGiven: Date
     @Published var timeEnded: Date
     @Published var servingUnit: String
-    @Published var servingQty: Double
+    @Published var servingQty: Double {
+        didSet {
+            if servingQty > 30 {
+                servingQty = 30
+                triggerAlert(message: "Serving size cannot exceed 30.")
+            }
+        }
+    }
+
     @Published var consumedQty: Double
     @Published var isAllergic: Bool
     @Published var notes: String
@@ -24,6 +32,7 @@ class RateMealViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
     @Published var navigateToMealFeedback: Bool = false
+    @Published var showSaveConfirmation = false
 
     var meal: Meal
     let units = ["Tea Spoon", "Table Spoon", "Cup"]
@@ -35,7 +44,7 @@ class RateMealViewModel: ObservableObject {
         self.timeGiven = meal.timeGiven
         self.timeEnded = meal.timeEnded
         self.servingUnit = meal.servingUnit
-        self.servingQty = meal.servingQty
+        self.servingQty = min(meal.servingQty, 30)
         self.consumedQty = meal.consumedQty
         self.isAllergic = meal.isAllergic
         self.notes = meal.notes
@@ -82,7 +91,7 @@ class RateMealViewModel: ObservableObject {
     // MARK: - Update Meal
 
     func updateMeal(context: ModelContext) {
-        if !validateInputs() { return } 
+        if !validateInputs() { return }
 
         meal.isLogged = true
         meal.ingredient?.name = ingredient

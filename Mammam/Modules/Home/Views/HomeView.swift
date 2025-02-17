@@ -15,6 +15,7 @@ struct HomeView: View {
     @Query private var motivation: [Motivation]
     @Query private var baby: [Baby]
     @Query private var article: [Article]
+    @Query private var allergen: [Allergen]
 
     @Query private var ingredient: [Ingredient]
     @Query(sort: \MealPlan.startDate, order: .forward) private var plans: [MealPlan]
@@ -411,13 +412,12 @@ struct HomeView: View {
     }
 
     private var menuSection: some View {
-        
         VStack(alignment: .leading) {
             Text("Fresh-eye menu")
                 .font(.headline)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    ForEach(menus.prefix(10), id: \.self) { food in
+                    ForEach(filteredMenus.prefix(10), id: \.self) { food in
                         FoodMenuCardComponent(foodMenu: food)
                             .frame(width: 150)
                             .onTapGesture {
@@ -434,7 +434,21 @@ struct HomeView: View {
             try? context.save() // Refresh data on view appear
         }
     }
-       
+
+    // MARK: - Helper Function to Filter Menus
+    private var filteredMenus: [FoodMenu] {
+        // Get allergens that are flagged as true
+        let allergicIngredients = allergen.filter { $0.isAllergy } ?? []
+        
+        return menus.filter { food in
+            let containsAllergen = food.allergens?.contains { allergen in
+                allergicIngredients.contains { $0.name == allergen.name }
+            } ?? false
+            return !containsAllergen // Exclude food with allergens
+        }
+    }
+
+
     // MARK: - Helpers
     
     private var todayMealPlan: MealPlan? {

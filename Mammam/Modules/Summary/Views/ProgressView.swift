@@ -177,6 +177,8 @@ struct displayLogHistory: View {
     var coordinator: Coordinator
     @Environment(\.modelContext) private var context
 
+    @State private var mealToDelete: Meal?
+    @State private var showDeleteAlert = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -199,23 +201,44 @@ struct displayLogHistory: View {
 
                             // Meals for the Date
                             ForEach(dailyMeals, id: \.self) { meal in
-                                Button(action: {
-                                    coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
-                                }) {
-                                    HistoryMealCardView(meal: meal)
-                                        .swipeActions(edge: .trailing) {
-                                            Button(role: .destructive) {
-                                                deleteMeal(meal)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                        }
+                                HStack {
+                                    Button(action: {
+                                        coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
+                                    }) {
+                                        HistoryMealCardView(meal: meal)
+                                    }
+                                    Spacer()
+                                    Button(action: {
+                                        mealToDelete = meal
+                                        showDeleteAlert = true
+                                    }) {
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
+                                    }
+                                    .buttonStyle(.borderless)
+                                }
+                                .swipeActions(edge: .trailing) {
+                                    Button(role: .destructive) {
+                                        deleteMeal(meal)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+        .alert("Delete Meal", isPresented: $showDeleteAlert) {
+            Button("Delete", role: .destructive) {
+                if let meal = mealToDelete {
+                    deleteMeal(meal)
+                }
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Are you sure you want to delete this meal log?")
         }
     }
 

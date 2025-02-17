@@ -75,7 +75,7 @@ struct RateMealView: View {
     private var saveButton: some View {
         Button(action: {
             if viewModel.validateInputs() {
-                viewModel.updateMeal(context: context)
+                viewModel.showSaveConfirmation = true
             }
         }) {
             Text("Save")
@@ -86,6 +86,14 @@ struct RateMealView: View {
                 .cornerRadius(10)
         }
         .disabled(!viewModel.validateInputs())
+        .alert("Confirm Save", isPresented: $viewModel.showSaveConfirmation) {
+            Button("Save", role: .destructive) {
+                viewModel.updateMeal(context: context)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Are you sure you want to save this meal entry?")
+        }
     }
 
     private var mealConsumedSection: some View {

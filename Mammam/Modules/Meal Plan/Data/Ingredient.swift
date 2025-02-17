@@ -21,6 +21,9 @@ class Ingredient {
         
     @Relationship(inverse: \FoodMenu.ingredients)
     var menus: [FoodMenu]?
+    
+    var allergens: [Allergen]?  // Ingredients may contain allergens
+
 
 //    @Relationship(inverse: \Nutrition.ingredients)
     
