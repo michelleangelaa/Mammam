@@ -14,9 +14,9 @@ struct ProgressView: View {
     @Environment(\.modelContext) private var context
     @Query private var nutrients: [Nutrient]
     @Query private var meals: [Meal]
-    
+
     @StateObject private var viewModel = ProgressViewModel()
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -36,9 +36,9 @@ struct ProgressView: View {
         .onChange(of: meals) { _ in updateViewModelData() }
         .onChange(of: nutrients) { _ in updateViewModelData() }
     }
-    
+
     // MARK: - View Components
-    
+
     private var headerSection: some View {
         VStack(alignment: .leading) {
             Text(viewModel.period == 0 ? "Monthly Variation Summary" : "Weekly Variation Summary")
@@ -46,7 +46,7 @@ struct ProgressView: View {
                 .fontWeight(.bold)
         }
     }
-    
+
     private var periodPicker: some View {
         Picker("Period", selection: $viewModel.period) {
             Text("Monthly").tag(0)
@@ -55,7 +55,7 @@ struct ProgressView: View {
         .pickerStyle(.segmented)
         .padding()
     }
-    
+
     private var dateNavigationControls: some View {
         HStack {
             Button(action: { viewModel.navigateDate(-1) }) {
@@ -71,7 +71,7 @@ struct ProgressView: View {
         }
         .padding(.horizontal)
     }
-    
+
     private var contentSection: some View {
         Group {
             if viewModel.filteredMeals.isEmpty {
@@ -84,7 +84,7 @@ struct ProgressView: View {
             }
         }
     }
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "doc.text.magnifyingglass")
@@ -96,7 +96,7 @@ struct ProgressView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     private var pieChartSection: some View {
         Chart(viewModel.filteredNutrients, id: \.name) { nutrient in
             SectorMark(
@@ -122,18 +122,18 @@ struct ProgressView: View {
         .frame(width: 324, height: 200)
         .padding()
     }
-    
+
     private var mealHistorySections: some View {
         LazyVStack(alignment: .leading) {
             displayAllergicWatch(meals: viewModel.filteredMeals, coordinator: coordinator)
             displayLogHistory(meals: viewModel.filteredMeals,
-                            period: viewModel.period,
-                            coordinator: coordinator)
+                              period: viewModel.period,
+                              coordinator: coordinator)
         }
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func updateViewModelData() {
         viewModel.meals = meals
         viewModel.nutrients = nutrients
@@ -141,9 +141,9 @@ struct ProgressView: View {
 }
 
 // MARK: - Subviews remain unchanged below this line
+
 // [Keep the existing implementations of displayAllergicWatch, displayLogHistory,
 //  HistoryMealCardView, and Calendar extensions here...]
-
 
 struct displayAllergicWatch: View {
     var meals: [Meal]
@@ -175,6 +175,8 @@ struct displayLogHistory: View {
     var meals: [Meal]
     var period: Int
     var coordinator: Coordinator
+    @Environment(\.modelContext) private var context
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -201,6 +203,13 @@ struct displayLogHistory: View {
                                     coordinator.presentSheet(sheet: .mealFeedback(meal: meal))
                                 }) {
                                     HistoryMealCardView(meal: meal)
+                                        .swipeActions(edge: .trailing) {
+                                            Button(role: .destructive) {
+                                                deleteMeal(meal)
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -208,6 +217,11 @@ struct displayLogHistory: View {
                 }
             }
         }
+    }
+
+    private func deleteMeal(_ meal: Meal) {
+        context.delete(meal) // Remove the meal from SwiftData
+        try? context.save() // Save changes
     }
 
     // Helper function to group meals by date
@@ -226,7 +240,6 @@ struct displayLogHistory: View {
         return formatter.string(from: date)
     }
 }
-
 
 extension Calendar {
     func startOfMonth(for date: Date) -> Date {

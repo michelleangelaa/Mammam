@@ -12,6 +12,7 @@ import PhotosUI
 @Model
 class Meal: ObservableObject {
     @Relationship(inverse: \MealPlan.meals)
+    @Relationship(deleteRule: .cascade)	
     var mealPlan: MealPlan?
     @Relationship
     var ingredient: Ingredient?

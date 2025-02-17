@@ -1,74 +1,68 @@
-////
-////  ReviewMealTypeViewModel.swift
-////  Mammam
-////
-////  Created by Michelle Angela Aryanto on 30/01/25.
-////
 //
-//import Foundation
-//import SwiftData
+//  ReviewMealTypeViewModel.swift
+//  Mammam
 //
+//  Created by Michelle Angela Aryanto on 19/12/24.
 //
-//@MainActor
-//class ReviewMealTypeViewModel: ObservableObject {
-//    @Published var currentMealTypeIndex: Int = 0
-//    @Published var meals: [Meal] = []
-//    @Published var isLastMealType: Bool = false
-//    
-//    let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
-//    
-//    private let context: ModelContext
-//    private let mealPlan: MealPlan
-//    
-//    func updateContext(_ newContext: ModelContext) {
-//            self.context = newContext
-//        }
-//    
-//    init(context: ModelContext, mealPlan: MealPlan) {
-//        self.context = context
-//        self.mealPlan = mealPlan
-//    }
-//    
-//    func loadMealsForCurrentMealType() {
-//        let currentMealType = mealTypes[currentMealTypeIndex]
-//        guard let mealPlanMeals = mealPlan.meals else { return }
-//        
-//        // Create a new array instead of modifying the existing one
-//        let filteredMeals = mealPlanMeals
-//            .filter { $0.type == currentMealType }
-//            .sorted { $0.timeGiven < $1.timeGiven }
-//        
-//        DispatchQueue.main.async {
-//            self.meals = filteredMeals
-//        }
-//    }
-//    
-//    func updateMealIngredient(_ meal: Meal, newIngredient: Ingredient) {
-//        // Make sure both objects are from the same context
-//        guard let contextMeal = context.model(for: meal.persistentModelID) as? Meal,
-//              let contextIngredient = context.model(for: newIngredient.persistentModelID) as? Ingredient
-//        else {
-//            print("Failed to get objects from context")
-//            return
-//        }
-//        
-//        contextMeal.ingredient = contextIngredient
-//        
-//        do {
-//            try context.save()
-//            loadMealsForCurrentMealType()
-//        } catch {
-//            print("Failed to update meal ingredient: \(error)")
-//        }
-//    }
-//    
-//    func moveToNextMealType() -> Bool {
-//        if currentMealTypeIndex < mealTypes.count - 1 {
-//            currentMealTypeIndex += 1
-//            return false
-//        } else {
-//            isLastMealType = true
-//            return true
-//        }
-//    }
-//}
+
+import SwiftData
+import SwiftUI
+
+class ReviewMealTypeViewModel: ObservableObject {
+    @Published var currentMealTypeIndex: Int = 0
+    @Published var meals: [Meal] = []
+    @Published var isLastMealType: Bool = false
+
+    private let mealPlan: MealPlan
+    private let mealTypes = ["Breakfast", "Morning Snack", "Lunch", "Evening Snack", "Dinner"]
+    
+    @Environment(\.modelContext) private var context // Fetch context from environment
+
+    init(mealPlan: MealPlan) {
+        self.mealPlan = mealPlan
+        loadMealsForCurrentMealType()
+    }
+    
+    var currentMealType: String {
+        mealTypes[currentMealTypeIndex]
+    }
+    
+    var progressIndicator: (total: Int, current: Int) {
+        (mealTypes.count, currentMealTypeIndex + 1)
+    }
+    
+    func loadMealsForCurrentMealType() {
+        guard let mealPlanMeals = mealPlan.meals else { return }
+
+        meals = mealPlanMeals
+            .filter { $0.type == currentMealType }
+            .sorted { $0.timeGiven < $1.timeGiven }
+
+        print("Loaded \(meals.count) meals for \(currentMealType)")
+    }
+
+    func updateMealIngredient(_ meal: Meal, newIngredient: Ingredient) {
+        meal.ingredient = newIngredient
+        do {
+            try context.save()
+            print("Updated ingredient for \(meal.type)")
+        } catch {
+            print("Failed to update meal ingredient: \(error)")
+        }
+    }
+    
+    func nextStep(coordinator: Coordinator) {
+        if currentMealTypeIndex < mealTypes.count - 1 {
+            currentMealTypeIndex += 1
+            loadMealsForCurrentMealType()
+        } else {
+            isLastMealType = true
+            coordinator.presentFullScreenCover(fullScreenCover: .loadingView)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                coordinator.dismissCover()
+                coordinator.selectedTab = .mealPlanner
+                coordinator.push(page: .main)
+            }
+        }
+    }
+}
