@@ -106,6 +106,9 @@ struct LogHistoryView: View {
         currentDate = calendar.date(byAdding: .weekOfYear, value: step, to: currentDate) ?? currentDate
     }
 }
+
+
+
 //#Preview {
 //    LogHistoryView()
 //}

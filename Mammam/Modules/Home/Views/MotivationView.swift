@@ -12,7 +12,7 @@ struct MotivationView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @StateObject private var viewModel: MotivationViewModel
 
-    var motivation: Motivation
+    public var motivation: Motivation
 
     init(motivation: Motivation) {
         self.motivation = motivation
