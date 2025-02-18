@@ -36,11 +36,15 @@ class ReviewMealTypeViewModel: ObservableObject {
 
         meals = mealPlanMeals
             .filter { $0.type == currentMealType }
+            .filter { meal in
+                // Ensure filtering is applied
+                meal.ingredient?.isSafeToShow ?? true
+            }
             .sorted { $0.timeGiven < $1.timeGiven }
 
         print("Loaded \(meals.count) meals for \(currentMealType)")
     }
-
+    
     func updateMealIngredient(_ meal: Meal, newIngredient: Ingredient) {
         meal.ingredient = newIngredient
         do {

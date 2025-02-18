@@ -21,6 +21,8 @@ class Motivation {
     var quotesSource : String
     var adviceImage : [String]
     var adviceText : [String]
+    
+    var user : [User]?
         
     init(previewMotivation: String, imageStory1: String, imageStory2: String, imageTrue: String, imageFalse: String, buttonText1: String, buttonText2: String, quotes: String, quotesSource: String, adviceImage: [String], adviceText: [String]) {
         self.previewMotivation = previewMotivation

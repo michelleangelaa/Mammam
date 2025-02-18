@@ -16,6 +16,10 @@ class User {
     var lastName: String
     
     var baby : Baby?
+    var article : [Article]?
+    var motivation : [Motivation]?
+
+
     
     init(userId: String, email: String, firstName: String, lastName: String, baby: Baby? = nil) {
         self.userId = userId

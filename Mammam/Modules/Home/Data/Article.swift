@@ -16,8 +16,7 @@ class Article {
     var articleSubheader: [String]
     var articleDesc: [String]
     
-//    @Relationship(inverse: \Baby.articles)
-//    var baby : [Baby]?
+    var user : [User]?
     
     init(previewArticle: String, articleTitle: String, articleImage: String, articleSubheader: [String], articleDesc: [String]) {
         self.previewArticle = previewArticle

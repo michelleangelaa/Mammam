@@ -27,9 +27,27 @@ class Ingredient {
 
 //    @Relationship(inverse: \Nutrition.ingredients)
     
-    init(name: String, image: String? = nil, nutrients: [Nutrient]? = nil) {
+    init(name: String, image: String? = nil, nutrients: [Nutrient]? = nil, allergens: [Allergen]? = nil) {
         self.name = name
         self.image = image
         self.nutrients = nutrients
+        self.allergens = allergens
+    }
+    
+    var isSafeToShow: Bool {
+        return !(allergens?.contains { $0.isAllergy } ?? false)
+    }
+
+    static func fetchSafeIngredients(context: ModelContext) -> [Ingredient] {
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        
+        if let allIngredients = try? context.fetch(fetchDescriptor) {
+            return allIngredients.filter { $0.isSafeToShow }
+        }
+        
+        return []
     }
 }
+
+
+

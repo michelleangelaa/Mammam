@@ -75,7 +75,7 @@ struct ProgressView: View {
     private var contentSection: some View {
         Group {
             if viewModel.filteredMeals.isEmpty {
-                emptyStateView
+                    emptyStateView
             } else {
                 VStack {
                     pieChartSection
@@ -87,6 +87,7 @@ struct ProgressView: View {
 
     private var emptyStateView: some View {
         VStack(spacing: 16) {
+            Spacer()
             Image(systemName: "doc.text.magnifyingglass")
                 .font(.largeTitle)
                 .foregroundColor(.gray)

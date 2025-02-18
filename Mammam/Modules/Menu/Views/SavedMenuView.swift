@@ -23,6 +23,7 @@ struct SavedMenuView: View {
 
                 if viewModel.savedMenus.isEmpty {
                     VStack(spacing: 16) {
+                        Spacer()
                         Image(systemName: "bookmark.slash")
                             .font(.largeTitle)
                             .foregroundColor(.gray)
