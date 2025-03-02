@@ -15,7 +15,6 @@ class UpdateFoodRestrictionViewModel: ObservableObject {
 //        fetchAllergens()
     }
 
-    // Fetch allergens from the database
     func fetchAllergens(context: ModelContext) {
         let fetchDescriptor = FetchDescriptor<Allergen>()
         do {
@@ -28,7 +27,6 @@ class UpdateFoodRestrictionViewModel: ObservableObject {
         }
     }
 
-    // Update allergen state
     func toggleAllergen(_ toggledAllergen: Allergen) {
         if let index = allergens.firstIndex(where: { $0.id == toggledAllergen.id }) {
             allergens[index].isAllergy = toggledAllergen.isAllergy
@@ -36,7 +34,6 @@ class UpdateFoodRestrictionViewModel: ObservableObject {
         }
     }
 
-    // Save changes to the database
     func saveChanges(context: ModelContext) {
         do {
             try context.save()

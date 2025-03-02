@@ -17,18 +17,14 @@ struct ProfileView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // profile
                 headerSection
                 
                 showBabyProfile
                 
-                // update baby profile
                 updateBabyProfile
                 
-                // update allergic
                 updateAllergic
                 
-                // log out
                 logOut
                 
                 Spacer()

@@ -30,7 +30,6 @@ class DataController {
         let context = container.mainContext
         
         do {
-            // Check each entity type independently
 //            try initializeNutrientsIfNeeded(context: context)
             try initializeAllergenIfNeeded(context: context)
             try initializeIngredientsIfNeeded(context: context)
@@ -43,42 +42,6 @@ class DataController {
             print("Failed to initialize data: \(error)")
         }
     }
-
-//    private func initializeNutrientsIfNeeded(context: ModelContext) throws {
-//        let nutrientsFetch = FetchDescriptor<Nutrient>()
-//        let existingNutrients = try context.fetch(nutrientsFetch)
-//            
-//        if existingNutrients.isEmpty {
-//            let nutrients = Nutrient.sampleNutrients
-//            nutrients.forEach { context.insert($0) }
-//            try context.save()
-//            print("Nutrients initialized")
-//        }
-//    }
-        
-//    private func initializeFoodMenuIfNeeded(context: ModelContext) throws {
-//        let foodMenuFetch = FetchDescriptor<FoodMenu>()
-//        let existingFoodMenus = try context.fetch(foodMenuFetch)
-//            
-//        if existingFoodMenus.isEmpty {
-//            let foodMenus = FoodMenu.sampleIngredient
-//            foodMenus.forEach { context.insert($0) }
-//            try context.save()
-//            print("FoodMenu initialized")
-//        }
-//    }
-    
-//    func initializeFoodMenusAndAllergens(context: ModelContext) {
-//        // Fetch or create allergens and menus
-//        let existingAllergens = Allergen.sampleAllergens
-//        let existingMenus = FoodMenu.getExistingMenus(context: context)
-//        
-//        // Link menus and allergens
-//        linkMenusAndAllergens(menus: existingMenus, allergens: existingAllergens)
-//        
-//        // Save the context
-//        try? context.save()
-//    }
     
     private func initializeIngredientsIfNeeded(context: ModelContext) throws {
         let ingredientsFetch = FetchDescriptor<Ingredient>()
@@ -131,61 +94,14 @@ class DataController {
         let existingAllergens = try context.fetch(allergenFetch)
         
         if existingAllergens.isEmpty {
-//            generateallergenData(context: context)
-//            try context.save()
-//            print("Allergen data initialized")
             let allergens = Allergen.sampleAllergens
-            //(with: nutrients)
             
             allergens.forEach { context.insert($0) }
-//            nutrients.forEach { context.insert($0) }
             try context.save()
             print("allergens initialized")
         }
     }
 
-//    private func generateNutrientData() -> [Nutrient] {
-//        return [
-//            Nutrient(name: "Protein", amount: 20, unit: "g"),
-//            Nutrient(name: "Carbohydrates", amount: 30, unit: "g"),
-//            Nutrient(name: "Fat", amount: 10, unit: "g"),
-//            Nutrient(name: "Fiber", amount: 5, unit: "g"),
-//            Nutrient(name: "Iron", amount: 8, unit: "mg"),
-//            Nutrient(name: "Calcium", amount: 200, unit: "mg"),
-//            Nutrient(name: "Vitamin C", amount: 60, unit: "mg"),
-//            Nutrient(name: "Vitamin D", amount: 10, unit: "mcg")
-//        ]
-//    }
-        
-//    private func generateFoodMenuData() -> [FoodMenu] {
-//        return [
-//            FoodMenu(
-//                name: "Breakfast",
-//                description: "Morning meals suitable for babies",
-//                image: "breakfast_icon",
-//                isSelected: true
-//            ),
-//            FoodMenu(
-//                name: "Lunch",
-//                description: "Midday meals for growing babies",
-//                image: "lunch_icon",
-//                isSelected: true
-//            ),
-//            FoodMenu(
-//                name: "Dinner",
-//                description: "Evening meals for babies",
-//                image: "dinner_icon",
-//                isSelected: true
-//            ),
-//            FoodMenu(
-//                name: "Snacks",
-//                description: "Healthy snacks between meals",
-//                image: "snack_icon",
-//                isSelected: true
-//            )
-//        ]
-//    }
-    
     private func generateBabyData(context: ModelContext) {
 //        let baby = Baby(babyProfileImage: "✨", babyName: "Eve", babyBirthDate: Date())
 //        context.insert(baby)
@@ -232,6 +148,7 @@ class DataController {
                 - Shape (oval, stick, circle, etc.).
                 """, "Think of foods similar in taste, texture, smell, temperature, or color to those your child prefers. If they have more than one similarity, even better. Try not to limit yourself here. Write down as many ideas as you can think of – including foods you think your child would never eat."]
         )
+        
         
         [article1, article2, article3].forEach {context.insert($0)}
         print("generated all article")
@@ -283,11 +200,22 @@ class DataController {
         
         )
         
-//        [motivation1, motivation2, motivation3].forEach { context.insert($0) }
-//        print("Inserted motivation with buttons: \(motivation.buttonText1), \(motivation.buttonText2)")
-//
-//        print("generated all motivation")
-        [motivation1,motivation2,motivation3].forEach { motivation in
+        let motivation4 = Motivation(
+            previewMotivation: "home_motivation3",
+            imageStory1: "motivation3image1",
+            imageStory2: "motivation3image2",
+            imageTrue: "motivation3image3_true",
+            imageFalse: "motivation3image3_false",
+            buttonText1: "Turn",
+            buttonText2: "Offer them a choice to involve in the meal",
+            quotes: "Social interactions between caregiver and child (such as speaking to the child, singing, and encouraging him/her) also stimulate connections in the child’s brain and promote cognitive development!",
+            quotesSource: "World Health Organization",
+            adviceImage: ["advice1_motivation3", "advice2_motivation3", "advice3_motivation3"],
+            adviceText: ["Seat your child at the dining table in a calm environment, allowing them to focus on their meal.","Have the mother or other family members eat together with the baby.","Engage with your child by talking and interacting, such as telling them about the food during eat."]
+            
+        
+        )
+        [motivation1,motivation2,motivation3, motivation4].forEach { motivation in
             context.insert(motivation)
             print("Inserted motivation with buttons: \(motivation.buttonText1), \(motivation.buttonText2)")
         }
@@ -295,22 +223,5 @@ class DataController {
         
         
     }
-    
-//    private func generateallergenData(context: ModelContext) {
-//        let eggAllergen = Allergen(name: "Egg", image: "i_authentication_egg", isAllergy: false)
-//        let dairyAllergen = Allergen(name: "Dairy", image: "i_authentication_dairy", isAllergy: false)
-//        let fishAllergen = Allergen(name: "Fish", image: "i_authentication_fish", isAllergy: false)
-//        let glutenAllergen = Allergen(name: "Gluten", image: "i_authentication_gluten",isAllergy: false)
-//        let nonhalalAllergen =  Allergen(name: "Non-halal", image: "i_authentication_nonhalal", isAllergy: false)
-//        let soyAllergen = Allergen(name: "Soy", image: "i_authentication_soy", isAllergy: false)
-//        let treenutAllergen = Allergen(name: "Treenut", image: "i_authentication_treenut", isAllergy: false)
-//        let shellfishAllergen = Allergen(name: "Shellfish", image: "i_authentication_shellfish", isAllergy: false)
-//        let peanutAllergen = Allergen(name: "Peanut", image: "i_authentication_peanut", isAllergy: false)
-//        
-//        [eggAllergen, dairyAllergen, fishAllergen, glutenAllergen, nonhalalAllergen, soyAllergen, treenutAllergen, shellfishAllergen, peanutAllergen].forEach { context.insert($0) }
-//        print("generated all")
-//    }
-    
-    
     
 }

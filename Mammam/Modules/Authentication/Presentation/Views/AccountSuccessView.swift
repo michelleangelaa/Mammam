@@ -41,7 +41,7 @@ struct AccountSuccessView: View {
         .onAppear {
             // Redirect after 3 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                coordinator.push(page: .registrationForm) // Navigate to onboarding using Coordinator
+                coordinator.push(page: .registrationForm)
             }
         }
     }

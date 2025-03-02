@@ -14,15 +14,6 @@ struct FoodMenuCardComponent: View {
     @EnvironmentObject private var coordinator: Coordinator
     @State private var showingUnsaveAlert = false
 
-//
-//    @Binding var foodMenu: FoodMenu
-//    @State private var isBookmarked: Bool
-//
-//    init(foodMenu: Binding<FoodMenu>) {
-//        self._foodMenu = foodMenu
-//        self._isBookmarked = State(initialValue: foodMenu.wrappedValue.isSaved)
-//    }
-
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             ZStack(alignment: .topTrailing) {
@@ -74,13 +65,6 @@ struct FoodMenuCardComponent: View {
             Text("Are you sure you want to unsave the menu?")
         }
     }
-
-//    private func toggleBookmark() {
-//        isBookmarked.toggle()
-//        foodMenu.isSaved = isBookmarked
-//        try? context.save()
-//        print("\(foodMenu.name) bookmark status: \(isBookmarked)")
-//    }
 
     private func toggleBookmark() {
         foodMenu.isSaved.toggle()

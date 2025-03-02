@@ -13,10 +13,6 @@ struct UpdateFoodRestrictionView: View {
     @Environment(\.modelContext) private var context
     @StateObject private var viewModel = UpdateFoodRestrictionViewModel()
 
-//    init(context: ModelContext) {
-//        _viewModel = StateObject(wrappedValue: UpdateFoodRestrictionViewModel(context: context))
-//    }
-
     var body: some View {
         VStack {
             Text("Update Food Restriction")
@@ -24,7 +20,6 @@ struct UpdateFoodRestrictionView: View {
                 .fontWeight(.bold)
                 .padding(.top)
 
-            // Allergens grid
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3), spacing: 16) {
                 ForEach(viewModel.allergens) { allergen in
                     AllergyCardComponent(allergen: .constant(allergen)) { toggledAllergen in
@@ -36,7 +31,6 @@ struct UpdateFoodRestrictionView: View {
 
             Spacer()
 
-            // Update Button
             Button(action: {
                 viewModel.saveChanges(context: context)
                 dismiss()
@@ -52,7 +46,7 @@ struct UpdateFoodRestrictionView: View {
         }
         .padding(.horizontal)
         .onAppear {
-                    viewModel.fetchAllergens(context: context) // ✅ Pass context
-                }
+            viewModel.fetchAllergens(context: context) // ✅ Pass context
+        }
     }
 }

@@ -46,25 +46,6 @@ struct LogHistoryView: View {
                 .padding(.horizontal)
                 .padding(.top)
 
-                // Week Navigation
-//                HStack {
-//                    Button(action: { navigateWeek(-1) }) {
-//                        Image(systemName: "chevron.left")
-//                            .foregroundColor(.black)
-//                    }
-//                    Spacer()
-//                    Text(weekTitle(currentDate))
-//                        .font(.subheadline)
-//                        .fontWeight(.bold)
-//                    Spacer()
-//                    Button(action: { navigateWeek(1) }) {
-//                        Image(systemName: "chevron.right")
-//                            .foregroundColor(.black)
-//                    }
-//                }
-//                .padding(.horizontal)
-//                .padding(.vertical, 8)
-
                 // Meal List
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {

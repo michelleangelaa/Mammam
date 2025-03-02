@@ -56,12 +56,6 @@ extension Ingredient {
             nutrients: [protein, fat, iron].compactMap { $0 }
         )
 
-//        let lamb = Ingredient(
-//            name: "Lamb",
-//            image: "i_lamb",
-//            nutrients: [protein, fat].compactMap { $0 }
-//        )
-
         let duck = Ingredient(
             name: "Duck",
             image: "i_duck",
@@ -391,12 +385,6 @@ extension Ingredient {
             allergens: [fishAllergen].compactMap { $0 }
         )
 
-//        let clams = Ingredient(
-//            name: "Clams",
-//            image: "i_clam",
-//            nutrients: [protein, iron, zinc].compactMap { $0 }
-//        )
-
         let meatball = Ingredient(
             name: "Meatball",
             image: "i_meatball",
@@ -408,12 +396,6 @@ extension Ingredient {
             image: "i_eggyolk",
             nutrients: [protein, fat, micro].compactMap { $0 }
         )
-
-//        let duckEgg = Ingredient(
-//            name: "Duck Egg",
-//            image: "i_duckegg",
-//            nutrients: [protein, fat, zinc].compactMap { $0 }
-//        )
 
         let chicken = Ingredient(
             name: "Chicken",
@@ -2029,12 +2011,10 @@ extension Ingredient {
         meatball.menus = [friedRice, chickenMeatballSoup, meatballCurry]
         Dates.menus = [dateBreadPudding, ricePorridgeWithDateSyrup, datesAndBananaPure]
 
-//        return [chickenLiver, lamb, duck,  beefLiver,mincedBeef, tofu,shrimp,catfish,longJawedMackerel,quail,egg, tilapiaFish,snapperFish,chickenBroth, fishBroth, yogurt, whiteBread, macaroni, candlenut, cheese, tunaFish, dori, fishBalls, peas, tempeh, mungBeans,soyBeans,redBeans,peanuts, potato, eggNoodle, oatFlour, glutinousRice, jellyPowder, bihun, ricePorridge, macaroni, whiteRice, whiteBread, cassava, taro, riceFlour, flour, ubi, coconutOil, coconutMilk, cornOil,canolaOil, soybeanOil, sesameOil, butter, candlenut, squid, meat, saltedFish, catfish, carp,tilapiaFish, clams, meatball, eggYolk, duckEgg, chicken, okra, cucumber, avocado, blackJellyMushroom, blackJellyMushroom,waterGourd, eggPlant, corn, cabbage, cassavaLeaves, grape,langsat, wateryRoseApples, Dates,pear,watermelon,snakeFruit,mangosteen,soursop,lychee, ambarella, broccoli, carrot, tomato, greenBeans, mackarel, orange, banana, apple, spinach,pumpkin,strawberry,papaya ]
 
         return [chickenLiver, duck, beefLiver, mincedBeef, tofu, shrimp, catfish, longJawedMackerel, quail, egg, tilapiaFish, snapperFish, chickenBroth, fishBroth, yogurt, whiteBread, macaroni, candlenut, cheese, tunaFish, dori, fishBalls, peas, tempeh, mungBeans, soyBeans, redBeans, peanuts, potato, eggNoodle, oatFlour, glutinousRice, jellyPowder, bihun, ricePorridge, macaroni, whiteRice, whiteBread, cassava, taro, riceFlour, flour, ubi, coconutOil, coconutMilk, cornOil, canolaOil, soybeanOil, sesameOil, butter, candlenut, meat, saltedFish, carp, tilapiaFish, meatball, eggYolk, chicken, okra, cucumber, avocado, blackJellyMushroom, blackJellyMushroom, waterGourd, eggPlant, corn, cabbage, Dates, pear, watermelon, broccoli, carrot, tomato, greenBeans, mackarel, orange, banana, apple, spinach, pumpkin, strawberry, papaya]
     }
 
-    // Add this new method to fetch existing ingredients
     static func getExistingIngredients(context: ModelContext) -> [Ingredient] {
         let descriptor = FetchDescriptor<Ingredient>()
         
@@ -2045,7 +2025,6 @@ extension Ingredient {
         return []
     }
 
-    // Add this method to find a specific ingredient by name
     static func findIngredient(named name: String, context: ModelContext) -> Ingredient? {
         let descriptor = FetchDescriptor<Ingredient>(
             predicate: #Predicate<Ingredient> { ingredient in
@@ -2093,4 +2072,3 @@ extension Ingredient {
 let myNutrients = Nutrient.sampleNutrients
 let myIngredients = Ingredient.sampleIngredients(with: myNutrients)
 
-// linkIngredientsAndNutrients(ingredients: myIngredients, nutrients: myNutrients)

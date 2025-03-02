@@ -52,13 +52,11 @@ class Coordinator: ObservableObject {
         case .createMealPlan: SelectDateView()
         case .savedMenu: SavedMenuView()
         case .loadingView: GenerateMealLoadingView()
-//        case .onBoarding : RegisterFormView()
         case .reviewMealType(let mealPlan):
-            ReviewMealTypeView(mealPlan: mealPlan) // Navigate to ReviewMealTypeView
+            ReviewMealTypeView(mealPlan: mealPlan)
         case .account: AccountView()
         case .updateProfile(let baby): UpdateBabyProfileView(baby: baby)
         case .foodRestrictions: UpdateFoodRestrictionView()
-//        case .foodRestrictions(let baby): UpdateFoodRestrictionView(baby: baby)
         case .registrationForm: RegisterFormView()
         case .splashScreen: SplashScreenView()
         case .successSignUp: AccountSuccessView()
@@ -111,16 +109,6 @@ class Coordinator: ObservableObject {
 
     }
 
-//    func presentMealDetailAndLogMeal(with meal: Meal) {
-//        // Present the MealDetailView first
-//        sheet = .mealDetail(meal: meal)
-//
-//        // After dismissing MealDetailView, navigate to RateMealView
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            self.sheet = .logMeal(meal: meal)
-//        }
-//    }
-
     func presentRateMealSheet(with meal: Meal) {
         sheet = .logMeal(meal: meal)
     }
@@ -131,7 +119,7 @@ class Coordinator: ObservableObject {
 
     func dismissSheetAndNavigateToHome() {
         dismissSheet()
-        path = .init() // Reset the navigation stack
+        path = .init()
         push(page: .main)
     }
 }

@@ -22,10 +22,7 @@ class Ingredient {
     @Relationship(inverse: \FoodMenu.ingredients)
     var menus: [FoodMenu]?
     
-    var allergens: [Allergen]?  // Ingredients may contain allergens
-
-
-//    @Relationship(inverse: \Nutrition.ingredients)
+    var allergens: [Allergen]?
     
     init(name: String, image: String? = nil, nutrients: [Nutrient]? = nil, allergens: [Allergen]? = nil) {
         self.name = name

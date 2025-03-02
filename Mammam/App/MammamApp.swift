@@ -10,57 +10,22 @@ import SwiftUI
 
 @main
 struct MammamApp: App {
-//    let container: ModelContainer
-    @StateObject private var coordinator = Coordinator() // Create Coordinator instance
+    @StateObject private var coordinator = Coordinator()
     let dataController = DataController.shared
 
     @Environment(\.modelContext) private var context
 
-//    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
     var body: some Scene {
         WindowGroup {
-//            RegisterFormView()
             CoordinatorView()
-//                .environmentObject(coordinator)
                 .modelContainer(dataController.container)
                 .onAppear {
-                    // Move initialization here to ensure database is ready
                     dataController.initializeDataIfNeeded()
                 }
         }
     }
 
     init() {
-//        print(URL.applicationSupportDirectory.path(percentEncoded: false))
-//        let schema = Schema(
-//            [
-//                    Meal.self,
-//                    MealPlan.self,
-//                    Ingredient.self,
-//                    Nutrient.self,
-//                    FoodMenu.self,
-//                    Allergen.self
-//                ]
-//        )
-//        let config = ModelConfiguration("MammamData", schema: schema)
-//        do {
-//            container = try ModelContainer(for: schema, configurations: config)
-//        } catch {
-//            fatalError("Could not configure the container")
-//        }
-//        dataController.initializeDataIfNeeded()
         print(URL.documentsDirectory.path())
-
-//        dataController.initializeDataIfNeeded()
-//        dataController.generateSampleData()
     }
 }
-
-// class AppDelegate: NSObject, UIApplicationDelegate {
-//    func application(_ application: UIApplication,
-//                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool
-//    {
-//        return true
-//    }
-// }

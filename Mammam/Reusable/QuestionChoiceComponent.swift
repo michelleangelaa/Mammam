@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct QuestionChoiceComponent: View {
-    // Customizable text properties
         let buttonText1: String
         let buttonText2: String
         let actions: [() -> Void]
