@@ -5,25 +5,27 @@
 //  Created by Michelle Angela Aryanto on 01/10/24.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
 struct MammamApp: App {
-    
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+    @StateObject private var coordinator = Coordinator()
+    let dataController = DataController.shared
+
+    @Environment(\.modelContext) private var context
 
     var body: some Scene {
         WindowGroup {
             CoordinatorView()
+                .modelContainer(dataController.container)
+                .onAppear {
+                    dataController.initializeDataIfNeeded()
+                }
         }
     }
-}
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool
-    {        
-        return true
+    init() {
+        print(URL.documentsDirectory.path())
     }
 }

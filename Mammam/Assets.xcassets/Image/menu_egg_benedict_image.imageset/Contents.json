@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "food-lab-foolproof-eggs-benedict-recipe-hero-56a86e510be84599ab6179b0f8de40d7.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
