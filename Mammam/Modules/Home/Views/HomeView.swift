@@ -199,47 +199,6 @@ struct HomeView: View {
         )
     }
     
-//    private var storyOfTheDaySection: some View {
-//        VStack(alignment: .leading, spacing: 12) {
-//            Text("Today's Story")
-//                .font(.headline)
-//            Button(action: {
-//                if let currentMotivation = motivation.first {
-//                    coordinator.push(page: .motivation(motivation: currentMotivation))
-//                }
-//
-//            }) {
-//                ZStack {
-//                    //show preview motivation based on which motivation
-//                    Image("motivationimage1")
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fill)
-//                        .frame(width: 364, height: 129, alignment: .topLeading)
-//                        .clipShape(RoundedRectangle(cornerRadius: 18))
-//                    VStack(alignment: .leading) {
-//                        Text("#ResponsiveFeeding")
-//                            .font(.system(size: 13))
-//                            .foregroundColor(Color.theme.secondaryTextColor)
-//                            .padding(.top, 40)
-//                        HStack {
-//                            Text("Story Of The Day")
-//                                .font(.system(size: 22, weight: .bold))
-//                                .padding(.top, 10)
-//                                .foregroundColor(Color.theme.secondaryTextColor)
-//
-//                            Spacer()
-//
-//                            Image(systemName: "chevron.right")
-//                                .foregroundColor(.black)
-//                        }
-//                    }
-//                    .padding(.horizontal, 24)
-//                    .padding(.vertical, 16)
-//                }
-//            }
-//        }
-//    }
-    
     private var storyOfTheDaySection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Today's story")
@@ -374,12 +333,6 @@ struct HomeView: View {
         return article[articleIndex]
     }
 
-    // Add this Array extension for safe indexing
-//    extension Array {
-//        subscript(safe index: Int) -> Element? {
-//            return indices.contains(index) ? self[index] : nil
-//        }
-//    }
     
     private func mealPlanSection(for plan: MealPlan) -> some View {
         // Filter today's unlogged meals
